@@ -1,1358 +1,1189 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="dark h-full">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>💜 Приглашение для Киры</title>
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;700&family=Great+Vibes&display=swap" rel="stylesheet" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    <title>Своя Игра NEO — 12 Категорий • 120 Вопросов</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800;900&family=Unbounded:wght@500;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Manrope', 'sans-serif'],
+                        display: ['Unbounded', 'sans-serif'],
+                    },
+                    colors: {
+                        neo: {
+                            bg: '#07080F', card: '#0F1120', border: '#1E2138',
+                            accent: '#7C5CFF', pink: '#FF5C9D', cyan: '#22D3EE', gold: '#FFB547',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --sat: env(safe-area-inset-top, 0px);
+            --sab: env(safe-area-inset-bottom, 0px);
+            --sal: env(safe-area-inset-left, 0px);
+            --sar: env(safe-area-inset-right, 0px);
         }
-
-        body {
-            font-family: 'Raleway', sans-serif;
-            background: #0f0806;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-drag: none;
+        }
+        html, body {
             touch-action: manipulation;
+            -webkit-text-size-adjust: 100%;
         }
-
-        .app {
-            position: relative;
-            width: 100%;
-            max-width: 420px;
+        body {
+            background: #07080F;
+            background-image:
+                radial-gradient(ellipse 80% 60% at 15% -10%, rgba(124, 92, 255, 0.18), transparent 60%),
+                radial-gradient(ellipse 70% 50% at 90% 5%, rgba(255, 92, 157, 0.14), transparent 60%),
+                radial-gradient(ellipse 90% 60% at 50% 105%, rgba(34, 211, 238, 0.12), transparent 60%);
+            color: #E8ECF5;
+            user-select: none;
+            -webkit-user-select: none;
+            font-family: 'Manrope', sans-serif;
             height: 100vh;
-            max-height: 820px;
-            margin: 0 auto;
-            background: radial-gradient(ellipse at 30% 20%, #1e0f0a 0%, #120a07 70%);
+            height: 100dvh;
+            height: -webkit-fill-available;
             overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 0 80px rgba(255, 75, 100, 0.06);
-            border-radius: 0;
+            padding-top: max(4px, var(--sat));
+            padding-bottom: max(4px, var(--sab));
+            padding-left: max(4px, var(--sal));
+            padding-right: max(4px, var(--sar));
+            -webkit-font-smoothing: antialiased;
         }
-
-        @media (min-width: 421px) {
-            .app {
-                border-radius: 32px;
-                box-shadow: 0 0 80px rgba(255, 75, 100, 0.10), 0 0 200px rgba(192, 132, 252, 0.05);
-            }
+        .glass {
+            background: linear-gradient(160deg, rgba(24, 27, 48, 0.85), rgba(15, 17, 32, 0.7));
+            backdrop-filter: blur(20px) saturate(1.2);
+            -webkit-backdrop-filter: blur(20px) saturate(1.2);
+            border: 1px solid rgba(124, 92, 255, 0.15);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.04);
         }
+        .glass-soft {
+            background: linear-gradient(160deg, rgba(24, 27, 48, 0.6), rgba(15, 17, 32, 0.5));
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(124, 92, 255, 0.1);
+        }
+        .glow-text { text-shadow: 0 0 12px currentColor; }
 
-        /* ===== PARTICLES ===== */
-        .particles {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            z-index: 0;
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 181, 71, 0.5), 0 0 20px rgba(255, 181, 71, 0.2); }
+            50% { box-shadow: 0 0 0 8px rgba(255, 181, 71, 0), 0 0 30px rgba(255, 181, 71, 0.4); }
+        }
+        .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+
+        .cell {
+            position: relative;
+            background: linear-gradient(160deg, rgba(30, 33, 56, 0.9), rgba(15, 17, 32, 0.85));
+            border: 1px solid rgba(124, 92, 255, 0.12);
+            transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+                        border-color 0.15s ease,
+                        box-shadow 0.15s ease;
             overflow: hidden;
+            min-height: 42px;
         }
-        .particle {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: rgba(255, 180, 70, 0.25);
-            border-radius: 50%;
-            animation: floatParticle linear infinite;
-            box-shadow: 0 0 6px rgba(255, 180, 70, 0.15);
-        }
-        @keyframes floatParticle {
-            0% {
-                transform: translateY(100vh) scale(0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-10vh) scale(1);
-                opacity: 0;
-            }
-        }
-
-        /* ===== SCANLINE ===== */
-        .scanlines {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            z-index: 10;
-            background: repeating-linear-gradient(0deg,
-                    transparent,
-                    transparent 2px,
-                    rgba(255, 100, 80, 0.015) 2px,
-                    rgba(255, 100, 80, 0.015) 4px);
-            animation: scanMove 8s linear infinite;
-        }
-        @keyframes scanMove {
-            0% {
-                transform: translateY(0);
-            }
-            100% {
-                transform: translateY(4px);
-            }
-        }
-
-        /* ===== HOLO RING ===== */
-        .holo-ring {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 340px;
-            height: 340px;
-            border-radius: 50%;
-            border: 1px solid rgba(255, 180, 70, 0.04);
-            pointer-events: none;
-            z-index: 0;
-            animation: ringPulse 4s ease-in-out infinite;
-            box-shadow: 0 0 60px rgba(255, 100, 80, 0.02);
-        }
-        .holo-ring::before {
-            content: '';
-            position: absolute;
-            inset: 20px;
-            border-radius: 50%;
-            border: 1px solid rgba(192, 132, 252, 0.04);
-            animation: ringPulse 4s ease-in-out infinite 1s;
-        }
-        @keyframes ringPulse {
-            0%,
-            100% {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 0.4;
-            }
-            50% {
-                transform: translate(-50%, -50%) scale(1.08);
-                opacity: 1;
-            }
-        }
-
-        /* ===== CONTENT ===== */
-        .content {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 12px 16px 8px;
-        }
-
-        /* ===== HINT ===== */
-        .hint {
-            position: absolute;
-            bottom: 28px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            color: rgba(255, 180, 70, 0.4);
-            font-size: 12px;
-            font-weight: 300;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            animation: hintPulse 2s ease-in-out infinite;
-            z-index: 5;
-            text-shadow: 0 0 20px rgba(255, 180, 70, 0.1);
-            transition: opacity 0.6s ease;
-        }
-        .hint.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-        @keyframes hintPulse {
-            0%,
-            100% {
-                opacity: 0.3;
-                transform: translateY(0);
-            }
-            50% {
-                opacity: 0.9;
-                transform: translateY(-4px);
-            }
-        }
-
-        /* ===== ENVELOPE ===== */
-        .envelope-wrap {
-            position: relative;
-            width: 200px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-            z-index: 2;
-            transform: scale(1);
-        }
-        .envelope-wrap.fly-away {
-            transform: translateY(-120px) scale(0.3) rotate(12deg);
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.9s cubic-bezier(0.6, 0.04, 0.98, 0.34);
-        }
-        .envelope-wrap.hidden {
-            display: none;
-        }
-
-        .envelope {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 1.3 / 1;
-            background: rgba(30, 15, 10, 0.6);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 180, 70, 0.20);
-            border-radius: 16px;
-            box-shadow: 0 0 40px rgba(255, 75, 100, 0.06), inset 0 0 60px rgba(255, 75, 100, 0.02);
-            cursor: pointer;
-            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            overflow: hidden;
-            transform-style: preserve-3d;
-            perspective: 800px;
-        }
-        .envelope::before {
+        .cell::after {
             content: '';
             position: absolute;
             inset: 0;
-            border-radius: 16px;
-            padding: 1px;
-            background: linear-gradient(135deg, rgba(255, 180, 70, 0.2), rgba(255, 75, 100, 0.15), rgba(192, 132, 252, 0.1));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-            z-index: 2;
-        }
-        .envelope::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 16px;
-            background: radial-gradient(ellipse at 50% 80%, rgba(255, 180, 70, 0.04), transparent 70%);
-            pointer-events: none;
-            z-index: 1;
-        }
-        .envelope.glow {
-            box-shadow: 0 0 60px rgba(255, 75, 100, 0.10), 0 0 120px rgba(255, 75, 100, 0.04), inset 0 0 60px rgba(255, 75, 100, 0.02);
-            border-color: rgba(255, 180, 70, 0.30);
-        }
-
-        .flap {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 55%;
-            background: rgba(20, 10, 8, 0.6);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border-radius: 16px 16px 0 0;
-            transform-origin: bottom center;
-            transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
-            border-bottom: 1px solid rgba(255, 180, 70, 0.06);
-            z-index: 3;
-            clip-path: polygon(0 0, 100% 0, 50% 100%);
-        }
-        .flap.open {
-            transform: rotateX(180deg);
-        }
-
-        /* ===== BIG LETTER ===== */
-        .big-letter {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.8) rotate(-2deg);
-            width: 90%;
-            max-width: 340px;
-            background: rgba(20, 10, 8, 0.88);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 180, 70, 0.15);
-            box-shadow: 0 0 60px rgba(255, 75, 100, 0.08), 0 20px 60px rgba(0, 0, 0, 0.6), inset 0 0 80px rgba(255, 180, 70, 0.02);
-            padding: 24px 20px 20px;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
-            z-index: 3;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-        .big-letter.show {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1) rotate(0deg);
-            pointer-events: auto;
-        }
-        .big-letter::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 20px;
-            padding: 1px;
-            background: linear-gradient(135deg, rgba(255, 180, 70, 0.15), rgba(255, 75, 100, 0.10), rgba(192, 132, 252, 0.05));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
+            background: linear-gradient(135deg, transparent 40%, rgba(255, 255, 255, 0.06) 50%, transparent 60%);
             pointer-events: none;
         }
-        .big-letter .greeting {
-            font-family: 'Great Vibes', cursive;
-            font-size: 32px;
-            color: #ff4d6d;
-            text-shadow: 0 0 30px rgba(255, 75, 100, 0.3), 0 0 60px rgba(255, 75, 100, 0.1);
-            margin-bottom: 8px;
+        .cell:active:not(.cell-done) {
+            transform: scale(0.94);
+            border-color: rgba(255, 181, 71, 0.6);
+            box-shadow: 0 0 20px rgba(255, 181, 71, 0.3);
         }
-        .big-letter .body-text {
-            font-size: 16px;
-            line-height: 1.8;
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: 300;
-            letter-spacing: 0.5px;
-            max-width: 280px;
-            margin: 6px auto;
-        }
-        .big-letter .body-text strong {
-            color: #ffb347;
-            font-weight: 600;
-            text-shadow: 0 0 20px rgba(255, 180, 70, 0.2);
-        }
-        .big-letter .body-text .highlight {
-            color: #ff4d6d;
-            text-shadow: 0 0 20px rgba(255, 75, 100, 0.2);
-        }
-        .big-letter .date-line {
-            font-size: 14px;
-            color: rgba(192, 132, 252, 0.7);
-            margin: 4px 0 12px;
-            letter-spacing: 2px;
-        }
-        .big-letter .arrow-btn {
-            margin-top: 10px;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: rgba(255, 180, 70, 0.08);
-            border: 1px solid rgba(255, 180, 70, 0.3);
-            color: #ffb347;
-            font-size: 26px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 40px rgba(255, 180, 70, 0.05);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            animation: arrowPulse 2s ease-in-out infinite;
-        }
-        .big-letter .arrow-btn:active {
-            transform: scale(0.88);
-            background: rgba(255, 180, 70, 0.2);
-        }
-        @keyframes arrowPulse {
-            0%,
-            100% {
-                box-shadow: 0 0 20px rgba(255, 180, 70, 0.05);
-                transform: translateY(0);
-            }
-            50% {
-                box-shadow: 0 0 50px rgba(255, 180, 70, 0.2);
-                transform: translateY(-4px);
-            }
-        }
-
-        /* ===== SLIDER ===== */
-        .slider-wrap {
-            position: absolute;
-            inset: 0;
-            padding: 10px 12px 16px;
-            display: flex;
-            flex-direction: column;
-            opacity: 0;
+        .cell-done {
+            opacity: 0.2;
             pointer-events: none;
-            transition: opacity 0.8s ease 0.3s;
-            z-index: 1;
-            overflow: hidden;
+            background: rgba(15, 17, 32, 0.4);
+            border-color: transparent;
         }
-        .slider-wrap.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .slider-container {
-            position: relative;
-            width: 100%;
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transform: scale(0.95) translateY(20px);
-            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            pointer-events: none;
-            padding: 8px;
-        }
-        .slide.active {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-            pointer-events: auto;
-        }
-        .slide.exit {
-            opacity: 0;
-            transform: scale(0.95) translateY(-20px);
-        }
-
-        .slide .photo {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            border-radius: 16px;
-            margin-bottom: 12px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 180, 70, 0.08);
-            flex-shrink: 0;
-        }
-        .slide .photo .overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(0deg, rgba(0, 0, 0, 0.3) 0%, transparent 60%);
-            pointer-events: none;
-            z-index: 1;
-        }
-        .slide .photo .label {
-            position: absolute;
-            bottom: 10px;
-            left: 14px;
-            font-size: 11px;
-            font-weight: 400;
-            color: rgba(255, 255, 255, 0.6);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            z-index: 2;
-            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
-        }
-        .slide .info {
-            text-align: center;
-            width: 100%;
-            padding: 0 6px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .slide .info .name {
-            font-size: 20px;
-            font-weight: 600;
-            color: #fff;
-            letter-spacing: 0.5px;
-            margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .slide .info .name .icon {
-            font-size: 22px;
-        }
-        .slide .info .desc {
-            font-size: 14px;
-            font-weight: 300;
-            color: rgba(255, 255, 255, 0.75);
-            line-height: 1.6;
-            max-width: 320px;
-            margin: 0 auto;
-        }
-        .slide .info .tag {
-            display: inline-block;
-            margin-top: 8px;
-            font-size: 10px;
-            font-weight: 400;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: rgba(255, 180, 70, 0.4);
-            border: 1px solid rgba(255, 180, 70, 0.08);
-            padding: 4px 16px;
-            border-radius: 20px;
-            background: rgba(255, 180, 70, 0.02);
-            align-self: center;
-        }
-
-        /* фото-стили (без байкала) */
-        .photo-1 {
-            background: linear-gradient(145deg, #2a140e, #3d1f14, #2a120a);
-        }
-        .photo-1::after {
-            content: '🌅';
-            position: absolute;
-            bottom: 12px;
-            right: 16px;
-            font-size: 32px;
-            opacity: 0.5;
-            filter: drop-shadow(0 0 10px rgba(255, 180, 70, 0.2));
-        }
-        .photo-1 .sun {
-            position: absolute;
-            top: 20%;
-            right: 15%;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255, 180, 70, 0.5), rgba(255, 100, 80, 0.1));
-            box-shadow: 0 0 80px rgba(255, 180, 70, 0.2);
-            filter: blur(2px);
-        }
-        .photo-1 .water {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 35%;
-            background: linear-gradient(0deg, rgba(200, 100, 70, 0.2), transparent);
-            border-radius: 0 0 16px 16px;
-        }
-        .photo-1 .water::after {
-            content: '~~~';
-            position: absolute;
-            bottom: 6px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            color: rgba(255, 180, 70, 0.15);
-            font-size: 20px;
-            letter-spacing: 12px;
-        }
-
-        .photo-2 {
-            background: linear-gradient(145deg, #1f0f1a, #2d1a24, #1f0a14);
-        }
-        .photo-2::after {
-            content: '🏙️';
-            position: absolute;
-            bottom: 12px;
-            right: 16px;
-            font-size: 30px;
-            opacity: 0.5;
-            filter: drop-shadow(0 0 10px rgba(192, 132, 252, 0.2));
-        }
-        .photo-2 .buildings {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 55%;
-            display: flex;
-            align-items: flex-end;
-            gap: 6px;
-            padding: 0 12px;
-        }
-        .photo-2 .buildings span {
-            display: block;
-            background: linear-gradient(0deg, rgba(255, 180, 70, 0.08), rgba(255, 75, 100, 0.04));
-            border-radius: 4px 4px 0 0;
-            flex: 1;
-            border: 1px solid rgba(255, 180, 70, 0.03);
-            border-bottom: none;
-        }
-        .photo-2 .buildings span:nth-child(1) {
-            height: 55%;
-        }
-        .photo-2 .buildings span:nth-child(2) {
-            height: 80%;
-        }
-        .photo-2 .buildings span:nth-child(3) {
-            height: 40%;
-        }
-        .photo-2 .buildings span:nth-child(4) {
-            height: 65%;
-        }
-        .photo-2 .buildings span:nth-child(5) {
-            height: 45%;
-        }
-        .photo-2 .buildings span:nth-child(6) {
-            height: 85%;
-        }
-        .photo-2 .neon-glow {
-            position: absolute;
-            top: 15%;
-            left: 5%;
-            right: 5%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(255, 75, 100, 0.15), rgba(255, 180, 70, 0.15), transparent);
-            filter: blur(4px);
-            animation: neonSweep 4s ease-in-out infinite;
-        }
-        @keyframes neonSweep {
-            0%,
-            100% {
-                transform: translateX(-15%);
-                opacity: 0.3;
-            }
-            50% {
-                transform: translateX(15%);
-                opacity: 1;
+        @media (hover: hover) {
+            .cell:hover:not(.cell-done) {
+                border-color: rgba(255, 181, 71, 0.5);
+                box-shadow: 0 0 16px rgba(255, 181, 71, 0.25);
+                transform: translateY(-1px);
             }
         }
 
-        .photo-3 {
-            background: linear-gradient(145deg, #1a0e1a, #2a142a, #1a0a1a);
+        .no-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+        .no-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .no-scrollbar::-webkit-scrollbar-thumb { background: rgba(124, 92, 255, 0.3); border-radius: 4px; }
+
+        @keyframes flash-bg {
+            0%, 100% { background: linear-gradient(45deg, #ff00ff, #00ffff); }
+            25% { background: linear-gradient(45deg, #00ffff, #ffff00); }
+            50% { background: linear-gradient(45deg, #ffff00, #ff0000); }
+            75% { background: linear-gradient(45deg, #ff0000, #ff00ff); }
         }
-        .photo-3::after {
-            content: '🌊';
-            position: absolute;
-            bottom: 12px;
-            right: 16px;
-            font-size: 30px;
-            opacity: 0.5;
-            filter: drop-shadow(0 0 10px rgba(192, 132, 252, 0.15));
+        @keyframes shake-hard {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            20% { transform: translate(-6px, 3px) rotate(-2deg); }
+            40% { transform: translate(5px, -4px) rotate(2deg); }
+            60% { transform: translate(-4px, 5px) rotate(-1.5deg); }
+            80% { transform: translate(4px, -3px) rotate(1.5deg); }
         }
-        .photo-3 .river {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 40%;
-            background: linear-gradient(0deg, rgba(200, 100, 150, 0.15), rgba(255, 100, 150, 0.05));
-            border-radius: 0 0 16px 16px;
+        .animate-flash-bg { animation: flash-bg 0.4s linear infinite; }
+        .animate-shake-hard { animation: shake-hard 0.3s linear infinite; }
+        .animate-pop-text { animation: popText 0.5s ease-in-out infinite; }
+        @keyframes popText {
+            0%, 100% { transform: scale(1) rotate(-1deg); }
+            50% { transform: scale(1.08) rotate(1deg); }
         }
-        .photo-3 .river::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(255, 180, 70, 0.15), transparent);
-            filter: blur(2px);
+        .rainbow-text {
+            background: linear-gradient(90deg, #ff0000, #ff8000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
+            background-size: 200% auto; -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent; animation: rainbow-move 1s linear infinite;
         }
-        .photo-3 .sunset {
-            position: absolute;
-            top: 8%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255, 75, 100, 0.2), rgba(255, 180, 70, 0.05));
-            filter: blur(8px);
-            box-shadow: 0 0 100px rgba(255, 75, 100, 0.05);
+        @keyframes rainbow-move { to { background-position: 200% center; } }
+
+        @keyframes modal-in {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
-        .photo-3 .bridge {
-            position: absolute;
-            bottom: 32%;
-            left: 8%;
-            right: 8%;
-            height: 2px;
-            background: rgba(255, 180, 70, 0.04);
-            border-radius: 2px;
-            box-shadow: 0 0 20px rgba(255, 180, 70, 0.02);
+        .modal-in { animation: modal-in 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes slide-up {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
         }
-        .photo-3 .bridge::before,
-        .photo-3 .bridge::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            width: 2px;
-            height: 24px;
-            background: rgba(255, 180, 70, 0.02);
+        .slide-up { animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+
+        .score-block-locked { opacity: 0.28; pointer-events: none; filter: grayscale(0.6); }
+        .score-block-active { animation: pulse-glow 2s ease-in-out infinite; }
+
+        /* ========== MOBILE ========== */
+        @media (max-width: 640px) {
+            .cell { min-height: 38px; padding: 4px 2px !important; }
         }
-        .photo-3 .bridge::before {
-            left: 20%;
-            transform: rotate(8deg);
+        @media (max-width: 380px) {
+            .cell { min-height: 34px; }
         }
-        .photo-3 .bridge::after {
-            right: 20%;
-            transform: rotate(-8deg);
+        @media (max-height: 500px) and (orientation: landscape) {
+            header { padding-top: 4px !important; padding-bottom: 4px !important; }
+            section { padding-top: 2px !important; padding-bottom: 4px !important; }
+            #master-grid { gap: 3px !important; }
+            .cell { min-height: 30px !important; padding: 2px !important; }
+            .cell span { font-size: 9px !important; }
+            #turn-status-line { display: none; }
         }
 
-        .photo-4 {
-            background: linear-gradient(145deg, #1a0f08, #2a1a0a, #1a0f08);
-        }
-        .photo-4::after {
-            content: '🏘️';
-            position: absolute;
-            bottom: 12px;
-            right: 16px;
-            font-size: 28px;
-            opacity: 0.5;
-            filter: drop-shadow(0 0 10px rgba(255, 180, 70, 0.15));
-        }
-        .photo-4 .street {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 25%;
-            background: linear-gradient(0deg, rgba(60, 40, 20, 0.2), transparent);
-        }
-        .photo-4 .houses {
-            position: absolute;
-            bottom: 25%;
-            left: 8%;
-            right: 8%;
-            display: flex;
-            gap: 6px;
-            justify-content: center;
-            align-items: flex-end;
-        }
-        .photo-4 .houses span {
-            display: block;
-            background: linear-gradient(0deg, rgba(150, 100, 60, 0.10), rgba(200, 150, 100, 0.04));
-            border-radius: 2px 2px 0 0;
-            border: 1px solid rgba(200, 150, 100, 0.03);
-            border-bottom: none;
-            flex: 1;
-            max-width: 34px;
-        }
-        .photo-4 .houses span:nth-child(1) {
-            height: 35px;
-        }
-        .photo-4 .houses span:nth-child(2) {
-            height: 45px;
-        }
-        .photo-4 .houses span:nth-child(3) {
-            height: 28px;
-        }
-        .photo-4 .houses span:nth-child(4) {
-            height: 50px;
-        }
-        .photo-4 .houses span:nth-child(5) {
-            height: 38px;
-        }
-        .photo-4 .window-light {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(255, 180, 70, 0.15);
-            border-radius: 50%;
-            box-shadow: 0 0 20px rgba(255, 180, 70, 0.05);
-        }
-        .photo-4 .window-light:nth-child(2) {
-            left: 25%;
-            top: 30%;
-        }
-        .photo-4 .window-light:nth-child(3) {
-            left: 55%;
-            top: 25%;
-        }
-        .photo-4 .window-light:nth-child(4) {
-            left: 75%;
-            top: 35%;
+        /* ========== IPAD / TABLET OPTIMIZATION ========== */
+        @media (min-width: 768px) and (max-width: 1366px) {
+            .cell {
+                min-height: 50px !important;
+                padding: 8px 6px !important;
+                border-radius: 14px !important;
+            }
+            .cell span { font-size: 14px !important; }
+            #score-buttons-container button { min-height: 50px; font-size: 13px !important; }
+            #question-modal > div { max-width: 620px !important; }
         }
 
-        /* финальный слайд */
-        .slide-final {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 20px;
+        /* iPad портрет — 4 колонки */
+        @media (min-width: 768px) and (max-width: 1023px) and (orientation: portrait) {
+            #master-grid { grid-template-columns: repeat(4, 1fr) !important; gap: 8px !important; }
         }
-        .slide-final .sun-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
-            filter: drop-shadow(0 0 30px rgba(255, 180, 70, 0.3));
-            animation: sunPulse 3s ease-in-out infinite;
+        /* iPad ландшафт — 6 колонок */
+        @media (min-width: 1024px) and (max-width: 1365px) and (orientation: landscape) {
+            #master-grid { grid-template-columns: repeat(6, 1fr) !important; gap: 6px !important; }
         }
-        @keyframes sunPulse {
-            0%,
-            100% {
-                transform: scale(1) rotate(0deg);
-            }
-            50% {
-                transform: scale(1.1) rotate(8deg);
-            }
-        }
-        .slide-final .handwritten {
-            font-family: 'Great Vibes', cursive;
-            font-size: 34px;
-            line-height: 1.4;
-            color: #ff4d6d;
-            text-shadow: 0 0 40px rgba(255, 75, 100, 0.3), 0 0 80px rgba(255, 75, 100, 0.1);
-            max-width: 320px;
-        }
-        .slide-final .handwritten .love {
-            color: #ffb347;
-            text-shadow: 0 0 40px rgba(255, 180, 70, 0.3);
-        }
-        .slide-final .signature {
-            font-family: 'Great Vibes', cursive;
-            font-size: 28px;
-            color: rgba(255, 255, 255, 0.5);
-            margin-top: 12px;
-            letter-spacing: 2px;
+        /* iPad Pro 12.9" — 12 колонок */
+        @media (min-width: 1366px) {
+            #master-grid { grid-template-columns: repeat(12, 1fr) !important; }
         }
 
-        /* ===== NAVIGATION ARROWS ===== */
-        .slider-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 6px 0 4px;
-            width: 100%;
-            flex-shrink: 0;
+        /* Плотность: Comfortable (по умолчанию — для пальцев) */
+        body[data-density="comfortable"] .cell {
+            min-height: 54px !important;
+            padding: 8px 6px !important;
         }
-        .slider-nav .nav-btn {
-            background: rgba(255, 180, 70, 0.06);
-            border: 1px solid rgba(255, 180, 70, 0.15);
-            border-radius: 50%;
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ffb347;
-            font-size: 22px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            box-shadow: 0 0 20px rgba(255, 180, 70, 0.02);
+        body[data-density="comfortable"] .cell span {
+            font-size: 15px !important;
         }
-        .slider-nav .nav-btn:active {
-            transform: scale(0.88);
-            background: rgba(255, 180, 70, 0.15);
+        /* Плотность: Compact (для больших экранов / мыши) */
+        body[data-density="compact"] .cell {
+            min-height: 36px !important;
+            padding: 3px 4px !important;
         }
-        .slider-nav .nav-btn.hidden {
-            visibility: hidden;
-            pointer-events: none;
-        }
-        .slider-nav .dots {
-            display: flex;
-            gap: 10px;
-        }
-        .slider-nav .dots .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 180, 70, 0.05);
-            cursor: pointer;
-        }
-        .slider-nav .dots .dot.active {
-            background: #ffb347;
-            box-shadow: 0 0 20px rgba(255, 180, 70, 0.3);
-            border-color: #ffb347;
+        body[data-density="compact"] .cell span {
+            font-size: 11px !important;
         }
 
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 400px) {
-            .big-letter .greeting {
-                font-size: 26px;
-            }
-            .big-letter .body-text {
-                font-size: 14px;
-                max-width: 240px;
-            }
-            .big-letter {
-                padding: 20px 16px;
-            }
-            .envelope-wrap {
-                width: 160px;
-            }
-            .slide .info .name {
-                font-size: 17px;
-            }
-            .slide .info .desc {
-                font-size: 13px;
-            }
-            .slide-final .handwritten {
-                font-size: 28px;
-            }
-            .slide-final .sun-icon {
-                font-size: 50px;
-            }
-            .slider-nav .nav-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 18px;
-            }
-        }
-
-        @media (max-height: 700px) {
-            .envelope-wrap {
-                width: 140px;
-            }
-            .big-letter .greeting {
-                font-size: 24px;
-            }
-            .big-letter .body-text {
-                font-size: 13px;
-                line-height: 1.6;
-            }
-            .big-letter {
-                padding: 16px 14px;
-                max-width: 300px;
-            }
-            .big-letter .arrow-btn {
-                width: 48px;
-                height: 48px;
-                font-size: 22px;
-                margin-top: 6px;
-            }
-            .slide .photo {
-                aspect-ratio: 16 / 7;
-            }
-            .slide .info .name {
-                font-size: 17px;
-            }
-            .slide .info .desc {
-                font-size: 13px;
-            }
-            .slide-final .handwritten {
-                font-size: 28px;
-            }
-            .slide-final .sun-icon {
-                font-size: 48px;
-            }
-            .slider-nav .nav-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 18px;
-            }
-        }
-
-        @media (max-height: 600px) {
-            .envelope-wrap {
-                width: 120px;
-            }
-            .big-letter .greeting {
-                font-size: 20px;
-            }
-            .big-letter .body-text {
-                font-size: 12px;
-                line-height: 1.5;
-            }
-            .big-letter {
-                padding: 12px 12px;
-                max-width: 260px;
-            }
-            .big-letter .arrow-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 18px;
-                margin-top: 4px;
-            }
-            .slide .photo {
-                aspect-ratio: 16 / 6;
-            }
-            .slide .info .name {
-                font-size: 15px;
-            }
-            .slide .info .desc {
-                font-size: 12px;
-            }
-            .slide-final .handwritten {
-                font-size: 24px;
-            }
-            .slide-final .sun-icon {
-                font-size: 40px;
-            }
-            .slider-nav .nav-btn {
-                width: 36px;
-                height: 36px;
-                font-size: 16px;
-            }
-        }
-
-        /* ===== UTILITY ===== */
-        .hidden {
-            display: none !important;
-        }
-        ::-webkit-scrollbar {
-            display: none;
-        }
-        * {
-            scrollbar-width: none;
+        /* Кнопка плотности — только на iPad */
+        #density-btn { display: none; }
+        @media (min-width: 768px) {
+            #density-btn { display: flex; }
         }
     </style>
 </head>
-<body>
+<body class="flex flex-col justify-between h-screen overflow-hidden antialiased" data-density="comfortable">
 
-    <div class="app" id="app">
+<!-- HEADER -->
+<header class="w-full px-2 sm:px-4 py-2 shrink-0 flex items-center justify-between z-30">
+    <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-neo-accent via-neo-pink to-neo-gold flex items-center justify-center text-white font-black text-sm shadow-lg shadow-neo-accent/30 shrink-0">
+            <i class="fa-solid fa-bolt"></i>
+        </div>
+        <div class="min-w-0">
+            <h1 class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-white font-display leading-none truncate">СВОЯ ИГРА NEO</h1>
+            <p class="text-[7px] sm:text-[8px] text-neo-accent/80 font-bold tracking-widest mt-0.5">120 ВОПРОСОВ • IPAD READY</p>
+        </div>
+    </div>
+    <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <button id="density-btn" onclick="toggleDensity()" title="Плотность" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl glass items-center justify-center active:scale-95 transition">
+            <i class="fa-solid fa-table-cells-large text-neo-gold text-[10px] sm:text-xs" id="density-icon"></i>
+        </button>
+        <button onclick="toggleAudioMute()" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl glass flex items-center justify-center active:scale-95 transition">
+            <i class="fa-solid fa-volume-high text-neo-cyan text-[10px] sm:text-xs" id="mute-icon"></i>
+        </button>
+        <button onclick="showWinnerModal(true)" class="px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-gradient-to-r from-neo-gold/20 to-neo-pink/20 border border-neo-gold/40 text-neo-gold font-black text-[9px] sm:text-[10px] active:scale-95 transition flex items-center gap-1 font-display">
+            <i class="fa-solid fa-crown"></i> ИТОГИ
+        </button>
+    </div>
+</header>
 
-        <!-- Particles -->
-        <div class="particles" id="particles"></div>
-
-        <!-- Scanlines -->
-        <div class="scanlines"></div>
-
-        <!-- Holo Ring -->
-        <div class="holo-ring"></div>
-
-        <!-- ===== CONTENT ===== -->
-        <div class="content">
-
-            <!-- ===== ENVELOPE ===== -->
-            <div class="envelope-wrap" id="envelopeWrap">
-                <div class="envelope" id="envelope">
-                    <div class="flap" id="flap"></div>
+<!-- PLAYERS -->
+<section class="px-2 sm:px-4 pt-1 pb-2 w-full max-w-6xl mx-auto shrink-0">
+    <div class="grid grid-cols-2 gap-2 sm:gap-3">
+        <div id="player-card-0" class="glass rounded-2xl px-3 py-2 sm:px-4 sm:py-2.5 flex items-center justify-between relative transition-all">
+            <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-neo-pink to-rose-600 flex items-center justify-center text-sm sm:text-base shadow-lg shrink-0">👩‍🦰</div>
+                <div class="min-w-0">
+                    <div class="font-black text-xs sm:text-sm text-white font-display truncate">Кира</div>
+                    <span id="turn-badge-0" class="hidden text-[7px] bg-neo-pink text-white font-black px-1.5 py-0.5 rounded-md uppercase tracking-wider mt-0.5 inline-block">ХОДИТ</span>
                 </div>
             </div>
-
-            <!-- ===== HINT ===== -->
-            <div class="hint" id="hint">✧ нажми на конверт ✧</div>
-
-            <!-- ===== BIG LETTER ===== -->
-            <div class="big-letter" id="bigLetter">
-                <div class="greeting">💜 Моя любимая Кира</div>
-                <div class="body-text">
-                    я приглашаю тебя на свидание<br />
-                    в <strong>город Иркутск</strong>,<br />
-                    <span class="highlight">14 августа 2026</span>,<br />
-                    будь готова уже в <strong>11:00</strong>,<br />
-                    мы проведём <span class="highlight">незабываемую пятницу!</span>
-                </div>
-                <div class="date-line">✨ 14.08.2026 ✨</div>
-                <div class="arrow-btn" id="arrowBtn">➜</div>
+            <div class="text-right shrink-0">
+                <div id="score-0" class="text-base sm:text-xl font-black text-neo-pink font-mono glow-text">0</div>
+                <div class="text-[7px] sm:text-[8px] text-white/40 font-bold uppercase tracking-wider">очков</div>
             </div>
-
-            <!-- ===== SLIDER ===== -->
-            <div class="slider-wrap" id="sliderWrap">
-                <div class="slider-container" id="sliderContainer">
-                    <!-- Слайд 1: Остров Юности -->
-                    <div class="slide active" data-index="0">
-                        <div class="photo photo-1">
-                            <div class="sun"></div>
-                            <div class="water"></div>
-                            <div class="overlay"></div>
-                            <div class="label">✦ остров юности</div>
-                        </div>
-                        <div class="info">
-                            <div class="name"><span class="icon">🌿</span> Остров Юности</div>
-                            <div class="desc">
-                                Уютный зелёный островок посреди Ангары, где время течёт иначе. 
-                                Мы будем гулять по аллеям, слушать шелест листвы и смотреть, как закат 
-                                окрашивает реку в тёплые тона. Здесь легко забыть о суете и просто быть рядом.
-                            </div>
-                            <div class="tag">❤️ романтика</div>
-                        </div>
-                    </div>
-
-                    <!-- Слайд 2: Модный квартал -->
-                    <div class="slide" data-index="1">
-                        <div class="photo photo-2">
-                            <div class="buildings">
-                                <span></span><span></span><span></span><span></span><span></span><span></span>
-                            </div>
-                            <div class="neon-glow"></div>
-                            <div class="overlay"></div>
-                            <div class="label">✦ модный квартал</div>
-                        </div>
-                        <div class="info">
-                            <div class="name"><span class="icon">🏙️</span> Модный квартал</div>
-                            <div class="desc">
-                                Здесь современная архитектура переплетается с уютными улочками. 
-                                Мы зайдём в стильные кафе, сделаем сотню фотографий на фоне неоновых вывесок 
-                                и будем смеяться, глядя на отражения в витринах. Этот квартал запомнится нам 
-                                как место, где мы создаём свою собственную историю.
-                            </div>
-                            <div class="tag">✨ стиль</div>
-                        </div>
-                    </div>
-
-                    <!-- Слайд 3: Ангарская набережная -->
-                    <div class="slide" data-index="2">
-                        <div class="photo photo-3">
-                            <div class="sunset"></div>
-                            <div class="bridge"></div>
-                            <div class="river"></div>
-                            <div class="overlay"></div>
-                            <div class="label">✦ ангарская набережная</div>
-                        </div>
-                        <div class="info">
-                            <div class="name"><span class="icon">🌅</span> Набережная</div>
-                            <div class="desc">
-                                Одна из самых романтичных точек Иркутска – тихая набережная с видом на 
-                                Ангару. Мы постоим у парапета, глядя на течение, а когда стемнеет, 
-                                зажгутся фонари, отражаясь в воде. В этот момент я скажу тебе то, 
-                                что давно лежит у меня на душе.
-                            </div>
-                            <div class="tag">🌆 закат</div>
-                        </div>
-                    </div>
-
-                    <!-- Слайд 4: 130-й квартал -->
-                    <div class="slide" data-index="3">
-                        <div class="photo photo-4">
-                            <div class="street"></div>
-                            <div class="houses">
-                                <span></span><span></span><span></span><span></span><span></span>
-                            </div>
-                            <div class="window-light"></div>
-                            <div class="window-light"></div>
-                            <div class="window-light"></div>
-                            <div class="overlay"></div>
-                            <div class="label">✦ 130-й квартал</div>
-                        </div>
-                        <div class="info">
-                            <div class="name"><span class="icon">🏘️</span> 130-й квартал</div>
-                            <div class="desc">
-                                Старый Иркутск в миниатюре – деревянные дома с резными наличниками, 
-                                тихие дворики и запах сирени. Мы побродим по улочкам, представляя, 
-                                как здесь жили сто лет назад, и обязательно найдём маленькое кафе 
-                                с чашкой горячего шоколада. Этот квартал – как наша любовь: тёплый, 
-                                уютный и немного сказочный.
-                            </div>
-                            <div class="tag">📸 история</div>
-                        </div>
-                    </div>
-
-                    <!-- Слайд 5: Финальный (рукописный) -->
-                    <div class="slide slide-final" data-index="4">
-                        <div class="sun-icon">☀️</div>
-                        <div class="handwritten">
-                            я надеюсь, мы запомним<br />
-                            этот день,<br />
-                            <span class="love">я тебя люблю</span>
-                        </div>
-                        <div class="signature">твой Витя <3</div>
-                    </div>
-                </div>
-
-                <!-- Навигация -->
-                <div class="slider-nav">
-                    <button class="nav-btn prev" id="prevBtn">‹</button>
-                    <div class="dots" id="dotsContainer"></div>
-                    <button class="nav-btn next" id="nextBtn">›</button>
+        </div>
+        <div id="player-card-1" class="glass rounded-2xl px-3 py-2 sm:px-4 sm:py-2.5 flex items-center justify-between relative transition-all">
+            <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-neo-cyan to-blue-600 flex items-center justify-center text-sm sm:text-base shadow-lg shrink-0">🧑‍💻</div>
+                <div class="min-w-0">
+                    <div class="font-black text-xs sm:text-sm text-white font-display truncate">Витя</div>
+                    <span id="turn-badge-1" class="hidden text-[7px] bg-neo-cyan text-slate-950 font-black px-1.5 py-0.5 rounded-md uppercase tracking-wider mt-0.5 inline-block">ХОДИТ</span>
                 </div>
             </div>
+            <div class="text-right shrink-0">
+                <div id="score-1" class="text-base sm:text-xl font-black text-neo-cyan font-mono glow-text">0</div>
+                <div class="text-[7px] sm:text-[8px] text-white/40 font-bold uppercase tracking-wider">очков</div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-2 text-center">
+        <div class="inline-block px-3 py-1 rounded-full glass-soft text-[9px] sm:text-[10px] font-bold text-white/70">
+            <span id="turn-status-line">Ход: <strong class="text-neo-gold">Кира</strong></span>
+        </div>
+    </div>
+</section>
 
-        </div><!-- /content -->
-    </div><!-- /app -->
+<!-- GRID -->
+<main class="flex-1 px-2 sm:px-4 pb-2 w-full max-w-[1700px] mx-auto flex flex-col overflow-hidden">
+    <div class="glass rounded-3xl p-1.5 sm:p-2.5 h-full flex flex-col overflow-hidden">
+        <div id="master-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-12 gap-1 sm:gap-1.5 h-full overflow-y-auto no-scrollbar"></div>
+    </div>
+</main>
 
-    <script>
-        (function() {
-            'use strict';
+<!-- FOOTER -->
+<footer class="px-3 sm:px-4 py-1.5 w-full max-w-6xl mx-auto shrink-0 flex justify-between items-center z-20">
+    <button onclick="resetGame(true)" class="px-3 py-1.5 rounded-xl glass-soft text-white/60 text-[9px] font-bold flex items-center gap-1.5 active:scale-95 transition">
+        <i class="fa-solid fa-rotate-right"></i> Сбросить
+    </button>
+    <span class="text-[8px] text-white/30 font-bold font-mono tracking-wider">12 × 10 • NEO</span>
+</footer>
 
-            // DOM refs
-            const envelopeWrap = document.getElementById('envelopeWrap');
-            const envelope = document.getElementById('envelope');
-            const flap = document.getElementById('flap');
-            const hint = document.getElementById('hint');
-            const bigLetter = document.getElementById('bigLetter');
-            const arrowBtn = document.getElementById('arrowBtn');
-            const sliderWrap = document.getElementById('sliderWrap');
-            const slides = document.querySelectorAll('.slide');
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            const dotsContainer = document.getElementById('dotsContainer');
+<!-- QUESTION MODAL -->
+<div id="question-modal" class="fixed inset-0 bg-black/70 backdrop-blur-xl hidden flex flex-col justify-end z-50">
+    <div class="glass rounded-t-3xl w-full max-w-lg mx-auto p-4 sm:p-5 flex flex-col justify-between max-h-[95vh] overflow-y-auto slide-up" style="border-bottom: none; border-radius: 24px 24px 0 0;">
+        <div class="w-12 h-1.5 bg-white/20 rounded-full mx-auto mb-3"></div>
+        <div class="flex justify-between items-center border-b border-white/5 pb-3 mb-3">
+            <div class="flex items-center gap-1.5 flex-wrap">
+                <span id="modal-category" class="bg-neo-accent/20 text-neo-accent border border-neo-accent/30 text-[8px] sm:text-[9px] font-black px-2 py-1 rounded-lg uppercase tracking-wider">Категория</span>
+                <span id="modal-points" class="bg-gradient-to-r from-neo-gold to-orange-500 text-slate-950 text-[8px] sm:text-[9px] font-black px-2 py-1 rounded-lg font-mono">500</span>
+                <span id="modal-special" class="hidden text-[8px] sm:text-[9px] font-black px-2 py-1 rounded-lg font-display"></span>
+            </div>
+            <div class="text-[9px] sm:text-[10px] text-white/60 font-bold">Ход: <strong id="modal-player-turn" class="text-neo-gold font-mono">Кира</strong></div>
+        </div>
+        <div class="my-auto py-3 text-center flex flex-col items-center justify-center">
+            <div class="text-neo-accent text-[8px] sm:text-[9px] font-black uppercase tracking-widest mb-2" id="modal-difficulty-hint">Сложность</div>
+            <p id="modal-question-text" class="text-base sm:text-lg font-bold leading-snug text-white px-1">Текст вопроса...</p>
+            <div id="modal-answer-box" class="hidden mt-4 w-full p-3 bg-gradient-to-br from-emerald-950/80 to-emerald-900/40 border border-emerald-500/40 rounded-2xl text-emerald-300 text-center modal-in">
+                <div class="text-[8px] sm:text-[9px] uppercase tracking-widest text-emerald-400 font-black mb-1">✓ Правильный ответ:</div>
+                <div id="modal-answer-text" class="text-xs sm:text-sm font-black text-white font-display"></div>
+            </div>
+            <div id="modal-special-warning" class="hidden mt-3 w-full p-3 rounded-2xl text-center border-2"></div>
+        </div>
+        <div class="pt-3 border-t border-white/5">
+            <div id="action-reveal-container" class="flex justify-center mb-3">
+                <button onclick="revealAnswer()" class="w-full py-3 bg-gradient-to-r from-neo-accent via-neo-pink to-neo-gold text-white font-black rounded-xl text-[11px] sm:text-xs uppercase tracking-wider shadow-lg shadow-neo-accent/30 active:scale-98 transition flex items-center justify-center gap-2 font-display">
+                    <i class="fa-solid fa-key"></i> ПОКАЗАТЬ ОТВЕТ
+                </button>
+            </div>
+            <div id="score-buttons-container" class="grid grid-cols-2 gap-2">
+                <div id="score-block-0" class="bg-gradient-to-br from-pink-950/60 to-slate-950/80 p-2.5 rounded-xl border border-neo-pink/30 text-center flex flex-col gap-2 transition-all">
+                    <div class="text-[10px] font-black text-neo-pink flex items-center justify-center gap-1 font-display">
+                        👩‍🦰 Кира <span id="turn-tag-0" class="hidden text-[7px] bg-neo-pink text-white px-1.5 py-0.5 rounded">ХОД</span>
+                    </div>
+                    <div class="flex gap-1.5">
+                        <button onclick="scorePlayer(0, true)" class="flex-1 py-2 bg-gradient-to-b from-emerald-500 to-emerald-600 active:scale-95 text-white font-black rounded-lg text-[10px] shadow-lg shadow-emerald-500/20 transition flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-plus text-[9px]"></i> <span id="btn-kira-plus">+100</span>
+                        </button>
+                        <button onclick="scorePlayer(0, false)" class="flex-1 py-2 bg-gradient-to-b from-rose-500 to-rose-600 active:scale-95 text-white font-black rounded-lg text-[10px] shadow-lg shadow-rose-500/20 transition flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-minus text-[9px]"></i> <span id="btn-kira-minus">-100</span>
+                        </button>
+                    </div>
+                </div>
+                <div id="score-block-1" class="bg-gradient-to-br from-cyan-950/60 to-slate-950/80 p-2.5 rounded-xl border border-neo-cyan/30 text-center flex flex-col gap-2 transition-all">
+                    <div class="text-[10px] font-black text-neo-cyan flex items-center justify-center gap-1 font-display">
+                        🧑‍💻 Витя <span id="turn-tag-1" class="hidden text-[7px] bg-neo-cyan text-slate-950 px-1.5 py-0.5 rounded">ХОД</span>
+                    </div>
+                    <div class="flex gap-1.5">
+                        <button onclick="scorePlayer(1, true)" class="flex-1 py-2 bg-gradient-to-b from-emerald-500 to-emerald-600 active:scale-95 text-white font-black rounded-lg text-[10px] shadow-lg shadow-emerald-500/20 transition flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-plus text-[9px]"></i> <span id="btn-vitya-plus">+100</span>
+                        </button>
+                        <button onclick="scorePlayer(1, false)" class="flex-1 py-2 bg-gradient-to-b from-rose-500 to-rose-600 active:scale-95 text-white font-black rounded-lg text-[10px] shadow-lg shadow-rose-500/20 transition flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-minus text-[9px]"></i> <span id="btn-vitya-minus">-100</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-2 text-center">
+                <button onclick="closeQuestionModal()" class="text-[9px] text-white/40 hover:text-white/70 underline font-bold py-1">Пропустить → передать ход</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-            let currentIndex = 0;
-            const totalSlides = slides.length;
-            let isTransitioning = false;
+<!-- WINNER MODAL -->
+<div id="winner-modal" class="fixed inset-0 bg-black/85 backdrop-blur-2xl hidden flex items-center justify-center p-4 z-50">
+    <div class="glass rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl relative overflow-hidden modal-in">
+        <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-neo-gold to-orange-500 flex items-center justify-center text-4xl mx-auto mb-4 shadow-lg shadow-neo-gold/40">👑</div>
+        <h2 class="text-2xl font-black uppercase text-neo-gold font-display mb-1">ФИНАЛ!</h2>
+        <p class="text-[10px] text-white/40 uppercase tracking-widest font-bold mb-4">120 вопросов сыграно</p>
+        <p id="winner-name" class="text-xl font-black text-white my-2 font-display">Победитель</p>
+        <p id="winner-score" class="text-xs text-neo-gold font-mono font-bold mb-5">Результат</p>
+        <div class="bg-black/40 rounded-2xl p-4 mb-5 border border-white/5 flex justify-around items-center">
+            <div class="text-center">
+                <div class="text-[11px] text-neo-pink font-black mb-1 font-display">КИРА</div>
+                <div id="final-score-0" class="text-2xl font-black text-neo-pink font-mono glow-text">0</div>
+            </div>
+            <div class="w-px h-10 bg-white/10"></div>
+            <div class="text-center">
+                <div class="text-[11px] text-neo-cyan font-black mb-1 font-display">ВИТЯ</div>
+                <div id="final-score-1" class="text-2xl font-black text-neo-cyan font-mono glow-text">0</div>
+            </div>
+        </div>
+        <button onclick="resetGame(true); closeModal('winner-modal');" class="w-full py-3.5 bg-gradient-to-r from-neo-gold via-neo-pink to-neo-accent text-white font-black rounded-xl active:scale-95 transition shadow-lg shadow-neo-accent/30 text-sm font-display">
+            СЫГРАТЬ СНОВА
+        </button>
+    </div>
+</div>
 
-            // ---- Инициализация точек ----
-            function initDots() {
-                dotsContainer.innerHTML = '';
-                for (let i = 0; i < totalSlides; i++) {
-                    const dot = document.createElement('span');
-                    dot.className = 'dot' + (i === 0 ? ' active' : '');
-                    dot.dataset.index = i;
-                    dot.addEventListener('click', () => goToSlide(i));
-                    dotsContainer.appendChild(dot);
-                }
-            }
-            initDots();
+<!-- SPAM AD MODAL -->
+<div id="spam-ad-modal" class="fixed inset-0 hidden z-[100] overflow-hidden">
+    <div class="absolute inset-0 animate-flash-bg"></div>
+    <div class="relative w-full h-full flex flex-col items-center justify-center p-4 text-center overflow-hidden">
+        <div class="animate-shake-hard max-w-2xl">
+            <div class="text-4xl sm:text-6xl md:text-8xl font-black mb-3 animate-pop-text drop-shadow-[0_0_20px_rgba(0,0,0,0.8)]">
+                <span class="rainbow-text">💎 DIAMOND SHOP 💎</span>
+            </div>
+            <div class="text-xl sm:text-3xl md:text-5xl text-white font-black mb-2 drop-shadow-[0_2px_8px_rgba(0,0,0,1)]">
+                🚀 ЛУЧШИЕ РЕЗКИ В DISCORD! 🚀
+            </div>
+            <div class="text-base sm:text-2xl md:text-3xl text-yellow-200 font-black mb-4 animate-pulse drop-shadow-[0_2px_8px_rgba(0,0,0,1)]">
+                🎁 СКИДКА 1000% + БОНУС АЛМАЗЫ 🎁
+            </div>
+            <div class="flex flex-wrap gap-2 justify-center mb-4">
+                <span class="px-3 py-1 bg-black/80 text-cyan-300 font-black rounded-full text-xs sm:text-base animate-bounce">😎 РЕЗКИ</span>
+                <span class="px-3 py-1 bg-black/80 text-pink-300 font-black rounded-full text-xs sm:text-base animate-bounce" style="animation-delay:0.2s">🔥 АЛМАЗЫ</span>
+                <span class="px-3 py-1 bg-black/80 text-yellow-300 font-black rounded-full text-xs sm:text-base animate-bounce" style="animation-delay:0.4s">💀 МЕМЫ</span>
+            </div>
+            <button onclick="closeSpamAd()" class="px-8 py-4 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 text-white text-xl sm:text-3xl font-black rounded-2xl border-4 border-white animate-bounce shadow-[0_0_30px_rgba(255,255,0,0.8)]">
+                ЗАЙТИ В DISCORD! 🎉
+            </button>
+            <div class="text-white text-lg sm:text-2xl font-black mt-4 animate-pulse drop-shadow-[0_2px_8px_rgba(0,0,0,1)]">
+                ⚡ ААААА КУПИ АЛМАЗЫ!!! ⚡
+            </div>
+        </div>
+    </div>
+</div>
 
-            // ---- Функция переключения слайда ----
-            function goToSlide(index) {
-                if (isTransitioning || index === currentIndex) return;
-                if (index < 0 || index >= totalSlides) return;
+<script>
+// ========== STATE ==========
+let players = [{ name: "Кира", score: 0 }, { name: "Витя", score: 0 }];
+let activePlayerIndex = 0;
+let currentQuestion = null;
+let activeCellElement = null;
+let activeCellKey = null;
+let isAudioMuted = false;
+let spamLoopTimer = null;
+let blockedPlayerIndex = null;
 
-                isTransitioning = true;
+const STORAGE_KEY = 'jeopardy_neo_12x10_v9_ipad';
+const DENSITY_KEY = 'jeopardy_neo_density';
+let playedQuestions = new Set();
+let specialCells = {};
 
-                // Убираем активный класс у текущего
-                const currentSlide = slides[currentIndex];
-                currentSlide.classList.remove('active');
-                currentSlide.classList.add('exit');
+// ========== CATEGORIES ==========
+const categories = [
+    { id: 'angarsk', name: 'Ангарск', icon: 'fa-location-dot', color: 'text-amber-400' },
+    { id: 'brawl', name: 'Brawl Stars', icon: 'fa-skull-crossbones', color: 'text-pink-400' },
+    { id: 'memes', name: 'Мемы 2026', icon: 'fa-fire', color: 'text-rose-400' },
+    { id: 'music', name: 'Русская Музыка', icon: 'fa-music', color: 'text-cyan-400' },
+    { id: 'youtube', name: 'YouTube RU', icon: 'fa-play-circle', color: 'text-red-400' },
+    { id: 'words', name: 'Слова', icon: 'fa-font', color: 'text-emerald-400' },
+    { id: 'movies', name: 'Кино & Сериалы', icon: 'fa-clapperboard', color: 'text-amber-300' },
+    { id: 'space', name: 'Наука', icon: 'fa-rocket', color: 'text-purple-300' },
+    { id: 'food', name: 'Еда', icon: 'fa-burger', color: 'text-cyan-300' },
+    { id: 'games', name: 'Игры', icon: 'fa-gamepad', color: 'text-indigo-400' },
+    { id: 'anime', name: 'Аниме', icon: 'fa-dragon', color: 'text-purple-400' },
+    { id: 'money', name: 'Деньги', icon: 'fa-coins', color: 'text-yellow-400' }
+];
 
-                // Добавляем активный новому
-                const newSlide = slides[index];
-                newSlide.classList.remove('exit');
-                newSlide.classList.add('active');
+const pointValues = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
 
-                // Обновляем точки
-                document.querySelectorAll('.dot').forEach((dot, i) => {
-                    dot.classList.toggle('active', i === index);
-                });
+function getDifficulty(points) {
+    if (points <= 200) return { label: '🌱 Разминка' };
+    if (points <= 400) return { label: '⚡ Легко' };
+    if (points <= 600) return { label: '🎯 Средне' };
+    if (points <= 800) return { label: '🔥 Сложно' };
+    if (points <= 900) return { label: '💀 Очень сложно' };
+    return { label: '👑 ХАРДКОР' };
+}
 
-                // Обновляем индексы
-                currentIndex = index;
+// ========== СПЕЦЯЧЕЙКИ ==========
+function generateSpecialCells() {
+    const map = {};
+    const types = [
+        { type: 'spam_ad', count: 12 },
+        { type: 'double', count: 6 },
+        { type: 'trap', count: 6 },
+        { type: 'jackpot', count: 3 },
+        { type: 'swap', count: 3 },
+        { type: 'block', count: 3 },
+        { type: 'karaoke', count: 3 }
+    ];
+    const allKeys = [];
+    categories.forEach(c => pointValues.forEach(p => allKeys.push(`${c.id}-${p}`)));
+    for (let i = allKeys.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [allKeys[i], allKeys[j]] = [allKeys[j], allKeys[i]];
+    }
+    let idx = 0;
+    types.forEach(t => {
+        for (let i = 0; i < t.count && idx < allKeys.length; i++, idx++) {
+            map[allKeys[idx]] = { type: t.type };
+        }
+    });
+    return map;
+}
 
-                // Обновляем состояние кнопок
-                updateButtons();
+function getSpecialInfo(key) {
+    const s = specialCells[key];
+    if (!s) return null;
+    if (s.type === 'double') return { emoji: '💎', label: '×2', badgeCls: 'bg-blue-500 text-white' };
+    if (s.type === 'trap') return { emoji: '⚠️', label: 'ЛОВУШКА', badgeCls: 'bg-rose-600 text-white' };
+    if (s.type === 'spam_ad') return { emoji: '🎰', label: 'РЕКЛАМА', badgeCls: 'bg-yellow-500 text-slate-950' };
+    if (s.type === 'jackpot') return { emoji: '🎁', label: '×5 ДЖЕКПОТ', badgeCls: 'bg-fuchsia-600 text-white' };
+    if (s.type === 'swap') return { emoji: '🔄', label: 'ОБМЕН', badgeCls: 'bg-orange-500 text-white' };
+    if (s.type === 'block') return { emoji: '🚫', label: 'БЛОК', badgeCls: 'bg-slate-600 text-white' };
+    if (s.type === 'karaoke') return { emoji: '🎵', label: 'КАРАОКЕ', badgeCls: 'bg-violet-500 text-white' };
+    return null;
+}
 
-                // Снимаем блокировку после анимации
-                setTimeout(() => {
-                    currentSlide.classList.remove('exit');
-                    isTransitioning = false;
-                }, 600);
-            }
+// ========== 120 ВОПРОСОВ ==========
+const questionsDatabase = {
+    'angarsk': {
+        100: { q: 'На какой реке стоит город Ангарск?', a: 'На Ангаре (в междуречье Ангары и Китоя)' },
+        200: { q: 'Какой ангарский ДК носит имя, связанное с энергетикой?', a: 'ДК «Энергетик»' },
+        300: { q: 'Сколько микрорайонов (кварталов) насчитывает Ангарск?', a: 'Более 90 кварталов' },
+        400: { q: 'Какой аэропорт обслуживает Ангарск?', a: 'Иркутск (Международный аэропорт)' },
+        500: { q: 'Какое озеро в Ангарске — излюбленное место купания?', a: 'Озеро «Квадраты»' },
+        600: { q: 'Какой театр работает в Ангарске?', a: 'Ангарский театр-студия «Чудак»' },
+        700: { q: 'Как называется главная площадь старой части города?', a: 'Площадь Ленина' },
+        800: { q: 'Какой химический комбинат — градообразующее предприятие?', a: 'АНХК (Ангарская нефтехимическая компания)' },
+        900: { q: 'Какой музей есть в Ангарске?', a: 'Музей часов и Музей Победы' },
+        1000: { q: 'В каком году Ангарск получил статус города?', a: '30 мая 1951 года' }
+    },
+    'brawl': {
+        100: { q: 'Какая редкость у бравлера Шелли?', a: 'Начальный (стартовый)' },
+        200: { q: 'Какой ресурс дают за победы в ранговых матчах?', a: 'Ранговые очки и награды' },
+        300: { q: 'Сколько бойцов можно взять в командный бой 3×3?', a: 'Ровно 3 бравлера на команду' },
+        400: { q: 'Какой бравлер выпускает пчёл и мёд?', a: 'Би (Bea)' },
+        500: { q: 'Какая карта самая популярная в Brawl Stars?', a: '«Центр» / «Кристальный карьер»' },
+        600: { q: 'Кто такой Спайк в Brawl Stars?', a: 'Легендарный кактус-бравлер с колючими атаками' },
+        700: { q: 'Что даёт Brawl Pass?', a: 'Награды за прогресс сезона: монеты, гемы, бравлеры' },
+        800: { q: 'Как называется режим с мячом?', a: 'Броулбол (Brawl Ball)' },
+        900: { q: 'Какой бравлер может стать невидимым?', a: 'Леон' },
+        1000: { q: 'Сколько бравлеров за сезон обычно добавляют разработчики?', a: '2-3 новых бойца за сезон' }
+    },
+    'memes': {
+        100: { q: 'Что означает сленговое «кринж»?', a: 'Что-то неловкое, стыдное' },
+        200: { q: 'Кто такой «сигма» в мемах?', a: 'Сильный одиночка-мужчина, независимый' },
+        300: { q: 'Мем «Это фиаско, братан» — откуда фраза?', a: 'Из старого российского видео' },
+        400: { q: 'Что такое «рофл» в интернет-сленге?', a: 'Шутка, прикол, смех' },
+        500: { q: 'Мем «Ну ты и лох» — к кому чаще всего обращаются?', a: 'К другу в шутку' },
+        600: { q: 'Что означает «жиза»?', a: 'Жизненно, прямо в точку' },
+        700: { q: 'Кто такой «альтушка»?', a: 'Девушка в стиле альтернативной субкультуры' },
+        800: { q: 'Что такое «имба» в геймерском сленге?', a: 'Что-то несправедливо сильное, overpowered' },
+        900: { q: 'Что означает слово «вайб»?', a: 'Атмосфера, настроение, ощущение' },
+        1000: { q: 'Что значит «пон» в мемах?', a: 'Понял, осознал' }
+    },
+    'music': {
+        100: { q: 'Кто поёт «Позови меня с собой»?', a: 'Алла Пугачёва' },
+        200: { q: 'Какая группа поёт «Ты неси меня, река»?', a: 'Любэ' },
+        300: { q: 'Кто исполнил «Я русский»?', a: 'SHAMAN' },
+        400: { q: 'Кто поёт «Между нами тает лёд»?', a: 'Грибы' },
+        500: { q: 'Какая группа исполняет «Владимирский централ»?', a: 'Михаил Круг (сольный артист)' },
+        600: { q: 'Кто написал песню «Подмосковные вечера»?', a: 'Василий Соловьёв-Седой (музыка), Михаил Матусовский (слова)' },
+        700: { q: 'Какая группа исполняет «Как упоительны в России вечера»?', a: 'Белый орёл' },
+        800: { q: 'Кто поёт «Матушка»?', a: 'Татьяна Куртукова' },
+        900: { q: 'Кто исполнил песню «Группа крови»?', a: 'Виктор Цой (группа «Кино»)' },
+        1000: { q: 'Кто такой Егор Летов?', a: 'Лидер группы «Гражданская оборона»' }
+    },
+    'youtube': {
+        100: { q: 'Какой российский YouTube-канал посвящён авто?', a: 'Академия Дрифта / CarCoach' },
+        200: { q: 'Кто ведёт канал «Уэльбэк»?', a: 'Мультипликатор-аниматор' },
+        300: { q: 'Какой канал делает обзоры фильмов?', a: 'Кинопоиск / BadComedian' },
+        400: { q: 'Кто такой «Кузьма» на YouTube?', a: 'Стример / видеоблогер' },
+        500: { q: 'Какой канал делает кулинарные шоу?', a: 'Кухня наизнанку / Лазерсон' },
+        600: { q: 'Кто ведёт «Что было дальше?»?', a: 'LABELCOM' },
+        700: { q: 'Кто такой Дружко?', a: 'Шоумен Сергей Дружко' },
+        800: { q: 'Какой канал делает научпоп-видео?', a: 'Улица Шкловского / ТОПЛЕС' },
+        900: { q: 'Кто ведёт канал «Wylsacom»?', a: 'Валентин Петухов' },
+        1000: { q: 'Какой российский ютубер №1 по подписчикам в 2026?', a: 'Влад Бумага (A4)' }
+    },
+    'words': {
+        100: { q: 'Собери слово: ОМД', a: 'ДОМ' },
+        200: { q: 'Собери слово: НОЛС', a: 'СЛОН' },
+        300: { q: 'Собери слово: НИГАК', a: 'КНИГА' },
+        400: { q: 'Собери слово: КАБАСО', a: 'СОБАКА' },
+        500: { q: 'Собери слово: КОШКАА', a: 'КОШКА' },
+        600: { q: 'Собери слово: ОРЕХБ', a: 'ОБРЕХ' },
+        700: { q: 'Собери слово: МОРЕК', a: 'КОРМЕ' },
+        800: { q: 'Собери слово: ТАРЕЛКА', a: 'ТАРЕЛКА' },
+        900: { q: 'Собери слово: ЛАМПАЧОК', a: 'ЛАМПОЧКА' },
+        1000: { q: 'Собери слово: ТЕЛЕФОН', a: 'ТЕЛЕФОН' }
+    },
+    'movies': {
+        100: { q: 'Кто снял «Иронию судьбы»?', a: 'Эльдар Рязанов' },
+        200: { q: 'Как зовут главного героя «Брата»?', a: 'Данила Багров' },
+        300: { q: 'Какой фильм снимался в Крыму и стал хитом 2024?', a: '«Лёд 3»' },
+        400: { q: 'Кто сыграл Штирлица в «Семнадцати мгновениях весны»?', a: 'Вячеслав Тихонов' },
+        500: { q: 'Какой российский сериал про ментов стал классикой?', a: '«Улицы разбитых фонарей»' },
+        600: { q: 'Кто режиссёр фильма «Москва слезам не верит»?', a: 'Владимир Меньшов' },
+        700: { q: 'Какой фильм получил «Оскар» в 2024 от России?', a: 'Никакой (не было номинации)' },
+        800: { q: 'Кто сыграл Воланда в сериале «Мастер и Маргарита» 2024?', a: 'Аугуст Диль' },
+        900: { q: 'Кто автор романа-первоисточника «Мастер и Маргарита»?', a: 'Михаил Булгаков' },
+        1000: { q: 'Какой российский сериал про хакеров вышел в 2025?', a: '«Слово пацана» / «Хакер»' }
+    },
+    'space': {
+        100: { q: 'Сколько планет в Солнечной системе?', a: '8 планет' },
+        200: { q: 'Какой спутник у Земли?', a: 'Луна' },
+        300: { q: 'Кто первым вышел в открытый космос?', a: 'Алексей Леонов' },
+        400: { q: 'Как называется ближайшая к нам галактика?', a: 'Андромеда (2,5 млн св. лет)' },
+        500: { q: 'Что такое «красное смещение»?', a: 'Удаление галактик друг от друга' },
+        600: { q: 'Какая самая горячая планета в Солнечной системе?', a: 'Венера (около 470°C)' },
+        700: { q: 'Что такое световой год?', a: 'Расстояние, которое свет проходит за год (~9,46 трлн км)' },
+        800: { q: 'Как называется первая ступень ракеты SpaceX?', a: 'Super Heavy (для Starship)' },
+        900: { q: 'Сколько лететь до Марса?', a: '6-9 месяцев' },
+        1000: { q: 'Что такое «тёмная материя»?', a: 'Невидимое вещество, влияющее на гравитацию' }
+    },
+    'food': {
+        100: { q: 'Из чего делают борщ?', a: 'Свёкла, капуста, мясо, картофель, морковь' },
+        200: { q: 'Что такое «сырники»?', a: 'Творожные оладьи' },
+        300: { q: 'Из чего делают пельмени?', a: 'Тесто + фарш (обычно свино-говяжий)' },
+        400: { q: 'Что такое «Оливье»?', a: 'Салат из варёных овощей, мяса и майонеза' },
+        500: { q: 'Какая рыба — символ Нового года в России?', a: 'Селёдка (под шубой)' },
+        600: { q: 'Что такое «сельдь под шубой»?', a: 'Слоёный салат с селёдкой, картошкой, морковью, свёклой' },
+        700: { q: 'Из чего делают мороженое «пломбир»?', a: 'Молоко, сливки, сахар, яйца' },
+        800: { q: 'Какая самая популярная крупа в России?', a: 'Гречка' },
+        900: { q: 'Что такое «сгущёнка»?', a: 'Сгущённое молоко с сахаром' },
+        1000: { q: 'Какой напиток готовят из берёзового сока?', a: 'Квас / берёзовый сок' }
+    },
+    'games': {
+        100: { q: 'Сколько игроков в команде в CS?', a: '5 игроков' },
+        200: { q: 'Какая студия сделала «Ведьмака 3»?', a: 'CD Projekt RED' },
+        300: { q: 'Что означает «РПГ» в играх?', a: 'Ролевая игра (Role-Playing Game)' },
+        400: { q: 'В какой игре есть персонаж Кратос?', a: 'God of War' },
+        500: { q: 'Как называется главный киберспортивный турнир по Dota 2?', a: 'The International (TI)' },
+        600: { q: 'Кто такой «нуб» в играх?', a: 'Новичок, неопытный игрок' },
+        700: { q: 'Что такое «тиммейт»?', a: 'Сокомандник, товарищ по команде' },
+        800: { q: 'Какая игра самая продаваемая в истории?', a: 'Minecraft' },
+        900: { q: 'Что такое «фритуплей»?', a: 'Бесплатная игра с микротранзакциями' },
+        1000: { q: 'Кто такой «читер»?', a: 'Игрок, использующий сторонние программы' }
+    },
+    'anime': {
+        100: { q: 'Какой аниме-сериал про пиратов самый длинный?', a: 'One Piece («Ван-Пис»)' },
+        200: { q: 'Как зовут главного героя «Атаки титанов»?', a: 'Эрен Йегер' },
+        300: { q: 'Какая студия сняла «Унесённых призраками»?', a: 'Studio Ghibli' },
+        400: { q: 'Какой аниме-сериал про алхимиков-братьев?', a: '«Стальной алхимик»' },
+        500: { q: 'Кто написал мангу «Наруто»?', a: 'Масаси Кисимото' },
+        600: { q: 'Какой аниме-жанр про роботов?', a: 'Меха' },
+        700: { q: 'Что такое «исэкай»?', a: 'Жанр про попадание в другой мир' },
+        800: { q: 'Как зовут главного героя «Тетради смерти»?', a: 'Лайт Ягами' },
+        900: { q: 'Какой аниме-фильм получил «Оскар»?', a: '«Унесённые призраками» (2003)' },
+        1000: { q: 'Кто такой «отаку»?', a: 'Фанат аниме и манги' }
+    },
+    'money': {
+        100: { q: 'Какая валюта в России?', a: 'Российский рубль (₽)' },
+        200: { q: 'Сколько копеек в одном рубле?', a: '100 копеек' },
+        300: { q: 'Какая самая крупная купюра России?', a: '5000 рублей' },
+        400: { q: 'Что изображено на купюре 100 рублей?', a: 'Аполлон и Большой театр' },
+        500: { q: 'Что такое «инфляция»?', a: 'Обесценивание денег, рост цен' },
+        600: { q: 'Какая самая дорогая монета России?', a: '«Полтина» Петра I / редкие экземпляры' },
+        700: { q: 'Что такое «депозит»?', a: 'Вклад денег в банк под проценты' },
+        800: { q: 'Что такое «биткоин»?', a: 'Первая криптовалюта' },
+        900: { q: 'Что такое «дивиденды»?', a: 'Часть прибыли акционерам' },
+        1000: { q: 'Что такое «ипотека»?', a: 'Кредит на покупку недвижимости' }
+    }
+};
 
-            function updateButtons() {
-                prevBtn.classList.toggle('hidden', currentIndex === 0);
-                nextBtn.classList.toggle('hidden', currentIndex === totalSlides - 1);
-            }
+// ========== AUDIO ==========
+let audioCtx = null;
+function getAudioCtx() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+}
 
-            // ---- События кнопок ----
-            prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
-            nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
+function toggleAudioMute() {
+    isAudioMuted = !isAudioMuted;
+    const icon = document.getElementById('mute-icon');
+    icon.className = isAudioMuted
+        ? 'fa-solid fa-volume-xmark text-rose-400 text-[10px] sm:text-xs'
+        : 'fa-solid fa-volume-high text-neo-cyan text-[10px] sm:text-xs';
+}
 
-            // ---- Свайп (touch) ----
-            let touchStartX = 0;
-            let touchEndX = 0;
-            sliderWrap.addEventListener('touchstart', (e) => {
-                touchStartX = e.changedTouches[0].screenX;
-            }, { passive: true });
-            sliderWrap.addEventListener('touchend', (e) => {
-                touchEndX = e.changedTouches[0].screenX;
-                const diff = touchStartX - touchEndX;
-                if (Math.abs(diff) > 40) {
-                    if (diff > 0 && currentIndex < totalSlides - 1) goToSlide(currentIndex + 1);
-                    else if (diff < 0 && currentIndex > 0) goToSlide(currentIndex - 1);
-                }
-            }, { passive: true });
-
-            // ---- Particles ----
-            (function initParticles() {
-                const container = document.getElementById('particles');
-                const count = 30;
-                for (let i = 0; i < count; i++) {
-                    const p = document.createElement('div');
-                    p.className = 'particle';
-                    const size = 2 + Math.random() * 4;
-                    p.style.width = size + 'px';
-                    p.style.height = size + 'px';
-                    p.style.left = Math.random() * 100 + '%';
-                    p.style.animationDuration = 15 + Math.random() * 25 + 's';
-                    p.style.animationDelay = Math.random() * 20 + 's';
-                    p.style.opacity = 0.1 + Math.random() * 0.3;
-                    p.style.background = Math.random() > 0.5 ?
-                        'rgba(255, 180, 70, 0.25)' :
-                        'rgba(255, 75, 100, 0.2)';
-                    container.appendChild(p);
-                }
-            })();
-
-            // ---- Состояния ----
-            let state = 0; // 0 = envelope, 1 = big letter, 2 = slider
-
-            // ---- 1. Открытие конверта ----
-            function openEnvelope() {
-                if (state !== 0) return;
-                state = 1;
-                flap.classList.add('open');
-                envelope.classList.add('glow');
-                hint.classList.add('hidden');
-
-                setTimeout(() => {
-                    envelopeWrap.classList.add('fly-away');
-                    bigLetter.classList.add('show');
-                }, 600);
-            }
-
-            // ---- 2. Переход от письма к слайдеру ----
-            function goToSlider() {
-                if (state !== 1) return;
-                state = 2;
-                bigLetter.classList.remove('show');
-                bigLetter.style.transition = 'all 0.5s ease';
-                bigLetter.style.opacity = '0';
-                bigLetter.style.transform = 'translate(-50%, -50%) scale(0.9) rotate(3deg)';
-
-                setTimeout(() => {
-                    bigLetter.style.display = 'none';
-                    sliderWrap.classList.add('active');
-                    // активируем первый слайд (уже active по умолчанию)
-                    slides.forEach((s, i) => {
-                        s.classList.toggle('active', i === 0);
-                        s.classList.remove('exit');
-                    });
-                    document.querySelectorAll('.dot').forEach((d, i) => {
-                        d.classList.toggle('active', i === 0);
-                    });
-                    currentIndex = 0;
-                    updateButtons();
-                }, 500);
-            }
-
-            // ---- Events ----
-            envelope.addEventListener('click', openEnvelope);
-            envelope.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                openEnvelope();
-            }, { passive: false });
-
-            arrowBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                goToSlider();
+function playSound(type) {
+    if (isAudioMuted) return;
+    try {
+        const ctx = getAudioCtx();
+        const now = ctx.currentTime;
+        if (type === 'click') {
+            const o = ctx.createOscillator(), g = ctx.createGain();
+            o.connect(g); g.connect(ctx.destination);
+            o.frequency.setValueAtTime(500, now);
+            o.frequency.exponentialRampToValueAtTime(900, now + 0.04);
+            g.gain.setValueAtTime(0.05, now);
+            g.gain.linearRampToValueAtTime(0.01, now + 0.04);
+            o.start(now); o.stop(now + 0.04);
+        } else if (type === 'reveal') {
+            const o = ctx.createOscillator(), g = ctx.createGain();
+            o.connect(g); g.connect(ctx.destination);
+            o.type = 'triangle';
+            o.frequency.setValueAtTime(400, now);
+            o.frequency.exponentialRampToValueAtTime(700, now + 0.1);
+            g.gain.setValueAtTime(0.08, now);
+            g.gain.linearRampToValueAtTime(0.01, now + 0.1);
+            o.start(now); o.stop(now + 0.1);
+        } else if (type === 'correct') {
+            [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
+                const o = ctx.createOscillator(), g = ctx.createGain();
+                o.connect(g); g.connect(ctx.destination);
+                o.frequency.setValueAtTime(f, now + i * 0.05);
+                g.gain.setValueAtTime(0.07, now + i * 0.05);
+                g.gain.linearRampToValueAtTime(0.01, now + i * 0.05 + 0.12);
+                o.start(now + i * 0.05); o.stop(now + i * 0.05 + 0.12);
             });
-            arrowBtn.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                goToSlider();
-            }, { passive: false });
-
-            // Keyboard
-            envelope.setAttribute('tabindex', '0');
-            envelope.setAttribute('role', 'button');
-            envelope.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    openEnvelope();
-                }
+        } else if (type === 'wrong') {
+            const o = ctx.createOscillator(), g = ctx.createGain();
+            o.connect(g); g.connect(ctx.destination);
+            o.type = 'sawtooth';
+            o.frequency.setValueAtTime(220, now);
+            o.frequency.linearRampToValueAtTime(80, now + 0.18);
+            g.gain.setValueAtTime(0.08, now);
+            g.gain.linearRampToValueAtTime(0.01, now + 0.18);
+            o.start(now); o.stop(now + 0.18);
+        } else if (type === 'win') {
+            [440, 554.37, 659.25, 880, 1046.50].forEach((f, i) => {
+                const o = ctx.createOscillator(), g = ctx.createGain();
+                o.connect(g); g.connect(ctx.destination);
+                o.type = 'triangle';
+                o.frequency.setValueAtTime(f, now + i * 0.07);
+                g.gain.setValueAtTime(0.1, now + i * 0.07);
+                g.gain.linearRampToValueAtTime(0.01, now + i * 0.07 + 0.2);
+                o.start(now + i * 0.07); o.stop(now + i * 0.07 + 0.2);
             });
-            arrowBtn.setAttribute('tabindex', '0');
-            arrowBtn.setAttribute('role', 'button');
-            arrowBtn.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    goToSlider();
-                }
-            });
+        } else if (type === 'spam') {
+            for (let i = 0; i < 8; i++) {
+                const o = ctx.createOscillator(), g = ctx.createGain();
+                o.connect(g); g.connect(ctx.destination);
+                o.type = i % 2 === 0 ? 'square' : 'sawtooth';
+                const freq = 200 + Math.random() * 1400;
+                o.frequency.setValueAtTime(freq, now + i * 0.09);
+                g.gain.setValueAtTime(0.12, now + i * 0.09);
+                g.gain.linearRampToValueAtTime(0.01, now + i * 0.09 + 0.08);
+                o.start(now + i * 0.09);
+                o.stop(now + i * 0.09 + 0.08);
+            }
+            const o2 = ctx.createOscillator(), g2 = ctx.createGain();
+            o2.connect(g2); g2.connect(ctx.destination);
+            o2.type = 'square';
+            o2.frequency.setValueAtTime(2000, now + 0.72);
+            o2.frequency.exponentialRampToValueAtTime(300, now + 1.1);
+            g2.gain.setValueAtTime(0.13, now + 0.72);
+            g2.gain.linearRampToValueAtTime(0.01, now + 1.1);
+            o2.start(now + 0.72); o2.stop(now + 1.1);
+        }
+    } catch(e) {}
+}
 
-            // initial glow
-            setTimeout(() => envelope.classList.add('glow'), 300);
+function playSpamLoop() {
+    if (isAudioMuted) return;
+    if (spamLoopTimer) return;
+    playSound('spam');
+    spamLoopTimer = setInterval(() => {
+        if (document.getElementById('spam-ad-modal').classList.contains('hidden')) {
+            clearInterval(spamLoopTimer); spamLoopTimer = null; return;
+        }
+        playSound('spam');
+    }, 1300);
+}
 
-            // prevent overscroll
-            document.body.addEventListener('touchmove', (e) => {
-                if (!e.target.closest('.app')) e.preventDefault();
-            }, { passive: false });
+// ========== DENSITY (Плотность) ==========
+function applyDensity(mode) {
+    document.body.setAttribute('data-density', mode);
+    const icon = document.getElementById('density-icon');
+    if (mode === 'comfortable') {
+        icon.className = 'fa-solid fa-table-cells-large text-neo-gold text-[10px] sm:text-xs';
+    } else {
+        icon.className = 'fa-solid fa-table-cells text-neo-cyan text-[10px] sm:text-xs';
+    }
+    try { localStorage.setItem(DENSITY_KEY, mode); } catch(e) {}
+}
 
-            // инициализация кнопок
-            updateButtons();
+function toggleDensity() {
+    const current = document.body.getAttribute('data-density') || 'comfortable';
+    const next = current === 'comfortable' ? 'compact' : 'comfortable';
+    applyDensity(next);
+    playSound('click');
+}
 
-            console.log('💜 Приглашение с детальными описаниями загружено!');
+// ========== PERSISTENCE ==========
+function loadState() {
+    try {
+        const data = localStorage.getItem(STORAGE_KEY);
+        if (data) {
+            const parsed = JSON.parse(data);
+            if (parsed.playedQuestions) playedQuestions = new Set(parsed.playedQuestions);
+            if (parsed.players) players = parsed.players;
+            if (parsed.activePlayerIndex !== undefined) activePlayerIndex = parsed.activePlayerIndex;
+            if (parsed.blockedPlayerIndex !== undefined) blockedPlayerIndex = parsed.blockedPlayerIndex;
+            if (parsed.specialCells && Object.keys(parsed.specialCells).length > 0) {
+                specialCells = parsed.specialCells;
+            } else {
+                specialCells = generateSpecialCells();
+                saveState();
+            }
+        } else {
+            specialCells = generateSpecialCells();
+        }
+    } catch (e) {
+        specialCells = generateSpecialCells();
+    }
+    // Плотность
+    try {
+        const d = localStorage.getItem(DENSITY_KEY);
+        if (d) applyDensity(d);
+        else applyDensity('comfortable');
+    } catch(e) { applyDensity('comfortable'); }
+}
+
+function saveState() {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            playedQuestions: Array.from(playedQuestions),
+            players: players,
+            activePlayerIndex: activePlayerIndex,
+            blockedPlayerIndex: blockedPlayerIndex,
+            specialCells: specialCells
+        }));
+    } catch (e) {}
+}
+
+// ========== GRID ==========
+function initGrid() {
+    const masterGrid = document.getElementById('master-grid');
+    masterGrid.innerHTML = '';
+
+    categories.forEach(cat => {
+        const colDiv = document.createElement('div');
+        colDiv.className = 'flex flex-col gap-1 h-full overflow-hidden';
+
+        const headerDiv = document.createElement('div');
+        headerDiv.className = 'text-center pb-1.5 border-b border-white/5 shrink-0';
+        headerDiv.innerHTML = `
+            <div class="text-[7px] sm:text-[8px] md:text-[9px] font-black ${cat.color} uppercase font-display leading-tight flex items-center justify-center gap-1">
+                <i class="fa-solid ${cat.icon} text-[6px] sm:text-[7px]"></i>
+                <span class="truncate">${cat.name}</span>
+            </div>`;
+        colDiv.appendChild(headerDiv);
+
+        const tiersDiv = document.createElement('div');
+        tiersDiv.className = 'flex flex-col gap-1 overflow-y-auto no-scrollbar flex-1';
+
+        pointValues.forEach(points => {
+            const key = `${cat.id}-${points}`;
+            const isPlayed = playedQuestions.has(key);
+
+            const btn = document.createElement('button');
+            btn.className = `cell text-neo-gold font-black rounded-lg flex items-center justify-center font-mono relative shrink-0 ${isPlayed ? 'cell-done' : ''}`;
+            btn.dataset.key = key;
+
+            if (isPlayed) {
+                btn.innerHTML = `<i class="fa-solid fa-check text-emerald-400/60 text-[10px] sm:text-xs"></i>`;
+            } else {
+                btn.innerHTML = `<span class="text-neo-gold font-mono font-black glow-text leading-none">${points}</span>`;
+            }
+
+            btn.onclick = () => openQuestion(btn, key, cat.id, cat.name, points);
+            tiersDiv.appendChild(btn);
+        });
+
+        colDiv.appendChild(tiersDiv);
+        masterGrid.appendChild(colDiv);
+    });
+
+    updateTurnUI();
+}
+
+// ========== TURN ==========
+function updateTurnUI() {
+    players.forEach((p, idx) => {
+        const card = document.getElementById(`player-card-${idx}`);
+        const badge = document.getElementById(`turn-badge-${idx}`);
+        document.getElementById(`score-${idx}`).innerText = p.score;
+
+        if (idx === activePlayerIndex) {
+            card.className = `glass rounded-2xl px-3 py-2 sm:px-4 sm:py-2.5 flex items-center justify-between relative transition-all pulse-glow`;
+            card.style.borderColor = idx === 0 ? 'rgba(255, 92, 157, 0.6)' : 'rgba(34, 211, 238, 0.6)';
+            badge.classList.remove('hidden');
+        } else {
+            card.className = 'glass rounded-2xl px-3 py-2 sm:px-4 sm:py-2.5 flex items-center justify-between relative transition-all opacity-50';
+            card.style.borderColor = '';
+            badge.classList.add('hidden');
+        }
+    });
+
+    const statusLine = document.getElementById('turn-status-line');
+    let statusText = `Ход: <strong class="text-neo-gold">${players[activePlayerIndex].name}</strong>`;
+    if (blockedPlayerIndex !== null) {
+        statusText += ` • 🚫 <span class="text-rose-400">${players[blockedPlayerIndex].name} пропускает</span>`;
+    }
+    statusLine.innerHTML = statusText;
+
+    updateScoreButtonStates();
+}
+
+function updateScoreButtonStates() {
+    if (!currentQuestion) return;
+    for (let i = 0; i < 2; i++) {
+        const block = document.getElementById(`score-block-${i}`);
+        const tag = document.getElementById(`turn-tag-${i}`);
+        if (!block || !tag) continue;
+
+        if (i === activePlayerIndex) {
+            block.classList.remove('score-block-locked');
+            block.classList.add('score-block-active');
+            tag.classList.remove('hidden');
+        } else {
+            block.classList.add('score-block-locked');
+            block.classList.remove('score-block-active');
+            tag.classList.add('hidden');
+        }
+    }
+}
+
+// ========== QUESTION MODAL ==========
+function openQuestion(btnEl, key, catId, catName, points) {
+    if (playedQuestions.has(key) || btnEl.classList.contains('cell-done')) return;
+
+    playSound('click');
+    activeCellElement = btnEl;
+    activeCellKey = key;
+
+    const diffInfo = getDifficulty(points);
+    const special = getSpecialInfo(key);
+
+    currentQuestion = {
+        key: key, catId: catId, category: catName,
+        points: parseInt(points),
+        data: questionsDatabase[catId][points],
+        special: special ? specialCells[key].type : null
+    };
+
+    document.getElementById('modal-category').innerText = catName;
+    document.getElementById('modal-points').innerText = `${points} pts`;
+    document.getElementById('modal-difficulty-hint').innerText = diffInfo.label;
+    document.getElementById('modal-player-turn').innerText = players[activePlayerIndex].name;
+    document.getElementById('modal-question-text').innerText = currentQuestion.data.q;
+    document.getElementById('modal-answer-text').innerText = currentQuestion.data.a;
+
+    const specialBadge = document.getElementById('modal-special');
+    if (special) {
+        specialBadge.classList.remove('hidden');
+        specialBadge.className = `text-[8px] sm:text-[9px] font-black px-2 py-1 rounded-lg font-display ${special.badgeCls}`;
+        specialBadge.innerText = `${special.emoji} ${special.label}`;
+    } else {
+        specialBadge.classList.add('hidden');
+    }
+
+    const warnBox = document.getElementById('modal-special-warning');
+    if (currentQuestion.special === 'double') {
+        warnBox.className = 'mt-3 w-full p-3 rounded-2xl text-center border-2 border-blue-500/60 bg-blue-950/60 text-blue-200';
+        warnBox.innerHTML = `<div class="text-[9px] font-black uppercase tracking-wider mb-1">💎 ×2 УДВОЕНИЕ</div><div class="text-xs font-bold">Верно → <strong class="text-white">+${points * 2}</strong><br>Ошибка → <strong class="text-rose-300">-${points}</strong></div>`;
+        warnBox.classList.remove('hidden');
+    } else if (currentQuestion.special === 'trap') {
+        warnBox.className = 'mt-3 w-full p-3 rounded-2xl text-center border-2 border-rose-500/60 bg-rose-950/60 text-rose-200';
+        warnBox.innerHTML = `<div class="text-[9px] font-black uppercase tracking-wider mb-1">⚠️ ЛОВУШКА</div><div class="text-xs font-bold">Верно → <strong class="text-white">+${points}</strong><br>Ошибка → <strong class="text-rose-300">-${points * 2}</strong></div>`;
+        warnBox.classList.remove('hidden');
+    } else if (currentQuestion.special === 'spam_ad') {
+        warnBox.className = 'mt-3 w-full p-3 rounded-2xl text-center border-2 border-yellow-500/60 bg-yellow-950/60 text-yellow-200';
+        warnBox.innerHTML = `<div class="text-[9px] font-black uppercase tracking-wider mb-1">🎰 РЕКЛАМА</div><div class="text-xs font-bold">СЮРПРИЗ! Нажми «Показать ответ» 💎</div>`;
+        warnBox.classList.remove('hidden');
+    } else if (currentQuestion.special === 'jackpot') {
+        warnBox.className = 'mt-3 w-full p-3 rounded-2xl text-center border-2 border-fuchsia-500/60 bg-fuchsia-950/60 text-fuchsia-200';
+        warnBox.innerHTML = `<div class="text-[9px] font-black uppercase tracking-wider mb-1">🎁 ДЖЕКПОТ ×5</div><div class="text-xs font-bold">Верно → <strong class="text-white">+${points * 5}</strong>!!!<br>Ошибка → <strong class="text-rose-300">-${points}</strong></div>`;
+        warnBox.classList.remove('hidden');
+    } else if (currentQuestion.special === 'swap') {
+        warnBox.className = 'mt-3 w-full p-3 rounded-2xl text-center border-2 border-orange-500/60 bg-orange-950/60 text-orange-200';
+        warnBox.innerHTML = `<div class="text-[9px] font-black uppercase tracking-wider mb-1">🔄 ОБМЕН ОЧКАМИ</div><div class="text-xs font-bold">Игроки автоматически меняются счетами!</div>`;
+        warnBox.classList.remove('hidden');
+    } else if (currentQuestion.special === 'block') {
+        warnBox.className = 'mt-3 w-full p-3 rounded-2xl text-center border-2 border-slate-500/60 bg-slate-800/60 text-slate-200';
+        warnBox.innerHTML = `<div class="text-[9px] font-black uppercase tracking-wider mb-1">🚫 БЛОКИРОВКА</div><div class="text-xs font-bold">Соперник пропустит следующий ход!</div>`;
+        warnBox.classList.remove('hidden');
+    } else if (currentQuestion.special === 'karaoke') {
+        warnBox.className = 'mt-3 w-full p-3 rounded-2xl text-center border-2 border-violet-500/60 bg-violet-950/60 text-violet-200';
+        warnBox.innerHTML = `<div class="text-[9px] font-black uppercase tracking-wider mb-1">🎵 КАРАОКЕ</div><div class="text-xs font-bold">Игрок должен СПЕТЬ строчку! Ведущий оценивает.</div>`;
+        warnBox.classList.remove('hidden');
+    } else {
+        warnBox.classList.add('hidden');
+    }
+
+    updateScoreButtonLabels();
+
+    document.getElementById('modal-answer-box').classList.add('hidden');
+    document.getElementById('action-reveal-container').classList.remove('hidden');
+    document.getElementById('question-modal').classList.remove('hidden');
+
+    updateScoreButtonStates();
+}
+
+function updateScoreButtonLabels() {
+    const p = currentQuestion.points;
+    const s = currentQuestion.special;
+    let plusVal = p, minusVal = p;
+    if (s === 'double') { plusVal = p * 2; minusVal = p; }
+    else if (s === 'trap') { plusVal = p; minusVal = p * 2; }
+    else if (s === 'jackpot') { plusVal = p * 5; minusVal = p; }
+
+    document.getElementById('btn-kira-plus').innerText = `+${plusVal}`;
+    document.getElementById('btn-kira-minus').innerText = `-${minusVal}`;
+    document.getElementById('btn-vitya-plus').innerText = `+${plusVal}`;
+    document.getElementById('btn-vitya-minus').innerText = `-${minusVal}`;
+}
+
+function revealAnswer() {
+    playSound('reveal');
+    document.getElementById('modal-answer-box').classList.remove('hidden');
+    document.getElementById('action-reveal-container').classList.add('hidden');
+
+    if (currentQuestion && currentQuestion.special === 'spam_ad') {
+        openSpamAd();
+    }
+}
+
+// ========== SPAM AD ==========
+function openSpamAd() {
+    document.getElementById('spam-ad-modal').classList.remove('hidden');
+    playSpamLoop();
+}
+
+function closeSpamAd() {
+    document.getElementById('spam-ad-modal').classList.add('hidden');
+    if (spamLoopTimer) { clearInterval(spamLoopTimer); spamLoopTimer = null; }
+}
+
+// ========== SCORING ==========
+function scorePlayer(playerIdx, isCorrect) {
+    if (!currentQuestion) return;
+    if (playerIdx !== activePlayerIndex) { playSound('wrong'); return; }
+
+    const p = currentQuestion.points;
+    const s = currentQuestion.special;
+
+    if (s === 'swap') {
+        const temp = players[0].score;
+        players[0].score = players[1].score;
+        players[1].score = temp;
+        playSound('correct');
+        finishTurn(false);
+        return;
+    }
+
+    if (s === 'block') {
+        blockedPlayerIndex = activePlayerIndex === 0 ? 1 : 0;
+        playSound('correct');
+        finishTurn(false);
+        return;
+    }
+
+    let delta = 0;
+    if (s === 'double') delta = isCorrect ? p * 2 : -p;
+    else if (s === 'trap') delta = isCorrect ? p : -p * 2;
+    else if (s === 'jackpot') delta = isCorrect ? p * 5 : -p;
+    else delta = isCorrect ? p : -p;
+
+    if (!isCorrect && Math.abs(delta) >= 400) {
+        if (!confirm(`Списать ${Math.abs(delta)} очков у ${players[playerIdx].name}?`)) return;
+    }
+
+    if (isCorrect) playSound('correct');
+    else playSound('wrong');
+
+    players[playerIdx].score += delta;
+    const keepTurn = isCorrect && s !== 'karaoke';
+    finishTurn(!keepTurn);
+}
+
+function finishTurn(switchPlayer) {
+    if (activeCellKey) playedQuestions.add(activeCellKey);
+    if (activeCellElement) {
+        activeCellElement.classList.add('cell-done');
+        activeCellElement.innerHTML = `<i class="fa-solid fa-check text-emerald-400/60 text-xs"></i>`;
+    }
+
+    if (switchPlayer) {
+        let next = activePlayerIndex === 0 ? 1 : 0;
+        if (blockedPlayerIndex !== null && next === blockedPlayerIndex) {
+            blockedPlayerIndex = null;
+            next = next === 0 ? 1 : 0;
+        }
+        activePlayerIndex = next;
+    }
+
+    saveState();
+    updateTurnUI();
+    closeQuestionModal(true);
+}
+
+function closeQuestionModal(skipDisable = false) {
+    if (activeCellKey && !skipDisable) {
+        playedQuestions.add(activeCellKey);
+        if (activeCellElement) {
+            activeCellElement.classList.add('cell-done');
+            activeCellElement.innerHTML = `<i class="fa-solid fa-check text-emerald-400/60 text-xs"></i>`;
+        }
+        let next = activePlayerIndex === 0 ? 1 : 0;
+        if (blockedPlayerIndex !== null && next === blockedPlayerIndex) {
+            blockedPlayerIndex = null;
+            next = next === 0 ? 1 : 0;
+        }
+        activePlayerIndex = next;
+        saveState();
+        updateTurnUI();
+    }
+
+    document.getElementById('question-modal').classList.add('hidden');
+    document.getElementById('modal-special-warning').classList.add('hidden');
+    document.getElementById('modal-special').classList.add('hidden');
+
+    activeCellElement = null;
+    activeCellKey = null;
+    currentQuestion = null;
+
+    checkGameCompletion();
+}
+
+function closeModal(modalId) { document.getElementById(modalId).classList.add('hidden'); }
+
+function checkGameCompletion() {
+    const total = categories.length * pointValues.length;
+    if (playedQuestions.size >= total) {
+        setTimeout(() => showWinnerModal(), 400);
+    }
+}
+
+function showWinnerModal() {
+    playSound('win');
+    let winnerText = "", winnerScoreText = "";
+    if (players[0].score > players[1].score) {
+        winnerText = "👑 Побеждает Кира!";
+        winnerScoreText = `С результатом ${players[0].score} очков!`;
+    } else if (players[1].score > players[0].score) {
+        winnerText = "👑 Побеждает Витя!";
+        winnerScoreText = `С результатом ${players[1].score} очков!`;
+    } else {
+        winnerText = "🤝 Абсолютная Ничья!";
+        winnerScoreText = `Оба набрали по ${players[0].score} очков!`;
+    }
+    document.getElementById('winner-name').innerText = winnerText;
+    document.getElementById('winner-score').innerText = winnerScoreText;
+    document.getElementById('final-score-0').innerText = players[0].score;
+    document.getElementById('final-score-1').innerText = players[1].score;
+    document.getElementById('winner-modal').classList.remove('hidden');
+
+    if (window.confetti) {
+        const duration = 3500, end = Date.now() + duration;
+        (function frame() {
+            confetti({ particleCount: 6, angle: 60, spread: 55, origin: { x: 0 },
+                colors: ['#7C5CFF', '#FF5C9D', '#22D3EE', '#FFB547'] });
+            confetti({ particleCount: 6, angle: 120, spread: 55, origin: { x: 1 },
+                colors: ['#7C5CFF', '#FF5C9D', '#22D3EE', '#FFB547'] });
+            if (Date.now() < end) requestAnimationFrame(frame);
         })();
-    </script>
+    }
+}
 
+function resetGame(confirmReset = false) {
+    if (confirmReset && !confirm("Сбросить игру? Позиции спецячеек перемешаются!")) return;
+    playSound('click');
+    players[0].score = 0;
+    players[1].score = 0;
+    activePlayerIndex = 0;
+    blockedPlayerIndex = null;
+    playedQuestions.clear();
+    specialCells = generateSpecialCells();
+    localStorage.removeItem(STORAGE_KEY);
+    closeSpamAd();
+    saveState();
+    initGrid();
+}
+
+// ========== ORIENTATION ==========
+function handleOrientation() {
+    // Небольшая задержка для Safari, чтобы пересчитал размеры
+    document.documentElement.style.setProperty('--vh', window.innerHeight * 0.01 + 'px');
+}
+window.addEventListener('resize', handleOrientation);
+window.addEventListener('orientationchange', () => setTimeout(handleOrientation, 200));
+
+window.onload = function() {
+    loadState();
+    initGrid();
+    handleOrientation();
+};
+</script>
 </body>
 </html>
