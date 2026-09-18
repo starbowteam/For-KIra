@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>СВОЯ ИГРА • NEO-BRUTAL</title>
+    <title>СВОЯ ИГРА • PIXEL EDITION</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --sat: env(safe-area-inset-top, 0px);
@@ -15,205 +15,941 @@
             --sal: env(safe-area-inset-left, 0px);
             --sar: env(safe-area-inset-right, 0px);
             --black: #0A0A0A;
-            --cream: #FFF5DC;
+            --cream: #FFF8E7;
             --white: #FFFFFF;
-            --pink: #FF3D8B;
-            --yellow: #FFE24B;
-            --cyan: #00CFFF;
+            --pink: #FF5C8A;
+            --yellow: #FFD93D;
+            --cyan: #4ECDC4;
             --lime: #A8FF3D;
-            --orange: #FF7A2F;
+            --orange: #FF8C42;
             --purple: #A855F7;
             --green: #22C55E;
             --red: #FF3D3D;
+            --blue: #3B82F6;
         }
-        * { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; -webkit-user-drag: none; }
-        html, body { touch-action: manipulation; -webkit-text-size-adjust: 100%; }
+        * { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; -webkit-user-drag: none; box-sizing: border-box; }
+        html, body { touch-action: manipulation; -webkit-text-size-adjust: 100%; margin: 0; }
+        
         body {
             background: var(--cream);
             background-image:
-                radial-gradient(circle at 12% 15%, rgba(255, 61, 139, 0.12), transparent 35%),
-                radial-gradient(circle at 88% 85%, rgba(0, 207, 255, 0.12), transparent 35%),
-                radial-gradient(circle at 50% 50%, rgba(255, 226, 75, 0.08), transparent 50%);
+                radial-gradient(circle at 12% 15%, rgba(255, 92, 138, 0.10), transparent 35%),
+                radial-gradient(circle at 88% 85%, rgba(78, 205, 196, 0.10), transparent 35%),
+                radial-gradient(circle at 50% 50%, rgba(255, 217, 61, 0.08), transparent 50%);
             background-attachment: fixed;
             color: var(--black);
             font-family: 'Space Grotesk', sans-serif;
-            height: 100vh; height: 100dvh; height: -webkit-fill-available;
+            height: 100vh;
+            height: 100dvh;
+            height: -webkit-fill-available;
             overflow: hidden;
             padding: max(6px, var(--sat)) max(6px, var(--sar)) max(6px, var(--sab)) max(6px, var(--sal));
             -webkit-font-smoothing: antialiased;
+            display: flex;
+            flex-direction: column;
         }
-        .display { font-family: 'Archivo Black', sans-serif; letter-spacing: -0.02em; }
-        .brutal { background: var(--white); border: 3px solid var(--black); box-shadow: 6px 6px 0 var(--black); }
-        .brutal-sm { background: var(--white); border: 2px solid var(--black); box-shadow: 4px 4px 0 var(--black); }
-        .brutal-flat { background: var(--white); border: 3px solid var(--black); }
-        .brutal-btn { background: var(--white); border: 3px solid var(--black); box-shadow: 4px 4px 0 var(--black); transition: transform 0.08s ease, box-shadow 0.08s ease; cursor: pointer; }
-        .brutal-btn:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--black); }
-        @media (hover: hover) { .brutal-btn:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--black); } .brutal-btn:hover:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--black); } }
-        .turn-card { transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        .turn-card.active-kira { background: var(--pink); color: var(--white); transform: rotate(-1.5deg) scale(1.02); box-shadow: 8px 8px 0 var(--black); }
-        .turn-card.active-vitya { background: var(--cyan); transform: rotate(1.5deg) scale(1.02); box-shadow: 8px 8px 0 var(--black); }
-        .turn-card.inactive { background: var(--white); opacity: 0.55; }
-        .cell { position: relative; background: var(--white); border: 2px solid var(--black); box-shadow: 3px 3px 0 var(--black); transition: transform 0.08s ease, box-shadow 0.08s ease; overflow: hidden; min-height: 44px; cursor: pointer; font-family: 'Archivo Black', sans-serif; }
-        .cell:active:not(.cell-done) { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--black); }
-        @media (hover: hover) { .cell:hover:not(.cell-done) { background: var(--yellow); } }
-        .cell-done { opacity: 0.3; pointer-events: none; background: var(--cream); box-shadow: none; border-style: dashed; border-color: #999; }
-        .cat-header { border: 2px solid var(--black); box-shadow: 3px 3px 0 var(--black); font-family: 'Archivo Black', sans-serif; color: var(--black); padding: 4px 3px; text-align: center; font-size: 9px; line-height: 1.1; text-transform: uppercase; letter-spacing: -0.02em; font-weight: 900; }
-        .no-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-        .no-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .no-scrollbar::-webkit-scrollbar-thumb { background: var(--black); border-radius: 0; }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(10,10,10,0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(10,10,10,0.035) 1px, transparent 1px);
+            background-size: 20px 20px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        body > * { position: relative; z-index: 1; }
+
+        .display { font-family: 'Press Start 2P', monospace; letter-spacing: -0.02em; line-height: 1.2; }
+        .pixel { font-family: 'Pixelify Sans', sans-serif; letter-spacing: 0.01em; }
+
+        .brutal {
+            background: var(--white);
+            border: 3px solid var(--black);
+            box-shadow: 5px 5px 0 var(--black), 10px 10px 0 rgba(10,10,10,0.08);
+        }
+        .brutal-flat {
+            background: var(--white);
+            border: 3px solid var(--black);
+        }
+        .brutal-sm {
+            background: var(--white);
+            border: 2px solid var(--black);
+            box-shadow: 3px 3px 0 var(--black);
+        }
+
+        /* ========== HEADER ========== */
+        .top-header {
+            flex-shrink: 0;
+            width: 100%;
+            padding: 4px 4px 8px 4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        .brand-icon {
+            width: 44px; height: 44px;
+            background: var(--yellow);
+            border: 3px solid var(--black);
+            box-shadow: 4px 4px 0 var(--black);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+            transform: rotate(-4deg);
+            flex-shrink: 0;
+        }
+        .brand-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 11px;
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+        }
+        .brand-sub {
+            font-family: 'Pixelify Sans', sans-serif;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            opacity: 0.65;
+            margin-top: 2px;
+        }
+
+        .top-btn {
+            height: 40px;
+            min-width: 40px;
+            padding: 0 10px;
+            border: 3px solid var(--black);
+            box-shadow: 3px 3px 0 var(--black);
+            border-radius: 8px;
+            font-family: 'Pixelify Sans', sans-serif;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: transform 0.08s ease, box-shadow 0.08s ease;
+            color: var(--black);
+        }
+        .top-btn:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--black); }
+        @media (hover: hover) {
+            .top-btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--black); }
+            .top-btn:hover:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--black); }
+        }
+
+        /* ========== PLAYERS ========== */
+        .players-row {
+            flex-shrink: 0;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 0 4px 10px 4px;
+        }
+        .player-card {
+            background: var(--white);
+            border: 3px solid var(--black);
+            box-shadow: 5px 5px 0 var(--black);
+            border-radius: 12px;
+            padding: 8px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+        .player-card.active-kira {
+            background: var(--pink);
+            color: var(--white);
+            transform: rotate(-1.5deg) scale(1.02);
+            box-shadow: 7px 7px 0 var(--black);
+        }
+        .player-card.active-vitya {
+            background: var(--cyan);
+            transform: rotate(1.5deg) scale(1.02);
+            box-shadow: 7px 7px 0 var(--black);
+        }
+        .player-card.inactive { opacity: 0.55; }
+        .player-avatar {
+            width: 40px; height: 40px;
+            border-radius: 8px;
+            border: 2px solid var(--black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .player-name {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            letter-spacing: -0.03em;
+        }
+        .player-score {
+            font-family: 'Pixelify Sans', sans-serif;
+            font-weight: 700;
+            font-size: 26px;
+            line-height: 1;
+        }
+        .turn-badge {
+            font-family: 'Pixelify Sans', sans-serif;
+            font-weight: 700;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 2px;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        /* ========== STATUS LINE ========== */
+        .status-line-wrap {
+            flex-shrink: 0;
+            text-align: center;
+            padding-bottom: 8px;
+        }
+        .status-line {
+            display: inline-block;
+            padding: 5px 12px;
+            background: var(--white);
+            border: 2px solid var(--black);
+            box-shadow: 3px 3px 0 var(--black);
+            border-radius: 20px;
+            font-family: 'Pixelify Sans', sans-serif;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        /* ========== GRID ========== */
+        main {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 0 4px 8px 4px;
+            overflow: hidden;
+        }
+        .grid-wrap {
+            flex: 1;
+            min-height: 0;
+            background: var(--white);
+            border: 3px solid var(--black);
+            box-shadow: 5px 5px 0 var(--black);
+            border-radius: 16px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        #master-grid {
+            flex: 1;
+            min-height: 0;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-auto-rows: 1fr;
+            gap: 8px;
+            overflow-y: auto;
+        }
+
+        .cat-col {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            min-height: 0;
+        }
+        .cat-header {
+            flex-shrink: 0;
+            border: 2px solid var(--black);
+            box-shadow: 3px 3px 0 var(--black);
+            border-radius: 6px;
+            padding: 5px 6px;
+            text-align: center;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            line-height: 1.3;
+            text-transform: uppercase;
+            color: var(--black);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .tiers {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow-y: auto;
+        }
+
+        /* ========== CELLS ========== */
+        .cell {
+            background: var(--white);
+            border: 2px solid var(--black);
+            box-shadow: 3px 3px 0 var(--black);
+            border-radius: 6px;
+            min-height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.1s ease;
+            font-family: 'Pixelify Sans', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--black);
+            flex-shrink: 0;
+        }
+        .cell:active:not(.cell-done) {
+            transform: translate(3px, 3px);
+            box-shadow: 0 0 0 var(--black);
+        }
+        @media (hover: hover) {
+            .cell:hover:not(.cell-done) {
+                background: var(--yellow);
+                transform: translate(-1px, -1px);
+                box-shadow: 4px 4px 0 var(--black);
+            }
+            .cell:hover:not(.cell-done):active {
+                transform: translate(3px, 3px);
+                box-shadow: 0 0 0 var(--black);
+            }
+        }
+        .cell-done {
+            opacity: 0.28;
+            pointer-events: none;
+            background: var(--cream);
+            box-shadow: none;
+            border-style: dashed;
+            border-color: #999;
+            color: #999;
+        }
+
+        /* ========== DESKTOP HORIZONTAL STRIPS ========== */
+        @media (min-width: 1024px) {
+            #master-grid {
+                display: flex !important;
+                flex-direction: column;
+                gap: 5px;
+                overflow-y: hidden;
+            }
+            .cat-col {
+                flex: 1;
+                min-height: 0;
+                display: grid;
+                grid-template-columns: 150px repeat(10, 1fr);
+                gap: 5px;
+            }
+            .cat-header {
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                white-space: normal;
+                font-size: 7px;
+                line-height: 1.25;
+                text-align: center;
+                padding: 2px 4px;
+            }
+            .tiers {
+                display: contents !important;
+            }
+            .cell {
+                height: 100%;
+                min-height: 0;
+                font-size: 16px;
+            }
+        }
+        @media (min-width: 1600px) {
+            .cat-header { font-size: 8px; }
+            .cell { font-size: 18px; }
+        }
+
+        /* ========== TABLET ========== */
+        @media (min-width: 640px) and (max-width: 1023px) {
+            #master-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+            .cat-header { font-size: 8px; }
+            .cell { min-height: 44px; font-size: 16px; }
+        }
+        @media (min-width: 768px) and (max-width: 1023px) {
+            #master-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        /* ========== SMALL ========== */
+        @media (max-width: 480px) {
+            .brand-title { font-size: 9px; }
+            .brand-sub { font-size: 8px; }
+            .brand-icon { width: 38px; height: 38px; font-size: 15px; }
+            .top-btn { height: 36px; padding: 0 8px; font-size: 10px; }
+            .player-avatar { width: 34px; height: 34px; font-size: 14px; }
+            .player-name { font-size: 8px; }
+            .player-score { font-size: 22px; }
+            .cat-header { font-size: 7px; }
+            .cell { min-height: 36px; font-size: 13px; }
+        }
+
+        /* ========== SHORT SCREEN ========== */
+        @media (max-height: 600px) and (min-width: 1024px) {
+            .cat-header { font-size: 6px; }
+            .cell { font-size: 13px; }
+            .players-row { padding-bottom: 6px; }
+            .status-line-wrap { padding-bottom: 4px; }
+        }
+
+        /* ========== SCROLLBAR ========== */
+        .tiers::-webkit-scrollbar, #master-grid::-webkit-scrollbar { width: 5px; height: 5px; }
+        .tiers::-webkit-scrollbar-thumb, #master-grid::-webkit-scrollbar-thumb { background: var(--black); }
+        .tiers::-webkit-scrollbar-track, #master-grid::-webkit-scrollbar-track { background: transparent; }
+
+        /* ========== FOOTER ========== */
+        footer {
+            flex-shrink: 0;
+            padding: 4px 4px 0 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+        .reset-btn {
+            padding: 6px 12px;
+            background: var(--red);
+            color: var(--white);
+            border: 2px solid var(--black);
+            box-shadow: 3px 3px 0 var(--black);
+            border-radius: 8px;
+            font-family: 'Pixelify Sans', sans-serif;
+            font-weight: 700;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: transform 0.08s ease, box-shadow 0.08s ease;
+        }
+        .reset-btn:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--black); }
+        .footer-tag {
+            font-family: 'Pixelify Sans', sans-serif;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.5;
+        }
+
+        /* ========== BADGE ========== */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            border: 2px solid var(--black);
+            box-shadow: 2px 2px 0 var(--black);
+            padding: 3px 8px;
+            font-family: 'Pixelify Sans', sans-serif;
+            font-weight: 700;
+            font-size: 10px;
+            text-transform: uppercase;
+            color: var(--black);
+            border-radius: 4px;
+        }
+
+        /* ========== MODAL ========== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 10, 10, 0.7);
+            backdrop-filter: blur(6px);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            z-index: 50;
+        }
+        .modal-sheet {
+            background: var(--white);
+            border: 3px solid var(--black);
+            border-bottom: none;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -8px 0 var(--black);
+            width: 100%;
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 14px 16px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 95vh;
+            overflow-y: auto;
+            animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
         @keyframes slide-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .slide-up { animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes pop-in { 0% { transform: scale(0.5) rotate(-8deg); opacity: 0; } 70% { transform: scale(1.05) rotate(2deg); } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
-        .pop-in { animation: pop-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        @keyframes pop-in {
+            0% { transform: scale(0.5) rotate(-8deg); opacity: 0; }
+            70% { transform: scale(1.05) rotate(2deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        .pop-in { animation: pop-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
         @keyframes pop-big { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
         .pop-big { animation: pop-big 0.8s ease-in-out infinite; }
+
+        .modal-handle {
+            width: 60px; height: 5px;
+            background: var(--black);
+            border-radius: 4px;
+            margin: 0 auto 4px;
+        }
+        .modal-topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--black);
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .modal-body { padding: 10px 0; text-align: center; }
+        .modal-question {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 1.3;
+            margin: 12px 0;
+        }
+        .modal-answer {
+            background: var(--lime);
+            border: 3px solid var(--black);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: left;
+            margin-top: 12px;
+        }
+        .modal-answer-label {
+            font-family: 'Pixelify Sans', sans-serif;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .modal-answer-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            line-height: 1.35;
+        }
+        .warn-box {
+            border: 3px solid var(--black);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .warn-title {
+            font-family: 'Pixelify Sans', sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .warn-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .reveal-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--yellow);
+            border: 3px solid var(--black);
+            box-shadow: 4px 4px 0 var(--black);
+            border-radius: 10px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: transform 0.08s ease, box-shadow 0.08s ease;
+        }
+        .reveal-btn:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--black); }
+
+        .score-blocks {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .score-block {
+            background: var(--white);
+            border: 3px solid var(--black);
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
         .score-block-locked { opacity: 0.3; pointer-events: none; }
-        .score-block-active { background: var(--yellow) !important; animation: pop-big 1.2s ease-in-out infinite; }
-        .badge { display: inline-block; border: 2px solid var(--black); box-shadow: 2px 2px 0 var(--black); padding: 2px 8px; font-family: 'Archivo Black', sans-serif; font-size: 9px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--black); }
-        body[data-density="comfortable"] .cell { min-height: 56px; }
-        body[data-density="comfortable"] .cell span { font-size: 16px !important; }
-        body[data-density="compact"] .cell { min-height: 38px; }
-        body[data-density="compact"] .cell span { font-size: 12px !important; }
-        #density-btn { display: none; }
-        @media (min-width: 768px) { #density-btn { display: flex; } }
-        @media (max-width: 640px) { .cell { min-height: 40px; padding: 4px 2px !important; } .cat-header { font-size: 7px; } }
-        @media (max-width: 380px) { .cell { min-height: 36px; } .cat-header { font-size: 6px; } }
-        @media (max-height: 500px) and (orientation: landscape) { .cell { min-height: 32px !important; padding: 2px !important; } .cell span { font-size: 10px !important; } #turn-status-line { display: none; } }
-        @media (min-width: 768px) and (max-width: 1023px) and (orientation: portrait) { #master-grid { grid-template-columns: repeat(4, 1fr) !important; } }
-        @media (min-width: 1024px) and (max-width: 1365px) and (orientation: landscape) { #master-grid { grid-template-columns: repeat(6, 1fr) !important; } }
-        @media (min-width: 1366px) { #master-grid { grid-template-columns: repeat(12, 1fr) !important; } }
+        .score-block-active {
+            background: var(--yellow);
+            animation: pop-big 1.2s ease-in-out infinite;
+        }
+        .score-block-name {
+            font-family: 'Pixelify Sans', sans-serif;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .score-btns {
+            display: flex;
+            gap: 6px;
+        }
+        .score-btn {
+            flex: 1;
+            padding: 10px 6px;
+            border: 2px solid var(--black);
+            box-shadow: 3px 3px 0 var(--black);
+            border-radius: 8px;
+            font-family: 'Pixelify Sans', sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: transform 0.08s ease, box-shadow 0.08s ease;
+        }
+        .score-btn:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--black); }
+        .score-btn.plus { background: var(--green); }
+        .score-btn.minus { background: var(--red); }
+
+        .skip-btn {
+            display: block;
+            margin: 10px auto 0;
+            font-family: 'Pixelify Sans', sans-serif;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-decoration: underline;
+            opacity: 0.5;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .skip-btn:hover { opacity: 1; }
+
+        /* ========== INSTANT / WINNER ========== */
+        .center-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 10, 10, 0.75);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 50;
+        }
+        .center-card {
+            background: var(--white);
+            border: 3px solid var(--black);
+            box-shadow: 8px 8px 0 var(--black);
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        .center-icon {
+            width: 100px; height: 100px;
+            border: 3px solid var(--black);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            margin: 0 auto 16px;
+        }
+        .center-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 18px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        .center-desc {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .center-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--yellow);
+            border: 3px solid var(--black);
+            box-shadow: 4px 4px 0 var(--black);
+            border-radius: 10px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: transform 0.08s ease, box-shadow 0.08s ease;
+        }
+        .center-btn:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--black); }
+        .final-scores {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .final-score-box {
+            border: 3px solid var(--black);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+        }
+        .final-score-name {
+            font-family: 'Pixelify Sans', sans-serif;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+        .final-score-val {
+            font-family: 'Pixelify Sans', sans-serif;
+            font-weight: 700;
+            font-size: 32px;
+            line-height: 1;
+        }
+
+        .hidden { display: none !important; }
     </style>
 </head>
-<body class="flex flex-col justify-between h-screen overflow-hidden" data-density="comfortable">
+<body>
 
-<header class="w-full px-2 sm:px-4 py-1.5 shrink-0 flex items-center justify-between z-30">
-    <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-        <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center text-lg sm:text-2xl shrink-0 brutal" style="background: var(--yellow); transform: rotate(-4deg);">⚡</div>
+<!-- HEADER -->
+<header class="top-header">
+    <div class="flex items-center gap-3 min-w-0" style="min-width:0;">
+        <div class="brand-icon">
+            <i class="fa-solid fa-bolt"></i>
+        </div>
         <div class="min-w-0">
-            <h1 class="display text-[11px] sm:text-sm uppercase leading-none truncate">СВОЯ ИГРА</h1>
-            <p class="text-[7px] sm:text-[9px] font-bold uppercase tracking-widest mt-0.5 truncate">120 ВОПРОСОВ • NEO-BRUTAL</p>
+            <h1 class="brand-title">СВОЯ ИГРА</h1>
+            <p class="brand-sub">PIXEL EDITION • 120 ВОПРОСОВ</p>
         </div>
     </div>
-    <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-        <button id="density-btn" onclick="toggleDensity()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg brutal-btn items-center justify-center text-sm" style="background: var(--lime);"><i class="fa-solid fa-table-cells-large" id="density-icon"></i></button>
-        <button onclick="toggleAudioMute()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg brutal-btn flex items-center justify-center text-sm" style="background: var(--cyan);"><i class="fa-solid fa-volume-high" id="mute-icon"></i></button>
-        <button onclick="showWinnerModal(true)" class="px-2 sm:px-4 h-9 sm:h-10 rounded-lg brutal-btn font-black text-[9px] sm:text-[11px] flex items-center gap-1.5 uppercase display" style="background: var(--pink); color: var(--white);"><i class="fa-solid fa-crown text-[10px]"></i> <span class="hidden sm:inline">ИТОГИ</span></button>
+    <div class="flex items-center gap-2 shrink-0">
+        <button id="density-btn" class="top-btn" onclick="toggleDensity()" style="background:var(--lime); display:none;">
+            <i class="fa-solid fa-table-cells-large" id="density-icon"></i>
+        </button>
+        <button class="top-btn" onclick="toggleAudioMute()" style="background:var(--cyan);">
+            <i class="fa-solid fa-volume-high" id="mute-icon"></i>
+        </button>
+        <button class="top-btn" onclick="showWinnerModal(true)" style="background:var(--pink); color:var(--white);">
+            <i class="fa-solid fa-crown"></i><span class="hidden sm:inline">ИТОГИ</span>
+        </button>
     </div>
 </header>
 
-<section class="px-2 sm:px-4 pt-1 pb-2 w-full max-w-6xl mx-auto shrink-0">
-    <div class="grid grid-cols-2 gap-2 sm:gap-4">
-        <div id="player-card-0" class="turn-card brutal rounded-xl px-2.5 py-2 sm:px-4 sm:py-3 flex items-center justify-between relative">
-            <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-                <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center text-lg sm:text-2xl shrink-0 brutal-flat" style="background: var(--pink);">👩‍🦰</div>
-                <div class="min-w-0">
-                    <div class="display text-xs sm:text-base uppercase leading-tight truncate">Кира</div>
-                    <span id="turn-badge-0" class="hidden text-[8px] sm:text-[9px] font-black uppercase tracking-wider mt-0.5 inline-block">→ ХОДИТ!</span>
-                </div>
+<!-- PLAYERS -->
+<section class="players-row">
+    <div id="player-card-0" class="player-card">
+        <div class="flex items-center gap-2 min-w-0" style="min-width:0;">
+            <div class="player-avatar" style="background:var(--pink); color:var(--white);">
+                <i class="fa-solid fa-user-ninja"></i>
             </div>
-            <div class="text-right shrink-0">
-                <div id="score-0" class="display text-lg sm:text-3xl leading-none">0</div>
-                <div class="text-[7px] sm:text-[9px] font-bold uppercase tracking-widest mt-0.5 opacity-70">очков</div>
+            <div class="min-w-0">
+                <div class="player-name">КИРА</div>
+                <span id="turn-badge-0" class="turn-badge hidden">
+                    <i class="fa-solid fa-play"></i> ХОДИТ
+                </span>
             </div>
         </div>
-        <div id="player-card-1" class="turn-card brutal rounded-xl px-2.5 py-2 sm:px-4 sm:py-3 flex items-center justify-between relative">
-            <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-                <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center text-lg sm:text-2xl shrink-0 brutal-flat" style="background: var(--cyan);">🧑‍💻</div>
-                <div class="min-w-0">
-                    <div class="display text-xs sm:text-base uppercase leading-tight truncate">Витя</div>
-                    <span id="turn-badge-1" class="hidden text-[8px] sm:text-[9px] font-black uppercase tracking-wider mt-0.5 inline-block">→ ХОДИТ!</span>
-                </div>
-            </div>
-            <div class="text-right shrink-0">
-                <div id="score-1" class="display text-lg sm:text-3xl leading-none">0</div>
-                <div class="text-[7px] sm:text-[9px] font-bold uppercase tracking-widest mt-0.5 opacity-70">очков</div>
-            </div>
+        <div class="text-right shrink-0">
+            <div id="score-0" class="player-score">0</div>
+            <div class="pixel" style="font-size:9px; opacity:0.6; text-transform:uppercase; letter-spacing:0.1em;">очков</div>
         </div>
     </div>
-    <div class="mt-2 text-center">
-        <div class="inline-block px-3 py-1 brutal-sm rounded-full text-[9px] sm:text-[11px] font-black uppercase"><span id="turn-status-line">Ход: Кира</span></div>
+    <div id="player-card-1" class="player-card">
+        <div class="flex items-center gap-2 min-w-0" style="min-width:0;">
+            <div class="player-avatar" style="background:var(--cyan);">
+                <i class="fa-solid fa-user-astronaut"></i>
+            </div>
+            <div class="min-w-0">
+                <div class="player-name">ВИТЯ</div>
+                <span id="turn-badge-1" class="turn-badge hidden">
+                    <i class="fa-solid fa-play"></i> ХОДИТ
+                </span>
+            </div>
+        </div>
+        <div class="text-right shrink-0">
+            <div id="score-1" class="player-score">0</div>
+            <div class="pixel" style="font-size:9px; opacity:0.6; text-transform:uppercase; letter-spacing:0.1em;">очков</div>
+        </div>
     </div>
 </section>
 
-<main class="flex-1 px-2 sm:px-4 pb-2 w-full max-w-[1800px] mx-auto flex flex-col overflow-hidden">
-    <div class="brutal rounded-2xl p-1.5 sm:p-2 h-full flex flex-col overflow-hidden">
-        <div id="master-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-12 gap-1.5 sm:gap-2 h-full overflow-y-auto no-scrollbar"></div>
+<div class="status-line-wrap">
+    <div class="status-line">
+        <span id="turn-status-line">Ход: Кира</span>
+    </div>
+</div>
+
+<!-- GRID -->
+<main>
+    <div class="grid-wrap">
+        <div id="master-grid"></div>
     </div>
 </main>
 
-<footer class="px-3 sm:px-4 py-1.5 w-full max-w-6xl mx-auto shrink-0 flex justify-between items-center z-20">
-    <button onclick="resetGame(true)" class="px-3 py-1.5 rounded-lg brutal-btn text-[9px] sm:text-[10px] font-black uppercase display flex items-center gap-1.5" style="background: var(--red); color: var(--white);"><i class="fa-solid fa-rotate-right"></i> СБРОС</button>
-    <span class="text-[8px] sm:text-[9px] font-black uppercase tracking-widest opacity-50">12 × 10 • BRUTAL</span>
+<!-- FOOTER -->
+<footer>
+    <button class="reset-btn" onclick="resetGame(true)">
+        <i class="fa-solid fa-rotate-right"></i> СБРОС
+    </button>
+    <span class="footer-tag">12 × 10 • PIXEL</span>
 </footer>
 
-<div id="question-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex flex-col justify-end z-50">
-    <div class="brutal rounded-t-3xl w-full max-w-xl mx-auto p-4 sm:p-6 flex flex-col justify-between max-h-[95vh] overflow-y-auto slide-up" style="border-bottom: none; border-radius: 24px 24px 0 0; box-shadow: 0 -8px 0 var(--black);">
-        <div class="w-16 h-2 rounded-full mx-auto mb-4" style="background: var(--black);"></div>
-        <div class="flex justify-between items-center pb-3 mb-3 border-b-2 border-black">
-            <div class="flex items-center gap-1.5 flex-wrap">
-                <span id="modal-category" class="badge" style="background: var(--yellow);">Категория</span>
-                <span id="modal-points" class="badge" style="background: var(--pink); color: var(--white);">500</span>
-                <span id="modal-special" class="hidden badge"></span>
+<!-- QUESTION MODAL -->
+<div id="question-modal" class="modal-overlay hidden">
+    <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div class="modal-topbar">
+            <div class="flex items-center gap-2 flex-wrap">
+                <span id="modal-category" class="badge">Категория</span>
+                <span id="modal-points" class="badge" style="background:var(--pink); color:var(--white);">500</span>
+                <span id="modal-special" class="badge hidden"></span>
             </div>
-            <div class="text-[10px] sm:text-xs font-black uppercase">Ход: <span id="modal-player-turn" class="underline">Кира</span></div>
+            <div class="pixel" style="font-size:11px; font-weight:700; text-transform:uppercase;">
+                Ход: <span id="modal-player-turn" style="text-decoration:underline;">Кира</span>
+            </div>
         </div>
-        <div class="my-auto py-3 text-center flex flex-col items-center justify-center">
-            <div class="text-[9px] sm:text-[10px] font-black uppercase tracking-widest mb-3 px-2 py-1 brutal-sm rounded" id="modal-difficulty-hint">Сложность</div>
-            <p id="modal-question-text" class="display text-lg sm:text-2xl leading-tight px-1">Текст вопроса...</p>
-            <div id="modal-answer-box" class="hidden mt-4 w-full p-3 sm:p-4 rounded-xl brutal-flat pop-in" style="background: var(--lime);">
-                <div class="text-[9px] sm:text-[10px] font-black uppercase tracking-widest mb-2">✓ ОТВЕТ:</div>
-                <div id="modal-answer-text" class="display text-sm sm:text-lg leading-tight"></div>
+        <div class="modal-body">
+            <div class="badge" id="modal-difficulty-hint" style="margin-bottom:8px;">Сложность</div>
+            <p id="modal-question-text" class="modal-question">Текст вопроса...</p>
+            <div id="modal-answer-box" class="modal-answer hidden">
+                <div class="modal-answer-label">
+                    <i class="fa-solid fa-circle-check"></i> ПРАВИЛЬНЫЙ ОТВЕТ:
+                </div>
+                <div id="modal-answer-text" class="modal-answer-text"></div>
             </div>
-            <div id="modal-special-warning" class="hidden mt-3 w-full p-3 sm:p-4 rounded-xl brutal-flat text-center"></div>
+            <div id="modal-special-warning" class="warn-box hidden"></div>
         </div>
-        <div class="pt-3 border-t-2 border-black">
-            <div id="action-reveal-container" class="mb-3">
-                <button onclick="revealAnswer()" class="w-full py-3 sm:py-4 rounded-xl brutal-btn font-black text-sm sm:text-base uppercase display" style="background: var(--yellow);"><i class="fa-solid fa-key mr-1"></i> ПОКАЗАТЬ ОТВЕТ</button>
+        <div style="padding-top:10px; border-top:2px solid var(--black);">
+            <div id="action-reveal-container">
+                <button class="reveal-btn" onclick="revealAnswer()">
+                    <i class="fa-solid fa-key"></i> ПОКАЗАТЬ ОТВЕТ
+                </button>
             </div>
-            <div id="score-buttons-container" class="grid grid-cols-2 gap-2 sm:gap-3">
-                <div id="score-block-0" class="brutal-flat rounded-xl p-2.5 sm:p-3 text-center flex flex-col gap-2 transition-all" style="background: var(--white);">
-                    <div class="text-[10px] sm:text-xs font-black uppercase display flex items-center justify-center gap-1">👩‍🦰 КИРА <span id="turn-tag-0" class="hidden text-[8px] px-1.5 py-0.5 brutal-sm rounded bg-white">ХОД</span></div>
-                    <div class="flex gap-1.5">
-                        <button onclick="scorePlayer(0, true)" class="flex-1 py-2 sm:py-3 rounded-lg brutal-btn font-black text-[11px] sm:text-sm" style="background: var(--green); color: var(--white);"><i class="fa-solid fa-plus text-[9px] mr-0.5"></i><span id="btn-kira-plus">+100</span></button>
-                        <button onclick="scorePlayer(0, false)" class="flex-1 py-2 sm:py-3 rounded-lg brutal-btn font-black text-[11px] sm:text-sm" style="background: var(--red); color: var(--white);"><i class="fa-solid fa-minus text-[9px] mr-0.5"></i><span id="btn-kira-minus">-100</span></button>
+            <div id="score-buttons-container" class="score-blocks" style="margin-top:10px;">
+                <div id="score-block-0" class="score-block">
+                    <div class="score-block-name">
+                        <i class="fa-solid fa-user-ninja" style="color:var(--pink);"></i> КИРА
+                        <span id="turn-tag-0" class="badge hidden" style="font-size:8px; padding:2px 5px;">ХОД</span>
+                    </div>
+                    <div class="score-btns">
+                        <button class="score-btn plus" onclick="scorePlayer(0, true)">
+                            <i class="fa-solid fa-plus"></i><span id="btn-kira-plus">+100</span>
+                        </button>
+                        <button class="score-btn minus" onclick="scorePlayer(0, false)">
+                            <i class="fa-solid fa-minus"></i><span id="btn-kira-minus">-100</span>
+                        </button>
                     </div>
                 </div>
-                <div id="score-block-1" class="brutal-flat rounded-xl p-2.5 sm:p-3 text-center flex flex-col gap-2 transition-all" style="background: var(--white);">
-                    <div class="text-[10px] sm:text-xs font-black uppercase display flex items-center justify-center gap-1">🧑‍💻 ВИТЯ <span id="turn-tag-1" class="hidden text-[8px] px-1.5 py-0.5 brutal-sm rounded bg-white">ХОД</span></div>
-                    <div class="flex gap-1.5">
-                        <button onclick="scorePlayer(1, true)" class="flex-1 py-2 sm:py-3 rounded-lg brutal-btn font-black text-[11px] sm:text-sm" style="background: var(--green); color: var(--white);"><i class="fa-solid fa-plus text-[9px] mr-0.5"></i><span id="btn-vitya-plus">+100</span></button>
-                        <button onclick="scorePlayer(1, false)" class="flex-1 py-2 sm:py-3 rounded-lg brutal-btn font-black text-[11px] sm:text-sm" style="background: var(--red); color: var(--white);"><i class="fa-solid fa-minus text-[9px] mr-0.5"></i><span id="btn-vitya-minus">-100</span></button>
+                <div id="score-block-1" class="score-block">
+                    <div class="score-block-name">
+                        <i class="fa-solid fa-user-astronaut" style="color:var(--cyan);"></i> ВИТЯ
+                        <span id="turn-tag-1" class="badge hidden" style="font-size:8px; padding:2px 5px;">ХОД</span>
+                    </div>
+                    <div class="score-btns">
+                        <button class="score-btn plus" onclick="scorePlayer(1, true)">
+                            <i class="fa-solid fa-plus"></i><span id="btn-vitya-plus">+100</span>
+                        </button>
+                        <button class="score-btn minus" onclick="scorePlayer(1, false)">
+                            <i class="fa-solid fa-minus"></i><span id="btn-vitya-minus">-100</span>
+                        </button>
                     </div>
                 </div>
             </div>
-            <div class="mt-3 text-center">
-                <button onclick="closeQuestionModal()" class="text-[10px] sm:text-[11px] font-black uppercase underline opacity-50 hover:opacity-100 py-1">Пропустить → передать ход</button>
-            </div>
+            <button class="skip-btn" onclick="closeQuestionModal()">
+                <i class="fa-solid fa-forward"></i> ПРОПУСТИТЬ → ПЕРЕДАТЬ ХОД
+            </button>
         </div>
     </div>
 </div>
 
-<div id="instant-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-    <div id="instant-card" class="brutal rounded-3xl max-w-md w-full p-6 sm:p-8 text-center pop-in" style="transform: rotate(-2deg);">
-        <div id="instant-icon" class="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl flex items-center justify-center text-5xl sm:text-7xl mx-auto mb-4 brutal-flat pop-big"></div>
-        <h2 id="instant-title" class="display text-2xl sm:text-4xl uppercase mb-3"></h2>
-        <p id="instant-desc" class="text-sm sm:text-base font-bold mb-6"></p>
-        <button onclick="closeInstantModal()" class="w-full py-3 sm:py-4 rounded-xl brutal-btn font-black text-sm sm:text-base uppercase display" style="background: var(--yellow);">ПРОДОЛЖИТЬ →</button>
+<!-- INSTANT MODAL -->
+<div id="instant-modal" class="center-modal hidden">
+    <div id="instant-card" class="center-card pop-in" style="transform:rotate(-2deg);">
+        <div id="instant-icon" class="center-icon pop-big"></div>
+        <h2 id="instant-title" class="center-title"></h2>
+        <p id="instant-desc" class="center-desc"></p>
+        <button class="center-btn" onclick="closeInstantModal()">
+            ПРОДОЛЖИТЬ <i class="fa-solid fa-arrow-right"></i>
+        </button>
     </div>
 </div>
 
-<div id="winner-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-    <div class="brutal rounded-3xl max-w-md w-full p-6 sm:p-8 text-center pop-in" style="transform: rotate(-1deg);">
-        <div class="w-20 h-20 sm:w-28 sm:h-28 rounded-2xl flex items-center justify-center text-4xl sm:text-6xl mx-auto mb-4 brutal-flat" style="background: var(--yellow); transform: rotate(4deg);">👑</div>
-        <h2 class="display text-2xl sm:text-3xl uppercase mb-2">ФИНАЛ!</h2>
-        <p class="text-[10px] sm:text-xs font-black uppercase tracking-widest opacity-60 mb-4">120 вопросов сыграно</p>
-        <p id="winner-name" class="display text-lg sm:text-2xl my-3"></p>
-        <p id="winner-score" class="text-xs sm:text-sm font-bold mb-5"></p>
-        <div class="grid grid-cols-2 gap-3 mb-5">
-            <div class="brutal-flat rounded-xl p-3" style="background: var(--pink); color: var(--white);"><div class="display text-[10px] sm:text-xs uppercase mb-1">КИРА</div><div id="final-score-0" class="display text-2xl sm:text-3xl">0</div></div>
-            <div class="brutal-flat rounded-xl p-3" style="background: var(--cyan);"><div class="display text-[10px] sm:text-xs uppercase mb-1">ВИТЯ</div><div id="final-score-1" class="display text-2xl sm:text-3xl">0</div></div>
+<!-- WINNER MODAL -->
+<div id="winner-modal" class="center-modal hidden">
+    <div class="center-card pop-in" style="transform:rotate(-1deg);">
+        <div class="center-icon" style="background:var(--yellow); transform:rotate(4deg);">
+            <i class="fa-solid fa-crown"></i>
         </div>
-        <button onclick="resetGame(true); closeModal('winner-modal');" class="w-full py-3 sm:py-4 rounded-xl brutal-btn font-black text-sm sm:text-base uppercase display" style="background: var(--yellow);">СЫГРАТЬ СНОВА 🔥</button>
+        <h2 class="center-title">ФИНАЛ!</h2>
+        <p class="pixel" style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; opacity:0.6; margin-bottom:16px;">120 вопросов сыграно</p>
+        <p id="winner-name" class="center-title" style="font-size:16px;"></p>
+        <p id="winner-score" class="center-desc"></p>
+        <div class="final-scores">
+            <div class="final-score-box" style="background:var(--pink); color:var(--white);">
+                <div class="final-score-name">КИРА</div>
+                <div id="final-score-0" class="final-score-val">0</div>
+            </div>
+            <div class="final-score-box" style="background:var(--cyan);">
+                <div class="final-score-name">ВИТЯ</div>
+                <div id="final-score-1" class="final-score-val">0</div>
+            </div>
+        </div>
+        <button class="center-btn" onclick="resetGame(true); closeModal('winner-modal');">
+            СЫГРАТЬ СНОВА <i class="fa-solid fa-fire"></i>
+        </button>
     </div>
 </div>
 
@@ -227,39 +963,37 @@ let activeCellKey = null;
 let isAudioMuted = false;
 let blockedPlayerIndex = null;
 
-const STORAGE_KEY = 'jeopardy_brutal_12x10_v12';
-const DENSITY_KEY = 'jeopardy_brutal_density';
+const STORAGE_KEY = 'jeopardy_pixel_12x10_v1';
+const DENSITY_KEY = 'jeopardy_pixel_density';
 let playedQuestions = new Set();
 let specialCells = {};
 
-// ========== CATEGORIES ==========
 const categories = [
-    { id: 'angarsk', name: 'Ангарск', color: '#FF7A2F', icon: 'fa-location-dot' },
-    { id: 'brawl', name: 'Brawl Stars', color: '#FF3D8B', icon: 'fa-skull-crossbones' },
-    { id: 'memes', name: 'Мемы', color: '#A855F7', icon: 'fa-fire' },
-    { id: 'music', name: 'Музыка', color: '#00CFFF', icon: 'fa-music' },
-    { id: 'youtube', name: 'YouTube RU', color: '#FF3D3D', icon: 'fa-play-circle' },
-    { id: 'animals', name: 'Животные', color: '#22C55E', icon: 'fa-paw' },
-    { id: 'food', name: 'Еда', color: '#FFE24B', icon: 'fa-burger' },
-    { id: 'sport', name: 'Спорт', color: '#3B82F6', icon: 'fa-futbol' },
-    { id: 'nature', name: 'Природа', color: '#A8FF3D', icon: 'fa-leaf' },
-    { id: 'cartoons', name: 'Мультфильмы', color: '#FFB347', icon: 'fa-tv' },
-    { id: 'school', name: 'Школа', color: '#C4B5FD', icon: 'fa-graduation-cap' },
-    { id: 'space', name: 'Космос', color: '#818CF8', icon: 'fa-rocket' }
+    { id: 'angarsk', name: 'Ангарск', color: '#FF8C42' },
+    { id: 'brawl', name: 'Brawl Stars', color: '#FF5C8A' },
+    { id: 'memes', name: 'Мемы', color: '#A855F7' },
+    { id: 'music', name: 'Музыка', color: '#4ECDC4' },
+    { id: 'youtube', name: 'YouTube RU', color: '#FF3D3D' },
+    { id: 'animals', name: 'Животные', color: '#22C55E' },
+    { id: 'food', name: 'Еда', color: '#FFD93D' },
+    { id: 'sport', name: 'Спорт', color: '#3B82F6' },
+    { id: 'nature', name: 'Природа', color: '#A8FF3D' },
+    { id: 'cartoons', name: 'Мультфильмы', color: '#FFB347' },
+    { id: 'school', name: 'Школа', color: '#C4B5FD' },
+    { id: 'space', name: 'Космос', color: '#818CF8' }
 ];
 
 const pointValues = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
 
 function getDifficulty(points) {
-    if (points <= 200) return { label: '🌱 РАЗМИНКА' };
-    if (points <= 400) return { label: '⚡ ЛЕГКО' };
-    if (points <= 600) return { label: '🎯 СРЕДНЕ' };
-    if (points <= 800) return { label: '🔥 СЛОЖНО' };
-    if (points <= 900) return { label: '💀 ОЧЕНЬ СЛОЖНО' };
-    return { label: '👑 ХАРДКОР' };
+    if (points <= 200) return { label: '<i class="fa-solid fa-seedling"></i> РАЗМИНКА' };
+    if (points <= 400) return { label: '<i class="fa-solid fa-bolt"></i> ЛЕГКО' };
+    if (points <= 600) return { label: '<i class="fa-solid fa-bullseye"></i> СРЕДНЕ' };
+    if (points <= 800) return { label: '<i class="fa-solid fa-fire"></i> СЛОЖНО' };
+    if (points <= 900) return { label: '<i class="fa-solid fa-skull"></i> ОЧЕНЬ СЛОЖНО' };
+    return { label: '<i class="fa-solid fa-crown"></i> ХАРДКОР' };
 }
 
-// ========== СПЕЦЯЧЕЙКИ ==========
 function generateSpecialCells() {
     const map = {};
     const types = [
@@ -288,16 +1022,16 @@ function generateSpecialCells() {
 function getSpecialInfo(key) {
     const s = specialCells[key];
     if (!s) return null;
-    if (s.type === 'double') return { emoji: '💎', label: '×2', bg: '#00CFFF' };
-    if (s.type === 'trap') return { emoji: '⚠️', label: 'ЛОВУШКА', bg: '#FF3D3D', white: true };
-    if (s.type === 'jackpot') return { emoji: '🎁', label: '×5', bg: '#A855F7', white: true };
-    if (s.type === 'block') return { emoji: '🚫', label: 'БЛОК', bg: '#6B7280', white: true };
-    if (s.type === 'bonus') return { emoji: '🎲', label: 'БОНУС', bg: '#A8FF3D' };
-    if (s.type === 'penalty') return { emoji: '💥', label: 'ШТРАФ', bg: '#FF7A2F', white: true };
+    if (s.type === 'double') return { icon: 'fa-gem', label: '×2', bg: '#4ECDC4' };
+    if (s.type === 'trap') return { icon: 'fa-triangle-exclamation', label: 'ЛОВУШКА', bg: '#FF3D3D', white: true };
+    if (s.type === 'jackpot') return { icon: 'fa-gift', label: '×5', bg: '#A855F7', white: true };
+    if (s.type === 'block') return { icon: 'fa-ban', label: 'БЛОК', bg: '#6B7280', white: true };
+    if (s.type === 'bonus') return { icon: 'fa-dice', label: 'БОНУС', bg: '#A8FF3D' };
+    if (s.type === 'penalty') return { icon: 'fa-burst', label: 'ШТРАФ', bg: '#FF8C42', white: true };
     return null;
 }
 
-// ========== 120 НОВЫХ ВОПРОСОВ (2025-2026) ==========
+// ========== 120 ВОПРОСОВ ==========
 const questionsDatabase = {
     'angarsk': {
         100: { q: 'В каком году началось строительство Ангарска?', a: 'В 1945 году, сразу после Победы' },
@@ -374,7 +1108,7 @@ const questionsDatabase = {
     'food': {
         100: { q: 'Самый ранний овощ-корнеплод?', a: 'Редис' },
         200: { q: 'Какой овощ привезён в Европу из Перу?', a: 'Картофель' },
-        300: { q: 'Какое изделие прославило город, подаривший миру пиццу?', a: 'Неаполь' },
+        300: { q: 'Какой город подарил миру пиццу?', a: 'Неаполь' },
         400: { q: 'Что в русской сказке Колобок — хлеб, пирог или пряник?', a: 'Пряник' },
         500: { q: 'В какой стране запретили кофе в XVII веке?', a: 'В Турции' },
         600: { q: 'Сколько гектаров пиццы съедают в США ежедневно?', a: 'Около 75 гектаров' },
@@ -515,7 +1249,7 @@ function playSound(type) {
 function applyDensity(mode) {
     document.body.setAttribute('data-density', mode);
     const icon = document.getElementById('density-icon');
-    icon.className = mode === 'comfortable' ? 'fa-solid fa-table-cells-large' : 'fa-solid fa-table-cells';
+    if (icon) icon.className = mode === 'comfortable' ? 'fa-solid fa-table-cells-large' : 'fa-solid fa-table-cells';
     try { localStorage.setItem(DENSITY_KEY, mode); } catch(e) {}
 }
 function toggleDensity() {
@@ -523,6 +1257,14 @@ function toggleDensity() {
     applyDensity(current === 'comfortable' ? 'compact' : 'comfortable');
     playSound('click');
 }
+
+// Показать кнопку плотности только на десктопе
+function updateDensityVisibility() {
+    const btn = document.getElementById('density-btn');
+    if (window.innerWidth >= 1024) btn.style.display = 'flex';
+    else btn.style.display = 'none';
+}
+window.addEventListener('resize', updateDensityVisibility);
 
 // ========== PERSISTENCE ==========
 function loadState() {
@@ -546,7 +1288,7 @@ function loadState() {
     } catch (e) { specialCells = generateSpecialCells(); }
     try {
         const d = localStorage.getItem(DENSITY_KEY);
-        if (d) applyDensity(d); else applyDensity('comfortable');
+        applyDensity(d || 'comfortable');
     } catch(e) { applyDensity('comfortable'); }
 }
 function saveState() {
@@ -567,23 +1309,24 @@ function initGrid() {
     masterGrid.innerHTML = '';
     categories.forEach(cat => {
         const colDiv = document.createElement('div');
-        colDiv.className = 'flex flex-col gap-1.5 h-full overflow-hidden';
+        colDiv.className = 'cat-col';
         const headerDiv = document.createElement('div');
-        headerDiv.className = 'shrink-0';
-        headerDiv.innerHTML = `<div class="cat-header rounded-lg" style="background: ${cat.color};">${cat.name}</div>`;
+        headerDiv.className = 'cat-header';
+        headerDiv.style.background = cat.color;
+        headerDiv.textContent = cat.name;
         colDiv.appendChild(headerDiv);
         const tiersDiv = document.createElement('div');
-        tiersDiv.className = 'flex flex-col gap-1 sm:gap-1.5 overflow-y-auto no-scrollbar flex-1';
+        tiersDiv.className = 'tiers';
         pointValues.forEach(points => {
             const key = `${cat.id}-${points}`;
             const isPlayed = playedQuestions.has(key);
             const btn = document.createElement('button');
-            btn.className = `cell rounded-lg flex items-center justify-center ${isPlayed ? 'cell-done' : ''}`;
+            btn.className = `cell${isPlayed ? ' cell-done' : ''}`;
             btn.dataset.key = key;
             if (isPlayed) {
-                btn.innerHTML = `<i class="fa-solid fa-check" style="color: #999;"></i>`;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i>';
             } else {
-                btn.innerHTML = `<span class="display" style="color: var(--black);">${points}</span>`;
+                btn.textContent = points;
             }
             btn.onclick = () => openQuestion(btn, key, cat.id, cat.name, points);
             tiersDiv.appendChild(btn);
@@ -601,16 +1344,16 @@ function updateTurnUI() {
         const badge = document.getElementById(`turn-badge-${idx}`);
         document.getElementById(`score-${idx}`).innerText = p.score;
         if (idx === activePlayerIndex) {
-            card.className = `turn-card brutal rounded-xl px-2.5 py-2 sm:px-4 sm:py-3 flex items-center justify-between relative ${idx === 0 ? 'active-kira' : 'active-vitya'}`;
+            card.className = `player-card ${idx === 0 ? 'active-kira' : 'active-vitya'}`;
             badge.classList.remove('hidden');
         } else {
-            card.className = 'turn-card brutal rounded-xl px-2.5 py-2 sm:px-4 sm:py-3 flex items-center justify-between relative inactive';
+            card.className = 'player-card inactive';
             badge.classList.add('hidden');
         }
     });
     const statusLine = document.getElementById('turn-status-line');
-    let statusText = `Ход: <strong>${players[activePlayerIndex].name}</strong>`;
-    if (blockedPlayerIndex !== null) statusText += ` • 🚫 ${players[blockedPlayerIndex].name} пропускает`;
+    let statusText = `Ход: ${players[activePlayerIndex].name}`;
+    if (blockedPlayerIndex !== null) statusText += ` • ${players[blockedPlayerIndex].name} пропускает`;
     statusLine.innerHTML = statusText;
     updateScoreButtonStates();
 }
@@ -650,7 +1393,7 @@ function openQuestion(btnEl, key, catId, catName, points) {
         playedQuestions.add(key);
         if (activeCellElement) {
             activeCellElement.classList.add('cell-done');
-            activeCellElement.innerHTML = `<i class="fa-solid fa-check" style="color: #999;"></i>`;
+            activeCellElement.innerHTML = '<i class="fa-solid fa-check"></i>';
         }
         saveState();
         updateTurnUI();
@@ -666,7 +1409,7 @@ function openQuestion(btnEl, key, catId, catName, points) {
     document.getElementById('modal-category').innerText = catName;
     document.getElementById('modal-category').style.background = categories.find(c => c.id === catId).color;
     document.getElementById('modal-points').innerText = `${points} PTS`;
-    document.getElementById('modal-difficulty-hint').innerText = diffInfo.label;
+    document.getElementById('modal-difficulty-hint').innerHTML = diffInfo.label;
     document.getElementById('modal-player-turn').innerText = players[activePlayerIndex].name;
     document.getElementById('modal-question-text').innerText = currentQuestion.data.q;
     document.getElementById('modal-answer-text').innerText = currentQuestion.data.a;
@@ -676,25 +1419,25 @@ function openQuestion(btnEl, key, catId, catName, points) {
         specialBadge.classList.remove('hidden');
         specialBadge.style.background = special.bg;
         specialBadge.style.color = special.white ? '#FFFFFF' : '#0A0A0A';
-        specialBadge.innerText = `${special.emoji} ${special.label}`;
+        specialBadge.innerHTML = `<i class="fa-solid ${special.icon}"></i> ${special.label}`;
     } else specialBadge.classList.add('hidden');
 
     const warnBox = document.getElementById('modal-special-warning');
     if (currentQuestion.special === 'double') {
-        warnBox.style.background = 'var(--cyan)';
-        warnBox.innerHTML = `<div class="display text-xs sm:text-sm mb-1">💎 ×2 УДВОЕНИЕ</div><div class="text-xs sm:text-sm font-bold">Верно → <strong>+${points * 2}</strong><br>Ошибка → <strong>-${points}</strong></div>`;
+        warnBox.style.background = 'var(--cyan)'; warnBox.style.color = '';
+        warnBox.innerHTML = `<div class="warn-title"><i class="fa-solid fa-gem"></i> ×2 УДВОЕНИЕ</div><div class="warn-text">Верно → <strong>+${points * 2}</strong><br>Ошибка → <strong>-${points}</strong></div>`;
         warnBox.classList.remove('hidden');
     } else if (currentQuestion.special === 'trap') {
         warnBox.style.background = 'var(--red)'; warnBox.style.color = '#FFFFFF';
-        warnBox.innerHTML = `<div class="display text-xs sm:text-sm mb-1">⚠️ ЛОВУШКА</div><div class="text-xs sm:text-sm font-bold">Верно → <strong>+${points}</strong><br>Ошибка → <strong>-${points * 2}</strong></div>`;
+        warnBox.innerHTML = `<div class="warn-title"><i class="fa-solid fa-triangle-exclamation"></i> ЛОВУШКА</div><div class="warn-text">Верно → <strong>+${points}</strong><br>Ошибка → <strong>-${points * 2}</strong></div>`;
         warnBox.classList.remove('hidden');
     } else if (currentQuestion.special === 'jackpot') {
         warnBox.style.background = 'var(--purple)'; warnBox.style.color = '#FFFFFF';
-        warnBox.innerHTML = `<div class="display text-xs sm:text-sm mb-1">🎁 ДЖЕКПОТ ×5</div><div class="text-xs sm:text-sm font-bold">Верно → <strong>+${points * 5}</strong>!!!<br>Ошибка → <strong>-${points}</strong></div>`;
+        warnBox.innerHTML = `<div class="warn-title"><i class="fa-solid fa-gift"></i> ДЖЕКПОТ ×5</div><div class="warn-text">Верно → <strong>+${points * 5}</strong>!!!<br>Ошибка → <strong>-${points}</strong></div>`;
         warnBox.classList.remove('hidden');
     } else if (currentQuestion.special === 'block') {
         warnBox.style.background = '#6B7280'; warnBox.style.color = '#FFFFFF';
-        warnBox.innerHTML = `<div class="display text-xs sm:text-sm mb-1">🚫 БЛОКИРОВКА</div><div class="text-xs sm:text-sm font-bold">Соперник пропустит следующий ход!</div>`;
+        warnBox.innerHTML = `<div class="warn-title"><i class="fa-solid fa-ban"></i> БЛОКИРОВКА</div><div class="warn-text">Соперник пропустит следующий ход!</div>`;
         warnBox.classList.remove('hidden');
     } else {
         warnBox.classList.add('hidden'); warnBox.style.color = '';
@@ -733,14 +1476,14 @@ function showInstantModal(isBonus, delta) {
     const desc = document.getElementById('instant-desc');
     if (isBonus) {
         card.style.background = 'var(--lime)';
+        icon.innerHTML = '<i class="fa-solid fa-dice"></i>';
         icon.style.background = 'var(--white)';
-        icon.innerText = '🎲';
         title.innerText = 'БОНУС!';
         desc.innerText = `${players[activePlayerIndex].name} получает +${delta} очков!`;
     } else {
         card.style.background = 'var(--orange)';
+        icon.innerHTML = '<i class="fa-solid fa-burst"></i>';
         icon.style.background = 'var(--white)';
-        icon.innerText = '💥';
         title.innerText = 'ШТРАФ!';
         desc.innerText = `${players[activePlayerIndex].name} теряет ${Math.abs(delta)} очков!`;
     }
@@ -791,7 +1534,7 @@ function finishTurn(switchPlayer) {
     if (activeCellKey) playedQuestions.add(activeCellKey);
     if (activeCellElement) {
         activeCellElement.classList.add('cell-done');
-        activeCellElement.innerHTML = `<i class="fa-solid fa-check" style="color: #999;"></i>`;
+        activeCellElement.innerHTML = '<i class="fa-solid fa-check"></i>';
     }
     if (switchPlayer) {
         let next = activePlayerIndex === 0 ? 1 : 0;
@@ -811,7 +1554,7 @@ function closeQuestionModal(skipDisable = false) {
         playedQuestions.add(activeCellKey);
         if (activeCellElement) {
             activeCellElement.classList.add('cell-done');
-            activeCellElement.innerHTML = `<i class="fa-solid fa-check" style="color: #999;"></i>`;
+            activeCellElement.innerHTML = '<i class="fa-solid fa-check"></i>';
         }
         let next = activePlayerIndex === 0 ? 1 : 0;
         if (blockedPlayerIndex !== null && next === blockedPlayerIndex) {
@@ -839,9 +1582,9 @@ function checkGameCompletion() {
 function showWinnerModal() {
     playSound('win');
     let winnerText = "", winnerScoreText = "";
-    if (players[0].score > players[1].score) { winnerText = "👑 КИРА ПОБЕДИЛА!"; winnerScoreText = `С результатом ${players[0].score} очков!`; }
-    else if (players[1].score > players[0].score) { winnerText = "👑 ВИТЯ ПОБЕДИЛ!"; winnerScoreText = `С результатом ${players[1].score} очков!`; }
-    else { winnerText = "🤝 НИЧЬЯ!"; winnerScoreText = `Оба набрали по ${players[0].score} очков!`; }
+    if (players[0].score > players[1].score) { winnerText = "КИРА ПОБЕДИЛА!"; winnerScoreText = `С результатом ${players[0].score} очков`; }
+    else if (players[1].score > players[0].score) { winnerText = "ВИТЯ ПОБЕДИЛ!"; winnerScoreText = `С результатом ${players[1].score} очков`; }
+    else { winnerText = "НИЧЬЯ!"; winnerScoreText = `Оба набрали по ${players[0].score} очков`; }
     document.getElementById('winner-name').innerText = winnerText;
     document.getElementById('winner-score').innerText = winnerScoreText;
     document.getElementById('final-score-0').innerText = players[0].score;
@@ -850,8 +1593,8 @@ function showWinnerModal() {
     if (window.confetti) {
         const duration = 3500, end = Date.now() + duration;
         (function frame() {
-            confetti({ particleCount: 8, angle: 60, spread: 60, origin: { x: 0 }, colors: ['#FF3D8B', '#FFE24B', '#00CFFF', '#A8FF3D', '#FF7A2F'] });
-            confetti({ particleCount: 8, angle: 120, spread: 60, origin: { x: 1 }, colors: ['#FF3D8B', '#FFE24B', '#00CFFF', '#A8FF3D', '#FF7A2F'] });
+            confetti({ particleCount: 8, angle: 60, spread: 60, origin: { x: 0 }, colors: ['#FF5C8A', '#FFD93D', '#4ECDC4', '#A8FF3D', '#FF8C42'] });
+            confetti({ particleCount: 8, angle: 120, spread: 60, origin: { x: 1 }, colors: ['#FF5C8A', '#FFD93D', '#4ECDC4', '#A8FF3D', '#FF8C42'] });
             if (Date.now() < end) requestAnimationFrame(frame);
         })();
     }
@@ -874,6 +1617,7 @@ function resetGame(confirmReset = false) {
 window.onload = function() {
     loadState();
     initGrid();
+    updateDensityVisibility();
 };
 </script>
 </body>
