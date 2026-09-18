@@ -1,429 +1,219 @@
 <!DOCTYPE html>
-<html lang="ru" class="dark h-full">
+<html lang="ru" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="format-detection" content="telephone=no">
-    <title>Своя Игра NEO — 12 Категорий • 120 Вопросов</title>
+    <title>СВОЯ ИГРА • NEO-BRUTAL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800;900&family=Unbounded:wght@500;700;900&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Manrope', 'sans-serif'],
-                        display: ['Unbounded', 'sans-serif'],
-                    },
-                    colors: {
-                        neo: {
-                            bg: '#07080F', card: '#0F1120', border: '#1E2138',
-                            accent: '#7C5CFF', pink: '#FF5C9D', cyan: '#22D3EE', gold: '#FFB547',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --sat: env(safe-area-inset-top, 0px);
             --sab: env(safe-area-inset-bottom, 0px);
             --sal: env(safe-area-inset-left, 0px);
             --sar: env(safe-area-inset-right, 0px);
+            --black: #0A0A0A;
+            --cream: #FFF5DC;
+            --white: #FFFFFF;
+            --pink: #FF3D8B;
+            --yellow: #FFE24B;
+            --cyan: #00CFFF;
+            --lime: #A8FF3D;
+            --orange: #FF7A2F;
+            --purple: #A855F7;
+            --green: #22C55E;
+            --red: #FF3D3D;
         }
-        * {
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-            -webkit-user-drag: none;
-        }
-        html, body {
-            touch-action: manipulation;
-            -webkit-text-size-adjust: 100%;
-        }
+        * { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; -webkit-user-drag: none; }
+        html, body { touch-action: manipulation; -webkit-text-size-adjust: 100%; }
         body {
-            background: #07080F;
+            background: var(--cream);
             background-image:
-                radial-gradient(ellipse 80% 60% at 15% -10%, rgba(124, 92, 255, 0.18), transparent 60%),
-                radial-gradient(ellipse 70% 50% at 90% 5%, rgba(255, 92, 157, 0.14), transparent 60%),
-                radial-gradient(ellipse 90% 60% at 50% 105%, rgba(34, 211, 238, 0.12), transparent 60%);
-            color: #E8ECF5;
-            user-select: none;
-            -webkit-user-select: none;
-            font-family: 'Manrope', sans-serif;
-            height: 100vh;
-            height: 100dvh;
-            height: -webkit-fill-available;
+                radial-gradient(circle at 12% 15%, rgba(255, 61, 139, 0.12), transparent 35%),
+                radial-gradient(circle at 88% 85%, rgba(0, 207, 255, 0.12), transparent 35%),
+                radial-gradient(circle at 50% 50%, rgba(255, 226, 75, 0.08), transparent 50%);
+            background-attachment: fixed;
+            color: var(--black);
+            font-family: 'Space Grotesk', sans-serif;
+            height: 100vh; height: 100dvh; height: -webkit-fill-available;
             overflow: hidden;
-            padding-top: max(4px, var(--sat));
-            padding-bottom: max(4px, var(--sab));
-            padding-left: max(4px, var(--sal));
-            padding-right: max(4px, var(--sar));
+            padding: max(6px, var(--sat)) max(6px, var(--sar)) max(6px, var(--sab)) max(6px, var(--sal));
             -webkit-font-smoothing: antialiased;
         }
-        .glass {
-            background: linear-gradient(160deg, rgba(24, 27, 48, 0.85), rgba(15, 17, 32, 0.7));
-            backdrop-filter: blur(20px) saturate(1.2);
-            -webkit-backdrop-filter: blur(20px) saturate(1.2);
-            border: 1px solid rgba(124, 92, 255, 0.15);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.04);
-        }
-        .glass-soft {
-            background: linear-gradient(160deg, rgba(24, 27, 48, 0.6), rgba(15, 17, 32, 0.5));
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 1px solid rgba(124, 92, 255, 0.1);
-        }
-        .glow-text { text-shadow: 0 0 12px currentColor; }
-
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 181, 71, 0.5), 0 0 20px rgba(255, 181, 71, 0.2); }
-            50% { box-shadow: 0 0 0 8px rgba(255, 181, 71, 0), 0 0 30px rgba(255, 181, 71, 0.4); }
-        }
-        .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
-
-        .cell {
-            position: relative;
-            background: linear-gradient(160deg, rgba(30, 33, 56, 0.9), rgba(15, 17, 32, 0.85));
-            border: 1px solid rgba(124, 92, 255, 0.12);
-            transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1),
-                        border-color 0.15s ease,
-                        box-shadow 0.15s ease;
-            overflow: hidden;
-            min-height: 42px;
-        }
-        .cell::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, transparent 40%, rgba(255, 255, 255, 0.06) 50%, transparent 60%);
-            pointer-events: none;
-        }
-        .cell:active:not(.cell-done) {
-            transform: scale(0.94);
-            border-color: rgba(255, 181, 71, 0.6);
-            box-shadow: 0 0 20px rgba(255, 181, 71, 0.3);
-        }
-        .cell-done {
-            opacity: 0.2;
-            pointer-events: none;
-            background: rgba(15, 17, 32, 0.4);
-            border-color: transparent;
-        }
-        @media (hover: hover) {
-            .cell:hover:not(.cell-done) {
-                border-color: rgba(255, 181, 71, 0.5);
-                box-shadow: 0 0 16px rgba(255, 181, 71, 0.25);
-                transform: translateY(-1px);
-            }
-        }
-
-        .no-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+        .display { font-family: 'Archivo Black', sans-serif; letter-spacing: -0.02em; }
+        .brutal { background: var(--white); border: 3px solid var(--black); box-shadow: 6px 6px 0 var(--black); }
+        .brutal-sm { background: var(--white); border: 2px solid var(--black); box-shadow: 4px 4px 0 var(--black); }
+        .brutal-flat { background: var(--white); border: 3px solid var(--black); }
+        .brutal-btn { background: var(--white); border: 3px solid var(--black); box-shadow: 4px 4px 0 var(--black); transition: transform 0.08s ease, box-shadow 0.08s ease; cursor: pointer; }
+        .brutal-btn:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--black); }
+        @media (hover: hover) { .brutal-btn:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--black); } .brutal-btn:hover:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--black); } }
+        .turn-card { transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .turn-card.active-kira { background: var(--pink); color: var(--white); transform: rotate(-1.5deg) scale(1.02); box-shadow: 8px 8px 0 var(--black); }
+        .turn-card.active-vitya { background: var(--cyan); transform: rotate(1.5deg) scale(1.02); box-shadow: 8px 8px 0 var(--black); }
+        .turn-card.inactive { background: var(--white); opacity: 0.55; }
+        .cell { position: relative; background: var(--white); border: 2px solid var(--black); box-shadow: 3px 3px 0 var(--black); transition: transform 0.08s ease, box-shadow 0.08s ease; overflow: hidden; min-height: 44px; cursor: pointer; font-family: 'Archivo Black', sans-serif; }
+        .cell:active:not(.cell-done) { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--black); }
+        @media (hover: hover) { .cell:hover:not(.cell-done) { background: var(--yellow); } }
+        .cell-done { opacity: 0.3; pointer-events: none; background: var(--cream); box-shadow: none; border-style: dashed; border-color: #999; }
+        .cat-header { border: 2px solid var(--black); box-shadow: 3px 3px 0 var(--black); font-family: 'Archivo Black', sans-serif; color: var(--black); padding: 4px 3px; text-align: center; font-size: 9px; line-height: 1.1; text-transform: uppercase; letter-spacing: -0.02em; font-weight: 900; }
+        .no-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .no-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .no-scrollbar::-webkit-scrollbar-thumb { background: rgba(124, 92, 255, 0.3); border-radius: 4px; }
-
-        @keyframes flash-bg {
-            0%, 100% { background: linear-gradient(45deg, #ff00ff, #00ffff); }
-            25% { background: linear-gradient(45deg, #00ffff, #ffff00); }
-            50% { background: linear-gradient(45deg, #ffff00, #ff0000); }
-            75% { background: linear-gradient(45deg, #ff0000, #ff00ff); }
-        }
-        @keyframes shake-hard {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            20% { transform: translate(-6px, 3px) rotate(-2deg); }
-            40% { transform: translate(5px, -4px) rotate(2deg); }
-            60% { transform: translate(-4px, 5px) rotate(-1.5deg); }
-            80% { transform: translate(4px, -3px) rotate(1.5deg); }
-        }
-        .animate-flash-bg { animation: flash-bg 0.4s linear infinite; }
-        .animate-shake-hard { animation: shake-hard 0.3s linear infinite; }
-        .animate-pop-text { animation: popText 0.5s ease-in-out infinite; }
-        @keyframes popText {
-            0%, 100% { transform: scale(1) rotate(-1deg); }
-            50% { transform: scale(1.08) rotate(1deg); }
-        }
-        .rainbow-text {
-            background: linear-gradient(90deg, #ff0000, #ff8000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
-            background-size: 200% auto; -webkit-background-clip: text; background-clip: text;
-            -webkit-text-fill-color: transparent; animation: rainbow-move 1s linear infinite;
-        }
-        @keyframes rainbow-move { to { background-position: 200% center; } }
-
-        @keyframes modal-in {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .modal-in { animation: modal-in 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes slide-up {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
-        }
+        .no-scrollbar::-webkit-scrollbar-thumb { background: var(--black); border-radius: 0; }
+        @keyframes slide-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .slide-up { animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
-
-        .score-block-locked { opacity: 0.28; pointer-events: none; filter: grayscale(0.6); }
-        .score-block-active { animation: pulse-glow 2s ease-in-out infinite; }
-
-        /* ========== MOBILE ========== */
-        @media (max-width: 640px) {
-            .cell { min-height: 38px; padding: 4px 2px !important; }
-        }
-        @media (max-width: 380px) {
-            .cell { min-height: 34px; }
-        }
-        @media (max-height: 500px) and (orientation: landscape) {
-            header { padding-top: 4px !important; padding-bottom: 4px !important; }
-            section { padding-top: 2px !important; padding-bottom: 4px !important; }
-            #master-grid { gap: 3px !important; }
-            .cell { min-height: 30px !important; padding: 2px !important; }
-            .cell span { font-size: 9px !important; }
-            #turn-status-line { display: none; }
-        }
-
-        /* ========== IPAD / TABLET OPTIMIZATION ========== */
-        @media (min-width: 768px) and (max-width: 1366px) {
-            .cell {
-                min-height: 50px !important;
-                padding: 8px 6px !important;
-                border-radius: 14px !important;
-            }
-            .cell span { font-size: 14px !important; }
-            #score-buttons-container button { min-height: 50px; font-size: 13px !important; }
-            #question-modal > div { max-width: 620px !important; }
-        }
-
-        /* iPad портрет — 4 колонки */
-        @media (min-width: 768px) and (max-width: 1023px) and (orientation: portrait) {
-            #master-grid { grid-template-columns: repeat(4, 1fr) !important; gap: 8px !important; }
-        }
-        /* iPad ландшафт — 6 колонок */
-        @media (min-width: 1024px) and (max-width: 1365px) and (orientation: landscape) {
-            #master-grid { grid-template-columns: repeat(6, 1fr) !important; gap: 6px !important; }
-        }
-        /* iPad Pro 12.9" — 12 колонок */
-        @media (min-width: 1366px) {
-            #master-grid { grid-template-columns: repeat(12, 1fr) !important; }
-        }
-
-        /* Плотность: Comfortable (по умолчанию — для пальцев) */
-        body[data-density="comfortable"] .cell {
-            min-height: 54px !important;
-            padding: 8px 6px !important;
-        }
-        body[data-density="comfortable"] .cell span {
-            font-size: 15px !important;
-        }
-        /* Плотность: Compact (для больших экранов / мыши) */
-        body[data-density="compact"] .cell {
-            min-height: 36px !important;
-            padding: 3px 4px !important;
-        }
-        body[data-density="compact"] .cell span {
-            font-size: 11px !important;
-        }
-
-        /* Кнопка плотности — только на iPad */
+        @keyframes pop-in { 0% { transform: scale(0.5) rotate(-8deg); opacity: 0; } 70% { transform: scale(1.05) rotate(2deg); } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+        .pop-in { animation: pop-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        @keyframes pop-big { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+        .pop-big { animation: pop-big 0.8s ease-in-out infinite; }
+        .score-block-locked { opacity: 0.3; pointer-events: none; }
+        .score-block-active { background: var(--yellow) !important; animation: pop-big 1.2s ease-in-out infinite; }
+        .badge { display: inline-block; border: 2px solid var(--black); box-shadow: 2px 2px 0 var(--black); padding: 2px 8px; font-family: 'Archivo Black', sans-serif; font-size: 9px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--black); }
+        body[data-density="comfortable"] .cell { min-height: 56px; }
+        body[data-density="comfortable"] .cell span { font-size: 16px !important; }
+        body[data-density="compact"] .cell { min-height: 38px; }
+        body[data-density="compact"] .cell span { font-size: 12px !important; }
         #density-btn { display: none; }
-        @media (min-width: 768px) {
-            #density-btn { display: flex; }
-        }
+        @media (min-width: 768px) { #density-btn { display: flex; } }
+        @media (max-width: 640px) { .cell { min-height: 40px; padding: 4px 2px !important; } .cat-header { font-size: 7px; } }
+        @media (max-width: 380px) { .cell { min-height: 36px; } .cat-header { font-size: 6px; } }
+        @media (max-height: 500px) and (orientation: landscape) { .cell { min-height: 32px !important; padding: 2px !important; } .cell span { font-size: 10px !important; } #turn-status-line { display: none; } }
+        @media (min-width: 768px) and (max-width: 1023px) and (orientation: portrait) { #master-grid { grid-template-columns: repeat(4, 1fr) !important; } }
+        @media (min-width: 1024px) and (max-width: 1365px) and (orientation: landscape) { #master-grid { grid-template-columns: repeat(6, 1fr) !important; } }
+        @media (min-width: 1366px) { #master-grid { grid-template-columns: repeat(12, 1fr) !important; } }
     </style>
 </head>
-<body class="flex flex-col justify-between h-screen overflow-hidden antialiased" data-density="comfortable">
+<body class="flex flex-col justify-between h-screen overflow-hidden" data-density="comfortable">
 
-<!-- HEADER -->
-<header class="w-full px-2 sm:px-4 py-2 shrink-0 flex items-center justify-between z-30">
+<header class="w-full px-2 sm:px-4 py-1.5 shrink-0 flex items-center justify-between z-30">
     <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-neo-accent via-neo-pink to-neo-gold flex items-center justify-center text-white font-black text-sm shadow-lg shadow-neo-accent/30 shrink-0">
-            <i class="fa-solid fa-bolt"></i>
-        </div>
+        <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center text-lg sm:text-2xl shrink-0 brutal" style="background: var(--yellow); transform: rotate(-4deg);">⚡</div>
         <div class="min-w-0">
-            <h1 class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-white font-display leading-none truncate">СВОЯ ИГРА NEO</h1>
-            <p class="text-[7px] sm:text-[8px] text-neo-accent/80 font-bold tracking-widest mt-0.5">120 ВОПРОСОВ • IPAD READY</p>
+            <h1 class="display text-[11px] sm:text-sm uppercase leading-none truncate">СВОЯ ИГРА</h1>
+            <p class="text-[7px] sm:text-[9px] font-bold uppercase tracking-widest mt-0.5 truncate">120 ВОПРОСОВ • NEO-BRUTAL</p>
         </div>
     </div>
     <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-        <button id="density-btn" onclick="toggleDensity()" title="Плотность" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl glass items-center justify-center active:scale-95 transition">
-            <i class="fa-solid fa-table-cells-large text-neo-gold text-[10px] sm:text-xs" id="density-icon"></i>
-        </button>
-        <button onclick="toggleAudioMute()" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl glass flex items-center justify-center active:scale-95 transition">
-            <i class="fa-solid fa-volume-high text-neo-cyan text-[10px] sm:text-xs" id="mute-icon"></i>
-        </button>
-        <button onclick="showWinnerModal(true)" class="px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-gradient-to-r from-neo-gold/20 to-neo-pink/20 border border-neo-gold/40 text-neo-gold font-black text-[9px] sm:text-[10px] active:scale-95 transition flex items-center gap-1 font-display">
-            <i class="fa-solid fa-crown"></i> ИТОГИ
-        </button>
+        <button id="density-btn" onclick="toggleDensity()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg brutal-btn items-center justify-center text-sm" style="background: var(--lime);"><i class="fa-solid fa-table-cells-large" id="density-icon"></i></button>
+        <button onclick="toggleAudioMute()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg brutal-btn flex items-center justify-center text-sm" style="background: var(--cyan);"><i class="fa-solid fa-volume-high" id="mute-icon"></i></button>
+        <button onclick="showWinnerModal(true)" class="px-2 sm:px-4 h-9 sm:h-10 rounded-lg brutal-btn font-black text-[9px] sm:text-[11px] flex items-center gap-1.5 uppercase display" style="background: var(--pink); color: var(--white);"><i class="fa-solid fa-crown text-[10px]"></i> <span class="hidden sm:inline">ИТОГИ</span></button>
     </div>
 </header>
 
-<!-- PLAYERS -->
 <section class="px-2 sm:px-4 pt-1 pb-2 w-full max-w-6xl mx-auto shrink-0">
-    <div class="grid grid-cols-2 gap-2 sm:gap-3">
-        <div id="player-card-0" class="glass rounded-2xl px-3 py-2 sm:px-4 sm:py-2.5 flex items-center justify-between relative transition-all">
+    <div class="grid grid-cols-2 gap-2 sm:gap-4">
+        <div id="player-card-0" class="turn-card brutal rounded-xl px-2.5 py-2 sm:px-4 sm:py-3 flex items-center justify-between relative">
             <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-neo-pink to-rose-600 flex items-center justify-center text-sm sm:text-base shadow-lg shrink-0">👩‍🦰</div>
+                <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center text-lg sm:text-2xl shrink-0 brutal-flat" style="background: var(--pink);">👩‍🦰</div>
                 <div class="min-w-0">
-                    <div class="font-black text-xs sm:text-sm text-white font-display truncate">Кира</div>
-                    <span id="turn-badge-0" class="hidden text-[7px] bg-neo-pink text-white font-black px-1.5 py-0.5 rounded-md uppercase tracking-wider mt-0.5 inline-block">ХОДИТ</span>
+                    <div class="display text-xs sm:text-base uppercase leading-tight truncate">Кира</div>
+                    <span id="turn-badge-0" class="hidden text-[8px] sm:text-[9px] font-black uppercase tracking-wider mt-0.5 inline-block">→ ХОДИТ!</span>
                 </div>
             </div>
             <div class="text-right shrink-0">
-                <div id="score-0" class="text-base sm:text-xl font-black text-neo-pink font-mono glow-text">0</div>
-                <div class="text-[7px] sm:text-[8px] text-white/40 font-bold uppercase tracking-wider">очков</div>
+                <div id="score-0" class="display text-lg sm:text-3xl leading-none">0</div>
+                <div class="text-[7px] sm:text-[9px] font-bold uppercase tracking-widest mt-0.5 opacity-70">очков</div>
             </div>
         </div>
-        <div id="player-card-1" class="glass rounded-2xl px-3 py-2 sm:px-4 sm:py-2.5 flex items-center justify-between relative transition-all">
+        <div id="player-card-1" class="turn-card brutal rounded-xl px-2.5 py-2 sm:px-4 sm:py-3 flex items-center justify-between relative">
             <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-neo-cyan to-blue-600 flex items-center justify-center text-sm sm:text-base shadow-lg shrink-0">🧑‍💻</div>
+                <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center text-lg sm:text-2xl shrink-0 brutal-flat" style="background: var(--cyan);">🧑‍💻</div>
                 <div class="min-w-0">
-                    <div class="font-black text-xs sm:text-sm text-white font-display truncate">Витя</div>
-                    <span id="turn-badge-1" class="hidden text-[7px] bg-neo-cyan text-slate-950 font-black px-1.5 py-0.5 rounded-md uppercase tracking-wider mt-0.5 inline-block">ХОДИТ</span>
+                    <div class="display text-xs sm:text-base uppercase leading-tight truncate">Витя</div>
+                    <span id="turn-badge-1" class="hidden text-[8px] sm:text-[9px] font-black uppercase tracking-wider mt-0.5 inline-block">→ ХОДИТ!</span>
                 </div>
             </div>
             <div class="text-right shrink-0">
-                <div id="score-1" class="text-base sm:text-xl font-black text-neo-cyan font-mono glow-text">0</div>
-                <div class="text-[7px] sm:text-[8px] text-white/40 font-bold uppercase tracking-wider">очков</div>
+                <div id="score-1" class="display text-lg sm:text-3xl leading-none">0</div>
+                <div class="text-[7px] sm:text-[9px] font-bold uppercase tracking-widest mt-0.5 opacity-70">очков</div>
             </div>
         </div>
     </div>
     <div class="mt-2 text-center">
-        <div class="inline-block px-3 py-1 rounded-full glass-soft text-[9px] sm:text-[10px] font-bold text-white/70">
-            <span id="turn-status-line">Ход: <strong class="text-neo-gold">Кира</strong></span>
-        </div>
+        <div class="inline-block px-3 py-1 brutal-sm rounded-full text-[9px] sm:text-[11px] font-black uppercase"><span id="turn-status-line">Ход: Кира</span></div>
     </div>
 </section>
 
-<!-- GRID -->
-<main class="flex-1 px-2 sm:px-4 pb-2 w-full max-w-[1700px] mx-auto flex flex-col overflow-hidden">
-    <div class="glass rounded-3xl p-1.5 sm:p-2.5 h-full flex flex-col overflow-hidden">
-        <div id="master-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-12 gap-1 sm:gap-1.5 h-full overflow-y-auto no-scrollbar"></div>
+<main class="flex-1 px-2 sm:px-4 pb-2 w-full max-w-[1800px] mx-auto flex flex-col overflow-hidden">
+    <div class="brutal rounded-2xl p-1.5 sm:p-2 h-full flex flex-col overflow-hidden">
+        <div id="master-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-12 gap-1.5 sm:gap-2 h-full overflow-y-auto no-scrollbar"></div>
     </div>
 </main>
 
-<!-- FOOTER -->
 <footer class="px-3 sm:px-4 py-1.5 w-full max-w-6xl mx-auto shrink-0 flex justify-between items-center z-20">
-    <button onclick="resetGame(true)" class="px-3 py-1.5 rounded-xl glass-soft text-white/60 text-[9px] font-bold flex items-center gap-1.5 active:scale-95 transition">
-        <i class="fa-solid fa-rotate-right"></i> Сбросить
-    </button>
-    <span class="text-[8px] text-white/30 font-bold font-mono tracking-wider">12 × 10 • NEO</span>
+    <button onclick="resetGame(true)" class="px-3 py-1.5 rounded-lg brutal-btn text-[9px] sm:text-[10px] font-black uppercase display flex items-center gap-1.5" style="background: var(--red); color: var(--white);"><i class="fa-solid fa-rotate-right"></i> СБРОС</button>
+    <span class="text-[8px] sm:text-[9px] font-black uppercase tracking-widest opacity-50">12 × 10 • BRUTAL</span>
 </footer>
 
-<!-- QUESTION MODAL -->
-<div id="question-modal" class="fixed inset-0 bg-black/70 backdrop-blur-xl hidden flex flex-col justify-end z-50">
-    <div class="glass rounded-t-3xl w-full max-w-lg mx-auto p-4 sm:p-5 flex flex-col justify-between max-h-[95vh] overflow-y-auto slide-up" style="border-bottom: none; border-radius: 24px 24px 0 0;">
-        <div class="w-12 h-1.5 bg-white/20 rounded-full mx-auto mb-3"></div>
-        <div class="flex justify-between items-center border-b border-white/5 pb-3 mb-3">
+<div id="question-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex flex-col justify-end z-50">
+    <div class="brutal rounded-t-3xl w-full max-w-xl mx-auto p-4 sm:p-6 flex flex-col justify-between max-h-[95vh] overflow-y-auto slide-up" style="border-bottom: none; border-radius: 24px 24px 0 0; box-shadow: 0 -8px 0 var(--black);">
+        <div class="w-16 h-2 rounded-full mx-auto mb-4" style="background: var(--black);"></div>
+        <div class="flex justify-between items-center pb-3 mb-3 border-b-2 border-black">
             <div class="flex items-center gap-1.5 flex-wrap">
-                <span id="modal-category" class="bg-neo-accent/20 text-neo-accent border border-neo-accent/30 text-[8px] sm:text-[9px] font-black px-2 py-1 rounded-lg uppercase tracking-wider">Категория</span>
-                <span id="modal-points" class="bg-gradient-to-r from-neo-gold to-orange-500 text-slate-950 text-[8px] sm:text-[9px] font-black px-2 py-1 rounded-lg font-mono">500</span>
-                <span id="modal-special" class="hidden text-[8px] sm:text-[9px] font-black px-2 py-1 rounded-lg font-display"></span>
+                <span id="modal-category" class="badge" style="background: var(--yellow);">Категория</span>
+                <span id="modal-points" class="badge" style="background: var(--pink); color: var(--white);">500</span>
+                <span id="modal-special" class="hidden badge"></span>
             </div>
-            <div class="text-[9px] sm:text-[10px] text-white/60 font-bold">Ход: <strong id="modal-player-turn" class="text-neo-gold font-mono">Кира</strong></div>
+            <div class="text-[10px] sm:text-xs font-black uppercase">Ход: <span id="modal-player-turn" class="underline">Кира</span></div>
         </div>
         <div class="my-auto py-3 text-center flex flex-col items-center justify-center">
-            <div class="text-neo-accent text-[8px] sm:text-[9px] font-black uppercase tracking-widest mb-2" id="modal-difficulty-hint">Сложность</div>
-            <p id="modal-question-text" class="text-base sm:text-lg font-bold leading-snug text-white px-1">Текст вопроса...</p>
-            <div id="modal-answer-box" class="hidden mt-4 w-full p-3 bg-gradient-to-br from-emerald-950/80 to-emerald-900/40 border border-emerald-500/40 rounded-2xl text-emerald-300 text-center modal-in">
-                <div class="text-[8px] sm:text-[9px] uppercase tracking-widest text-emerald-400 font-black mb-1">✓ Правильный ответ:</div>
-                <div id="modal-answer-text" class="text-xs sm:text-sm font-black text-white font-display"></div>
+            <div class="text-[9px] sm:text-[10px] font-black uppercase tracking-widest mb-3 px-2 py-1 brutal-sm rounded" id="modal-difficulty-hint">Сложность</div>
+            <p id="modal-question-text" class="display text-lg sm:text-2xl leading-tight px-1">Текст вопроса...</p>
+            <div id="modal-answer-box" class="hidden mt-4 w-full p-3 sm:p-4 rounded-xl brutal-flat pop-in" style="background: var(--lime);">
+                <div class="text-[9px] sm:text-[10px] font-black uppercase tracking-widest mb-2">✓ ОТВЕТ:</div>
+                <div id="modal-answer-text" class="display text-sm sm:text-lg leading-tight"></div>
             </div>
-            <div id="modal-special-warning" class="hidden mt-3 w-full p-3 rounded-2xl text-center border-2"></div>
+            <div id="modal-special-warning" class="hidden mt-3 w-full p-3 sm:p-4 rounded-xl brutal-flat text-center"></div>
         </div>
-        <div class="pt-3 border-t border-white/5">
-            <div id="action-reveal-container" class="flex justify-center mb-3">
-                <button onclick="revealAnswer()" class="w-full py-3 bg-gradient-to-r from-neo-accent via-neo-pink to-neo-gold text-white font-black rounded-xl text-[11px] sm:text-xs uppercase tracking-wider shadow-lg shadow-neo-accent/30 active:scale-98 transition flex items-center justify-center gap-2 font-display">
-                    <i class="fa-solid fa-key"></i> ПОКАЗАТЬ ОТВЕТ
-                </button>
+        <div class="pt-3 border-t-2 border-black">
+            <div id="action-reveal-container" class="mb-3">
+                <button onclick="revealAnswer()" class="w-full py-3 sm:py-4 rounded-xl brutal-btn font-black text-sm sm:text-base uppercase display" style="background: var(--yellow);"><i class="fa-solid fa-key mr-1"></i> ПОКАЗАТЬ ОТВЕТ</button>
             </div>
-            <div id="score-buttons-container" class="grid grid-cols-2 gap-2">
-                <div id="score-block-0" class="bg-gradient-to-br from-pink-950/60 to-slate-950/80 p-2.5 rounded-xl border border-neo-pink/30 text-center flex flex-col gap-2 transition-all">
-                    <div class="text-[10px] font-black text-neo-pink flex items-center justify-center gap-1 font-display">
-                        👩‍🦰 Кира <span id="turn-tag-0" class="hidden text-[7px] bg-neo-pink text-white px-1.5 py-0.5 rounded">ХОД</span>
-                    </div>
+            <div id="score-buttons-container" class="grid grid-cols-2 gap-2 sm:gap-3">
+                <div id="score-block-0" class="brutal-flat rounded-xl p-2.5 sm:p-3 text-center flex flex-col gap-2 transition-all" style="background: var(--white);">
+                    <div class="text-[10px] sm:text-xs font-black uppercase display flex items-center justify-center gap-1">👩‍🦰 КИРА <span id="turn-tag-0" class="hidden text-[8px] px-1.5 py-0.5 brutal-sm rounded bg-white">ХОД</span></div>
                     <div class="flex gap-1.5">
-                        <button onclick="scorePlayer(0, true)" class="flex-1 py-2 bg-gradient-to-b from-emerald-500 to-emerald-600 active:scale-95 text-white font-black rounded-lg text-[10px] shadow-lg shadow-emerald-500/20 transition flex items-center justify-center gap-1">
-                            <i class="fa-solid fa-plus text-[9px]"></i> <span id="btn-kira-plus">+100</span>
-                        </button>
-                        <button onclick="scorePlayer(0, false)" class="flex-1 py-2 bg-gradient-to-b from-rose-500 to-rose-600 active:scale-95 text-white font-black rounded-lg text-[10px] shadow-lg shadow-rose-500/20 transition flex items-center justify-center gap-1">
-                            <i class="fa-solid fa-minus text-[9px]"></i> <span id="btn-kira-minus">-100</span>
-                        </button>
+                        <button onclick="scorePlayer(0, true)" class="flex-1 py-2 sm:py-3 rounded-lg brutal-btn font-black text-[11px] sm:text-sm" style="background: var(--green); color: var(--white);"><i class="fa-solid fa-plus text-[9px] mr-0.5"></i><span id="btn-kira-plus">+100</span></button>
+                        <button onclick="scorePlayer(0, false)" class="flex-1 py-2 sm:py-3 rounded-lg brutal-btn font-black text-[11px] sm:text-sm" style="background: var(--red); color: var(--white);"><i class="fa-solid fa-minus text-[9px] mr-0.5"></i><span id="btn-kira-minus">-100</span></button>
                     </div>
                 </div>
-                <div id="score-block-1" class="bg-gradient-to-br from-cyan-950/60 to-slate-950/80 p-2.5 rounded-xl border border-neo-cyan/30 text-center flex flex-col gap-2 transition-all">
-                    <div class="text-[10px] font-black text-neo-cyan flex items-center justify-center gap-1 font-display">
-                        🧑‍💻 Витя <span id="turn-tag-1" class="hidden text-[7px] bg-neo-cyan text-slate-950 px-1.5 py-0.5 rounded">ХОД</span>
-                    </div>
+                <div id="score-block-1" class="brutal-flat rounded-xl p-2.5 sm:p-3 text-center flex flex-col gap-2 transition-all" style="background: var(--white);">
+                    <div class="text-[10px] sm:text-xs font-black uppercase display flex items-center justify-center gap-1">🧑‍💻 ВИТЯ <span id="turn-tag-1" class="hidden text-[8px] px-1.5 py-0.5 brutal-sm rounded bg-white">ХОД</span></div>
                     <div class="flex gap-1.5">
-                        <button onclick="scorePlayer(1, true)" class="flex-1 py-2 bg-gradient-to-b from-emerald-500 to-emerald-600 active:scale-95 text-white font-black rounded-lg text-[10px] shadow-lg shadow-emerald-500/20 transition flex items-center justify-center gap-1">
-                            <i class="fa-solid fa-plus text-[9px]"></i> <span id="btn-vitya-plus">+100</span>
-                        </button>
-                        <button onclick="scorePlayer(1, false)" class="flex-1 py-2 bg-gradient-to-b from-rose-500 to-rose-600 active:scale-95 text-white font-black rounded-lg text-[10px] shadow-lg shadow-rose-500/20 transition flex items-center justify-center gap-1">
-                            <i class="fa-solid fa-minus text-[9px]"></i> <span id="btn-vitya-minus">-100</span>
-                        </button>
+                        <button onclick="scorePlayer(1, true)" class="flex-1 py-2 sm:py-3 rounded-lg brutal-btn font-black text-[11px] sm:text-sm" style="background: var(--green); color: var(--white);"><i class="fa-solid fa-plus text-[9px] mr-0.5"></i><span id="btn-vitya-plus">+100</span></button>
+                        <button onclick="scorePlayer(1, false)" class="flex-1 py-2 sm:py-3 rounded-lg brutal-btn font-black text-[11px] sm:text-sm" style="background: var(--red); color: var(--white);"><i class="fa-solid fa-minus text-[9px] mr-0.5"></i><span id="btn-vitya-minus">-100</span></button>
                     </div>
                 </div>
             </div>
-            <div class="mt-2 text-center">
-                <button onclick="closeQuestionModal()" class="text-[9px] text-white/40 hover:text-white/70 underline font-bold py-1">Пропустить → передать ход</button>
+            <div class="mt-3 text-center">
+                <button onclick="closeQuestionModal()" class="text-[10px] sm:text-[11px] font-black uppercase underline opacity-50 hover:opacity-100 py-1">Пропустить → передать ход</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- WINNER MODAL -->
-<div id="winner-modal" class="fixed inset-0 bg-black/85 backdrop-blur-2xl hidden flex items-center justify-center p-4 z-50">
-    <div class="glass rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl relative overflow-hidden modal-in">
-        <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-neo-gold to-orange-500 flex items-center justify-center text-4xl mx-auto mb-4 shadow-lg shadow-neo-gold/40">👑</div>
-        <h2 class="text-2xl font-black uppercase text-neo-gold font-display mb-1">ФИНАЛ!</h2>
-        <p class="text-[10px] text-white/40 uppercase tracking-widest font-bold mb-4">120 вопросов сыграно</p>
-        <p id="winner-name" class="text-xl font-black text-white my-2 font-display">Победитель</p>
-        <p id="winner-score" class="text-xs text-neo-gold font-mono font-bold mb-5">Результат</p>
-        <div class="bg-black/40 rounded-2xl p-4 mb-5 border border-white/5 flex justify-around items-center">
-            <div class="text-center">
-                <div class="text-[11px] text-neo-pink font-black mb-1 font-display">КИРА</div>
-                <div id="final-score-0" class="text-2xl font-black text-neo-pink font-mono glow-text">0</div>
-            </div>
-            <div class="w-px h-10 bg-white/10"></div>
-            <div class="text-center">
-                <div class="text-[11px] text-neo-cyan font-black mb-1 font-display">ВИТЯ</div>
-                <div id="final-score-1" class="text-2xl font-black text-neo-cyan font-mono glow-text">0</div>
-            </div>
-        </div>
-        <button onclick="resetGame(true); closeModal('winner-modal');" class="w-full py-3.5 bg-gradient-to-r from-neo-gold via-neo-pink to-neo-accent text-white font-black rounded-xl active:scale-95 transition shadow-lg shadow-neo-accent/30 text-sm font-display">
-            СЫГРАТЬ СНОВА
-        </button>
+<div id="instant-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+    <div id="instant-card" class="brutal rounded-3xl max-w-md w-full p-6 sm:p-8 text-center pop-in" style="transform: rotate(-2deg);">
+        <div id="instant-icon" class="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl flex items-center justify-center text-5xl sm:text-7xl mx-auto mb-4 brutal-flat pop-big"></div>
+        <h2 id="instant-title" class="display text-2xl sm:text-4xl uppercase mb-3"></h2>
+        <p id="instant-desc" class="text-sm sm:text-base font-bold mb-6"></p>
+        <button onclick="closeInstantModal()" class="w-full py-3 sm:py-4 rounded-xl brutal-btn font-black text-sm sm:text-base uppercase display" style="background: var(--yellow);">ПРОДОЛЖИТЬ →</button>
     </div>
 </div>
 
-<!-- SPAM AD MODAL -->
-<div id="spam-ad-modal" class="fixed inset-0 hidden z-[100] overflow-hidden">
-    <div class="absolute inset-0 animate-flash-bg"></div>
-    <div class="relative w-full h-full flex flex-col items-center justify-center p-4 text-center overflow-hidden">
-        <div class="animate-shake-hard max-w-2xl">
-            <div class="text-4xl sm:text-6xl md:text-8xl font-black mb-3 animate-pop-text drop-shadow-[0_0_20px_rgba(0,0,0,0.8)]">
-                <span class="rainbow-text">💎 DIAMOND SHOP 💎</span>
-            </div>
-            <div class="text-xl sm:text-3xl md:text-5xl text-white font-black mb-2 drop-shadow-[0_2px_8px_rgba(0,0,0,1)]">
-                🚀 ЛУЧШИЕ РЕЗКИ В DISCORD! 🚀
-            </div>
-            <div class="text-base sm:text-2xl md:text-3xl text-yellow-200 font-black mb-4 animate-pulse drop-shadow-[0_2px_8px_rgba(0,0,0,1)]">
-                🎁 СКИДКА 1000% + БОНУС АЛМАЗЫ 🎁
-            </div>
-            <div class="flex flex-wrap gap-2 justify-center mb-4">
-                <span class="px-3 py-1 bg-black/80 text-cyan-300 font-black rounded-full text-xs sm:text-base animate-bounce">😎 РЕЗКИ</span>
-                <span class="px-3 py-1 bg-black/80 text-pink-300 font-black rounded-full text-xs sm:text-base animate-bounce" style="animation-delay:0.2s">🔥 АЛМАЗЫ</span>
-                <span class="px-3 py-1 bg-black/80 text-yellow-300 font-black rounded-full text-xs sm:text-base animate-bounce" style="animation-delay:0.4s">💀 МЕМЫ</span>
-            </div>
-            <button onclick="closeSpamAd()" class="px-8 py-4 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 text-white text-xl sm:text-3xl font-black rounded-2xl border-4 border-white animate-bounce shadow-[0_0_30px_rgba(255,255,0,0.8)]">
-                ЗАЙТИ В DISCORD! 🎉
-            </button>
-            <div class="text-white text-lg sm:text-2xl font-black mt-4 animate-pulse drop-shadow-[0_2px_8px_rgba(0,0,0,1)]">
-                ⚡ ААААА КУПИ АЛМАЗЫ!!! ⚡
-            </div>
+<div id="winner-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+    <div class="brutal rounded-3xl max-w-md w-full p-6 sm:p-8 text-center pop-in" style="transform: rotate(-1deg);">
+        <div class="w-20 h-20 sm:w-28 sm:h-28 rounded-2xl flex items-center justify-center text-4xl sm:text-6xl mx-auto mb-4 brutal-flat" style="background: var(--yellow); transform: rotate(4deg);">👑</div>
+        <h2 class="display text-2xl sm:text-3xl uppercase mb-2">ФИНАЛ!</h2>
+        <p class="text-[10px] sm:text-xs font-black uppercase tracking-widest opacity-60 mb-4">120 вопросов сыграно</p>
+        <p id="winner-name" class="display text-lg sm:text-2xl my-3"></p>
+        <p id="winner-score" class="text-xs sm:text-sm font-bold mb-5"></p>
+        <div class="grid grid-cols-2 gap-3 mb-5">
+            <div class="brutal-flat rounded-xl p-3" style="background: var(--pink); color: var(--white);"><div class="display text-[10px] sm:text-xs uppercase mb-1">КИРА</div><div id="final-score-0" class="display text-2xl sm:text-3xl">0</div></div>
+            <div class="brutal-flat rounded-xl p-3" style="background: var(--cyan);"><div class="display text-[10px] sm:text-xs uppercase mb-1">ВИТЯ</div><div id="final-score-1" class="display text-2xl sm:text-3xl">0</div></div>
         </div>
+        <button onclick="resetGame(true); closeModal('winner-modal');" class="w-full py-3 sm:py-4 rounded-xl brutal-btn font-black text-sm sm:text-base uppercase display" style="background: var(--yellow);">СЫГРАТЬ СНОВА 🔥</button>
     </div>
 </div>
 
@@ -435,38 +225,37 @@ let currentQuestion = null;
 let activeCellElement = null;
 let activeCellKey = null;
 let isAudioMuted = false;
-let spamLoopTimer = null;
 let blockedPlayerIndex = null;
 
-const STORAGE_KEY = 'jeopardy_neo_12x10_v9_ipad';
-const DENSITY_KEY = 'jeopardy_neo_density';
+const STORAGE_KEY = 'jeopardy_brutal_12x10_v12';
+const DENSITY_KEY = 'jeopardy_brutal_density';
 let playedQuestions = new Set();
 let specialCells = {};
 
 // ========== CATEGORIES ==========
 const categories = [
-    { id: 'angarsk', name: 'Ангарск', icon: 'fa-location-dot', color: 'text-amber-400' },
-    { id: 'brawl', name: 'Brawl Stars', icon: 'fa-skull-crossbones', color: 'text-pink-400' },
-    { id: 'memes', name: 'Мемы 2026', icon: 'fa-fire', color: 'text-rose-400' },
-    { id: 'music', name: 'Русская Музыка', icon: 'fa-music', color: 'text-cyan-400' },
-    { id: 'youtube', name: 'YouTube RU', icon: 'fa-play-circle', color: 'text-red-400' },
-    { id: 'words', name: 'Слова', icon: 'fa-font', color: 'text-emerald-400' },
-    { id: 'movies', name: 'Кино & Сериалы', icon: 'fa-clapperboard', color: 'text-amber-300' },
-    { id: 'space', name: 'Наука', icon: 'fa-rocket', color: 'text-purple-300' },
-    { id: 'food', name: 'Еда', icon: 'fa-burger', color: 'text-cyan-300' },
-    { id: 'games', name: 'Игры', icon: 'fa-gamepad', color: 'text-indigo-400' },
-    { id: 'anime', name: 'Аниме', icon: 'fa-dragon', color: 'text-purple-400' },
-    { id: 'money', name: 'Деньги', icon: 'fa-coins', color: 'text-yellow-400' }
+    { id: 'angarsk', name: 'Ангарск', color: '#FF7A2F', icon: 'fa-location-dot' },
+    { id: 'brawl', name: 'Brawl Stars', color: '#FF3D8B', icon: 'fa-skull-crossbones' },
+    { id: 'memes', name: 'Мемы', color: '#A855F7', icon: 'fa-fire' },
+    { id: 'music', name: 'Музыка', color: '#00CFFF', icon: 'fa-music' },
+    { id: 'youtube', name: 'YouTube RU', color: '#FF3D3D', icon: 'fa-play-circle' },
+    { id: 'animals', name: 'Животные', color: '#22C55E', icon: 'fa-paw' },
+    { id: 'food', name: 'Еда', color: '#FFE24B', icon: 'fa-burger' },
+    { id: 'sport', name: 'Спорт', color: '#3B82F6', icon: 'fa-futbol' },
+    { id: 'nature', name: 'Природа', color: '#A8FF3D', icon: 'fa-leaf' },
+    { id: 'cartoons', name: 'Мультфильмы', color: '#FFB347', icon: 'fa-tv' },
+    { id: 'school', name: 'Школа', color: '#C4B5FD', icon: 'fa-graduation-cap' },
+    { id: 'space', name: 'Космос', color: '#818CF8', icon: 'fa-rocket' }
 ];
 
 const pointValues = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
 
 function getDifficulty(points) {
-    if (points <= 200) return { label: '🌱 Разминка' };
-    if (points <= 400) return { label: '⚡ Легко' };
-    if (points <= 600) return { label: '🎯 Средне' };
-    if (points <= 800) return { label: '🔥 Сложно' };
-    if (points <= 900) return { label: '💀 Очень сложно' };
+    if (points <= 200) return { label: '🌱 РАЗМИНКА' };
+    if (points <= 400) return { label: '⚡ ЛЕГКО' };
+    if (points <= 600) return { label: '🎯 СРЕДНЕ' };
+    if (points <= 800) return { label: '🔥 СЛОЖНО' };
+    if (points <= 900) return { label: '💀 ОЧЕНЬ СЛОЖНО' };
     return { label: '👑 ХАРДКОР' };
 }
 
@@ -474,13 +263,12 @@ function getDifficulty(points) {
 function generateSpecialCells() {
     const map = {};
     const types = [
-        { type: 'spam_ad', count: 12 },
         { type: 'double', count: 6 },
         { type: 'trap', count: 6 },
         { type: 'jackpot', count: 3 },
-        { type: 'swap', count: 3 },
         { type: 'block', count: 3 },
-        { type: 'karaoke', count: 3 }
+        { type: 'bonus', count: 5 },
+        { type: 'penalty', count: 5 }
     ];
     const allKeys = [];
     categories.forEach(c => pointValues.forEach(p => allKeys.push(`${c.id}-${p}`)));
@@ -500,161 +288,160 @@ function generateSpecialCells() {
 function getSpecialInfo(key) {
     const s = specialCells[key];
     if (!s) return null;
-    if (s.type === 'double') return { emoji: '💎', label: '×2', badgeCls: 'bg-blue-500 text-white' };
-    if (s.type === 'trap') return { emoji: '⚠️', label: 'ЛОВУШКА', badgeCls: 'bg-rose-600 text-white' };
-    if (s.type === 'spam_ad') return { emoji: '🎰', label: 'РЕКЛАМА', badgeCls: 'bg-yellow-500 text-slate-950' };
-    if (s.type === 'jackpot') return { emoji: '🎁', label: '×5 ДЖЕКПОТ', badgeCls: 'bg-fuchsia-600 text-white' };
-    if (s.type === 'swap') return { emoji: '🔄', label: 'ОБМЕН', badgeCls: 'bg-orange-500 text-white' };
-    if (s.type === 'block') return { emoji: '🚫', label: 'БЛОК', badgeCls: 'bg-slate-600 text-white' };
-    if (s.type === 'karaoke') return { emoji: '🎵', label: 'КАРАОКЕ', badgeCls: 'bg-violet-500 text-white' };
+    if (s.type === 'double') return { emoji: '💎', label: '×2', bg: '#00CFFF' };
+    if (s.type === 'trap') return { emoji: '⚠️', label: 'ЛОВУШКА', bg: '#FF3D3D', white: true };
+    if (s.type === 'jackpot') return { emoji: '🎁', label: '×5', bg: '#A855F7', white: true };
+    if (s.type === 'block') return { emoji: '🚫', label: 'БЛОК', bg: '#6B7280', white: true };
+    if (s.type === 'bonus') return { emoji: '🎲', label: 'БОНУС', bg: '#A8FF3D' };
+    if (s.type === 'penalty') return { emoji: '💥', label: 'ШТРАФ', bg: '#FF7A2F', white: true };
     return null;
 }
 
-// ========== 120 ВОПРОСОВ ==========
+// ========== 120 НОВЫХ ВОПРОСОВ (2025-2026) ==========
 const questionsDatabase = {
     'angarsk': {
-        100: { q: 'На какой реке стоит город Ангарск?', a: 'На Ангаре (в междуречье Ангары и Китоя)' },
-        200: { q: 'Какой ангарский ДК носит имя, связанное с энергетикой?', a: 'ДК «Энергетик»' },
-        300: { q: 'Сколько микрорайонов (кварталов) насчитывает Ангарск?', a: 'Более 90 кварталов' },
-        400: { q: 'Какой аэропорт обслуживает Ангарск?', a: 'Иркутск (Международный аэропорт)' },
-        500: { q: 'Какое озеро в Ангарске — излюбленное место купания?', a: 'Озеро «Квадраты»' },
-        600: { q: 'Какой театр работает в Ангарске?', a: 'Ангарский театр-студия «Чудак»' },
-        700: { q: 'Как называется главная площадь старой части города?', a: 'Площадь Ленина' },
-        800: { q: 'Какой химический комбинат — градообразующее предприятие?', a: 'АНХК (Ангарская нефтехимическая компания)' },
-        900: { q: 'Какой музей есть в Ангарске?', a: 'Музей часов и Музей Победы' },
-        1000: { q: 'В каком году Ангарск получил статус города?', a: '30 мая 1951 года' }
+        100: { q: 'В каком году началось строительство Ангарска?', a: 'В 1945 году, сразу после Победы' },
+        200: { q: 'Междуречье каких двух рек расположен Ангарск?', a: 'Ангары и Китоя' },
+        300: { q: 'Какой комбинат стал градообразующим предприятием?', a: 'Комбинат №16 по производству жидкого моторного топлива' },
+        400: { q: 'В каком году Ангарск официально получил статус города?', a: '30 мая 1951 года' },
+        500: { q: 'Сколько жителей насчитывает Ангарск?', a: 'Около 247 тысяч человек' },
+        600: { q: 'Какой памятник самолёту установлен на въезде в город?', a: 'Самолёт МиГ-17' },
+        700: { q: 'Какое управление занималось строительством города и комбината?', a: 'Главпромстрой МВД СССР' },
+        800: { q: 'Сколько квадратных метров жилья было введено в 1951 году?', a: '158 тысяч кв. м' },
+        900: { q: 'Какой музей, посвящённый точному времени, есть в Ангарске?', a: 'Музей часов' },
+        1000: { q: 'Какое название носил посёлок до получения статуса города?', a: 'Ангарский' }
     },
     'brawl': {
-        100: { q: 'Какая редкость у бравлера Шелли?', a: 'Начальный (стартовый)' },
-        200: { q: 'Какой ресурс дают за победы в ранговых матчах?', a: 'Ранговые очки и награды' },
-        300: { q: 'Сколько бойцов можно взять в командный бой 3×3?', a: 'Ровно 3 бравлера на команду' },
-        400: { q: 'Какой бравлер выпускает пчёл и мёд?', a: 'Би (Bea)' },
-        500: { q: 'Какая карта самая популярная в Brawl Stars?', a: '«Центр» / «Кристальный карьер»' },
-        600: { q: 'Кто такой Спайк в Brawl Stars?', a: 'Легендарный кактус-бравлер с колючими атаками' },
-        700: { q: 'Что даёт Brawl Pass?', a: 'Награды за прогресс сезона: монеты, гемы, бравлеры' },
-        800: { q: 'Как называется режим с мячом?', a: 'Броулбол (Brawl Ball)' },
-        900: { q: 'Какой бравлер может стать невидимым?', a: 'Леон' },
-        1000: { q: 'Сколько бравлеров за сезон обычно добавляют разработчики?', a: '2-3 новых бойца за сезон' }
+        100: { q: 'Какой бравлер стал 100-м по счёту в игре?', a: 'Сириус' },
+        200: { q: 'Какой бравлер вышел в апреле 2026 года под метал-саундтрек?', a: 'Дамиан' },
+        300: { q: 'Какой новый мифический бравлер-дамагер вышел в феврале 2026?', a: 'Наджия' },
+        400: { q: 'Какой бравлер стал первым, родившимся в Starr Park?', a: 'Нори' },
+        500: { q: 'Какой бравлер вышел в августе 2026 как астроном?', a: 'Космо' },
+        600: { q: 'Какой бравлер поддержки вышел вместе с Нори?', a: 'Венди' },
+        700: { q: 'Какой бравлер вышел в августе 2026 вместе с Космо?', a: 'Винс' },
+        800: { q: 'Какая группа записала саундтрек для нового бравлера Дамиана?', a: 'Electric Callboy' },
+        900: { q: 'Кто написал анимационный трейлер для бравлера Наджия?', a: 'Тайка Вайтити' },
+        1000: { q: 'Какой класс у бравлера Наджия?', a: 'Мифический дамагер с ядами' }
     },
     'memes': {
-        100: { q: 'Что означает сленговое «кринж»?', a: 'Что-то неловкое, стыдное' },
-        200: { q: 'Кто такой «сигма» в мемах?', a: 'Сильный одиночка-мужчина, независимый' },
-        300: { q: 'Мем «Это фиаско, братан» — откуда фраза?', a: 'Из старого российского видео' },
-        400: { q: 'Что такое «рофл» в интернет-сленге?', a: 'Шутка, прикол, смех' },
-        500: { q: 'Мем «Ну ты и лох» — к кому чаще всего обращаются?', a: 'К другу в шутку' },
-        600: { q: 'Что означает «жиза»?', a: 'Жизненно, прямо в точку' },
-        700: { q: 'Кто такой «альтушка»?', a: 'Девушка в стиле альтернативной субкультуры' },
-        800: { q: 'Что такое «имба» в геймерском сленге?', a: 'Что-то несправедливо сильное, overpowered' },
-        900: { q: 'Что означает слово «вайб»?', a: 'Атмосфера, настроение, ощущение' },
-        1000: { q: 'Что значит «пон» в мемах?', a: 'Понял, осознал' }
+        100: { q: 'Какой мем стал самым популярным в Рунете в 2026 году?', a: '«Сикс-севен» (6-7)' },
+        200: { q: 'Какой мем про зайца и льва стал вирусным в 2026?', a: '«Черемша»' },
+        300: { q: 'Какой мем связан с чрезмерно разговорчивыми людьми?', a: '«Воздухан»' },
+        400: { q: 'Какой мем ворвался в топ-3 Рунета в 2026 году?', a: '«Бурмалда»' },
+        500: { q: 'Кто такой «кот Куки» из мемов 2026 года?', a: 'Кот по прозвищу «Котость»' },
+        600: { q: 'Какой тренд 2026 года связан с движением против течения?', a: '«Нишевость»' },
+        700: { q: 'Какой мем высмеивает фразу топ-менеджера «Автоваза»?', a: '«Можно. А зачем?»' },
+        800: { q: 'Сколько упоминаний собрал мем «Сикс-севен» за 7 месяцев?', a: 'Более 1,26 миллиона' },
+        900: { q: 'Какой тренд 2026 года связан с 2016 годом?', a: '«Верните мой 2016-й»' },
+        1000: { q: 'Кто такой Данил Колбасенко в мемах 2026?', a: 'Мальчик с добрым голосом' }
     },
     'music': {
-        100: { q: 'Кто поёт «Позови меня с собой»?', a: 'Алла Пугачёва' },
-        200: { q: 'Какая группа поёт «Ты неси меня, река»?', a: 'Любэ' },
-        300: { q: 'Кто исполнил «Я русский»?', a: 'SHAMAN' },
-        400: { q: 'Кто поёт «Между нами тает лёд»?', a: 'Грибы' },
-        500: { q: 'Какая группа исполняет «Владимирский централ»?', a: 'Михаил Круг (сольный артист)' },
-        600: { q: 'Кто написал песню «Подмосковные вечера»?', a: 'Василий Соловьёв-Седой (музыка), Михаил Матусовский (слова)' },
-        700: { q: 'Какая группа исполняет «Как упоительны в России вечера»?', a: 'Белый орёл' },
-        800: { q: 'Кто поёт «Матушка»?', a: 'Татьяна Куртукова' },
-        900: { q: 'Кто исполнил песню «Группа крови»?', a: 'Виктор Цой (группа «Кино»)' },
-        1000: { q: 'Кто такой Егор Летов?', a: 'Лидер группы «Гражданская оборона»' }
+        100: { q: 'Какая песня стала самой популярной о России в 2026 году?', a: '«Матушка» — Татьяна Куртукова' },
+        200: { q: 'Какая песня заняла 2 место среди песен о России?', a: '«Ты неси меня, река» — Любэ' },
+        300: { q: 'Какой трек стал хитом №1 в интернет-чарте 2026 года?', a: '«Банк» — Zivert и Icegergert' },
+        400: { q: 'Какая песня Любэ также попала в топ песен о России?', a: '«От Волги до Енисея»' },
+        500: { q: 'Кто исполнил «Эпилог» в 2026 году?', a: 'Дима Билан и ANNA ASTI' },
+        600: { q: 'Какая группа исполнила «Как упоительны в России вечера»?', a: 'Белый Орёл' },
+        700: { q: 'Какая песня Sabi & Mia Boyka попала в топ-5?', a: '«Базовый минимум»' },
+        800: { q: 'Какой трек Ваня Дмитриенко и Ани Пересильд стал хитом?', a: '«Силуэт»' },
+        900: { q: 'Какая песня Любэ посвящена Родине-матери?', a: '«За тебя, Родина-мать»' },
+        1000: { q: 'Какой сгенерированный ИИ артист попал в чарты 2026 года?', a: '«Это радио»' }
     },
     'youtube': {
-        100: { q: 'Какой российский YouTube-канал посвящён авто?', a: 'Академия Дрифта / CarCoach' },
-        200: { q: 'Кто ведёт канал «Уэльбэк»?', a: 'Мультипликатор-аниматор' },
-        300: { q: 'Какой канал делает обзоры фильмов?', a: 'Кинопоиск / BadComedian' },
-        400: { q: 'Кто такой «Кузьма» на YouTube?', a: 'Стример / видеоблогер' },
-        500: { q: 'Какой канал делает кулинарные шоу?', a: 'Кухня наизнанку / Лазерсон' },
-        600: { q: 'Кто ведёт «Что было дальше?»?', a: 'LABELCOM' },
-        700: { q: 'Кто такой Дружко?', a: 'Шоумен Сергей Дружко' },
-        800: { q: 'Какой канал делает научпоп-видео?', a: 'Улица Шкловского / ТОПЛЕС' },
-        900: { q: 'Кто ведёт канал «Wylsacom»?', a: 'Валентин Петухов' },
-        1000: { q: 'Какой российский ютубер №1 по подписчикам в 2026?', a: 'Влад Бумага (A4)' }
+        100: { q: 'Какой детский канал №1 в России по подписчикам?', a: '«Маша и Медведь»' },
+        200: { q: 'Какой влог-канал занимает 2 место по подписчикам?', a: 'Like Nastya Vlog' },
+        300: { q: 'Какой канал занимает 3 место по подписчикам в России?', a: 'HiMan' },
+        400: { q: 'Кто ведёт канал про игры и занимает 5 место?', a: 'Marmok' },
+        500: { q: 'Какой канал занимает 4 место по подписчикам?', a: 'Kika Kim' },
+        600: { q: 'У какого российского канала 13 миллионов подписчиков?', a: 'Иван Гай' },
+        700: { q: 'Какой канал делает шоу «вДудь»?', a: 'Юрий Дудь' },
+        800: { q: 'Какой легендарный канал КВН имеет 3,8 млн подписчиков?', a: 'КВН' },
+        900: { q: 'Какой канал занимается научными обзорами с 2,8 млн подписчиков?', a: 'Enjoykin' },
+        1000: { q: 'Какой канал «Славный другар Обломов» имеет 2,9 млн подписчиков?', a: 'Славный другар Обломов' }
     },
-    'words': {
-        100: { q: 'Собери слово: ОМД', a: 'ДОМ' },
-        200: { q: 'Собери слово: НОЛС', a: 'СЛОН' },
-        300: { q: 'Собери слово: НИГАК', a: 'КНИГА' },
-        400: { q: 'Собери слово: КАБАСО', a: 'СОБАКА' },
-        500: { q: 'Собери слово: КОШКАА', a: 'КОШКА' },
-        600: { q: 'Собери слово: ОРЕХБ', a: 'ОБРЕХ' },
-        700: { q: 'Собери слово: МОРЕК', a: 'КОРМЕ' },
-        800: { q: 'Собери слово: ТАРЕЛКА', a: 'ТАРЕЛКА' },
-        900: { q: 'Собери слово: ЛАМПАЧОК', a: 'ЛАМПОЧКА' },
-        1000: { q: 'Собери слово: ТЕЛЕФОН', a: 'ТЕЛЕФОН' }
+    'animals': {
+        100: { q: 'Какое животное строит хатку?', a: 'Бобр' },
+        200: { q: 'Какое самое большое животное из всех, когда-либо живших на Земле?', a: 'Синий кит' },
+        300: { q: 'Какое животное может обходиться без воды 14 дней?', a: 'Верблюд' },
+        400: { q: 'У какого животного более 25 000 перьев?', a: 'У лебедя' },
+        500: { q: 'Какое млекопитающее может стоять на голове?', a: 'Слон (и человек)' },
+        600: { q: 'Какое животное является лучшим садовником?', a: 'Белка' },
+        700: { q: 'Зуб какого животного может весить до 9 кг?', a: 'Слона' },
+        800: { q: 'Какое животное самое высокое в мире?', a: 'Жираф' },
+        900: { q: 'Какое животное имеет зелёный оттенок шерсти?', a: 'Ленивец' },
+        1000: { q: 'Какая птица подбрасывает яйца в чужие гнёзда?', a: 'Кукушка' }
     },
-    'movies': {
-        100: { q: 'Кто снял «Иронию судьбы»?', a: 'Эльдар Рязанов' },
-        200: { q: 'Как зовут главного героя «Брата»?', a: 'Данила Багров' },
-        300: { q: 'Какой фильм снимался в Крыму и стал хитом 2024?', a: '«Лёд 3»' },
-        400: { q: 'Кто сыграл Штирлица в «Семнадцати мгновениях весны»?', a: 'Вячеслав Тихонов' },
-        500: { q: 'Какой российский сериал про ментов стал классикой?', a: '«Улицы разбитых фонарей»' },
-        600: { q: 'Кто режиссёр фильма «Москва слезам не верит»?', a: 'Владимир Меньшов' },
-        700: { q: 'Какой фильм получил «Оскар» в 2024 от России?', a: 'Никакой (не было номинации)' },
-        800: { q: 'Кто сыграл Воланда в сериале «Мастер и Маргарита» 2024?', a: 'Аугуст Диль' },
-        900: { q: 'Кто автор романа-первоисточника «Мастер и Маргарита»?', a: 'Михаил Булгаков' },
-        1000: { q: 'Какой российский сериал про хакеров вышел в 2025?', a: '«Слово пацана» / «Хакер»' }
+    'food': {
+        100: { q: 'Самый ранний овощ-корнеплод?', a: 'Редис' },
+        200: { q: 'Какой овощ привезён в Европу из Перу?', a: 'Картофель' },
+        300: { q: 'Какое изделие прославило город, подаривший миру пиццу?', a: 'Неаполь' },
+        400: { q: 'Что в русской сказке Колобок — хлеб, пирог или пряник?', a: 'Пряник' },
+        500: { q: 'В какой стране запретили кофе в XVII веке?', a: 'В Турции' },
+        600: { q: 'Сколько гектаров пиццы съедают в США ежедневно?', a: 'Около 75 гектаров' },
+        700: { q: 'Более 40% какого ореха идёт на шоколад?', a: 'Миндаля' },
+        800: { q: 'Для удобства поедания чего придумали вилку с зубцами?', a: 'Макарон' },
+        900: { q: 'Англичане называют кофе с молоком как?', a: '«Белый кофе»' },
+        1000: { q: 'Какой продукт называли «волчьим персиком»?', a: 'Помидор' }
+    },
+    'sport': {
+        100: { q: 'Сколько колец на олимпийском флаге?', a: '5 колец' },
+        200: { q: 'Самый быстрый ракеточный вид спорта?', a: 'Бадминтон' },
+        300: { q: 'Кто самый быстрый человек в мире?', a: 'Усэйн Болт' },
+        400: { q: 'В каком году бокс узаконили как вид спорта?', a: 'В 1900 году' },
+        500: { q: 'Из чего сделана первая медаль современных Олимпийских игр?', a: 'Из серебра' },
+        600: { q: 'Какой порошок используют гимнасты?', a: 'Магнезия' },
+        700: { q: 'Сколько игроков в футбольной команде?', a: '11 игроков' },
+        800: { q: 'Как называется соревнование лыжников со стрельбой?', a: 'Биатлон' },
+        900: { q: 'Какой вид спорта называют «королевой спорта»?', a: 'Лёгкая атлетика' },
+        1000: { q: 'Какой город рекордсмен по Олимпийским играм?', a: 'Лондон' }
+    },
+    'nature': {
+        100: { q: 'Сколько цветов в радуге?', a: '7 цветов' },
+        200: { q: 'Какое самое глубокое озеро в мире?', a: 'Байкал' },
+        300: { q: 'Как называется самая высокая гора?', a: 'Эверест' },
+        400: { q: 'Какое дерево самое высокое в мире?', a: 'Секвойя' },
+        500: { q: 'Какой океан самый большой?', a: 'Тихий океан' },
+        600: { q: 'Что такое «радуга»?', a: 'Оптическое явление после дождя' },
+        700: { q: 'Какой материк самый большой?', a: 'Евразия' },
+        800: { q: 'Какое дерево символ России?', a: 'Берёза' },
+        900: { q: 'Какой самый крупный цветок в мире?', a: 'Раффлезия' },
+        1000: { q: 'Где появились первые арбузы?', a: 'В Африке (более 4000 лет назад)' }
+    },
+    'cartoons': {
+        100: { q: 'Как зовут друга Чебурашки?', a: 'Крокодил Гена' },
+        200: { q: 'Как зовут кота из Простоквашино?', a: 'Матроскин' },
+        300: { q: 'Как зовут розового друга Винни-Пуха?', a: 'Пятачок' },
+        400: { q: 'Как зовут девочку из «Маши и Медведя»?', a: 'Маша' },
+        500: { q: 'Какого цвета был шарик у Ослика Иа?', a: 'Зелёный' },
+        600: { q: 'Кто озвучивал Волка в «Ну, погоди!»?', a: 'Анатолий Папанов' },
+        700: { q: 'Кем работал крокодил Гена в зоопарке?', a: 'Крокодилом' },
+        800: { q: 'Сколько богатырей в мультфильме?', a: 'Три богатыря' },
+        900: { q: 'Как зовут деревянного мальчика из сказки?', a: 'Буратино' },
+        1000: { q: 'Что делили котёнок и щенок в «Котёнке по имени Гав»?', a: 'Сосиску' }
+    },
+    'school': {
+        100: { q: 'Сколько букв в русском алфавите?', a: '33 буквы' },
+        200: { q: 'Сколько дней в неделе?', a: '7 дней' },
+        300: { q: 'Сколько месяцев в году?', a: '12 месяцев' },
+        400: { q: 'Как называется перерыв между уроками?', a: 'Перемена' },
+        500: { q: 'Сколько минут в одном часе?', a: '60 минут' },
+        600: { q: 'Как называется книга с оценками?', a: 'Дневник' },
+        700: { q: 'Какая самая высокая оценка в школе?', a: 'Пятёрка (5)' },
+        800: { q: 'Что изучает математика?', a: 'Числа и фигуры' },
+        900: { q: 'Что означает словесный эквивалент оценки «пять»?', a: '«Отлично»' },
+        1000: { q: 'Сколько континентов на Земле?', a: '6 континентов' }
     },
     'space': {
         100: { q: 'Сколько планет в Солнечной системе?', a: '8 планет' },
-        200: { q: 'Какой спутник у Земли?', a: 'Луна' },
-        300: { q: 'Кто первым вышел в открытый космос?', a: 'Алексей Леонов' },
-        400: { q: 'Как называется ближайшая к нам галактика?', a: 'Андромеда (2,5 млн св. лет)' },
-        500: { q: 'Что такое «красное смещение»?', a: 'Удаление галактик друг от друга' },
-        600: { q: 'Какая самая горячая планета в Солнечной системе?', a: 'Венера (около 470°C)' },
-        700: { q: 'Что такое световой год?', a: 'Расстояние, которое свет проходит за год (~9,46 трлн км)' },
-        800: { q: 'Как называется первая ступень ракеты SpaceX?', a: 'Super Heavy (для Starship)' },
-        900: { q: 'Сколько лететь до Марса?', a: '6-9 месяцев' },
-        1000: { q: 'Что такое «тёмная материя»?', a: 'Невидимое вещество, влияющее на гравитацию' }
-    },
-    'food': {
-        100: { q: 'Из чего делают борщ?', a: 'Свёкла, капуста, мясо, картофель, морковь' },
-        200: { q: 'Что такое «сырники»?', a: 'Творожные оладьи' },
-        300: { q: 'Из чего делают пельмени?', a: 'Тесто + фарш (обычно свино-говяжий)' },
-        400: { q: 'Что такое «Оливье»?', a: 'Салат из варёных овощей, мяса и майонеза' },
-        500: { q: 'Какая рыба — символ Нового года в России?', a: 'Селёдка (под шубой)' },
-        600: { q: 'Что такое «сельдь под шубой»?', a: 'Слоёный салат с селёдкой, картошкой, морковью, свёклой' },
-        700: { q: 'Из чего делают мороженое «пломбир»?', a: 'Молоко, сливки, сахар, яйца' },
-        800: { q: 'Какая самая популярная крупа в России?', a: 'Гречка' },
-        900: { q: 'Что такое «сгущёнка»?', a: 'Сгущённое молоко с сахаром' },
-        1000: { q: 'Какой напиток готовят из берёзового сока?', a: 'Квас / берёзовый сок' }
-    },
-    'games': {
-        100: { q: 'Сколько игроков в команде в CS?', a: '5 игроков' },
-        200: { q: 'Какая студия сделала «Ведьмака 3»?', a: 'CD Projekt RED' },
-        300: { q: 'Что означает «РПГ» в играх?', a: 'Ролевая игра (Role-Playing Game)' },
-        400: { q: 'В какой игре есть персонаж Кратос?', a: 'God of War' },
-        500: { q: 'Как называется главный киберспортивный турнир по Dota 2?', a: 'The International (TI)' },
-        600: { q: 'Кто такой «нуб» в играх?', a: 'Новичок, неопытный игрок' },
-        700: { q: 'Что такое «тиммейт»?', a: 'Сокомандник, товарищ по команде' },
-        800: { q: 'Какая игра самая продаваемая в истории?', a: 'Minecraft' },
-        900: { q: 'Что такое «фритуплей»?', a: 'Бесплатная игра с микротранзакциями' },
-        1000: { q: 'Кто такой «читер»?', a: 'Игрок, использующий сторонние программы' }
-    },
-    'anime': {
-        100: { q: 'Какой аниме-сериал про пиратов самый длинный?', a: 'One Piece («Ван-Пис»)' },
-        200: { q: 'Как зовут главного героя «Атаки титанов»?', a: 'Эрен Йегер' },
-        300: { q: 'Какая студия сняла «Унесённых призраками»?', a: 'Studio Ghibli' },
-        400: { q: 'Какой аниме-сериал про алхимиков-братьев?', a: '«Стальной алхимик»' },
-        500: { q: 'Кто написал мангу «Наруто»?', a: 'Масаси Кисимото' },
-        600: { q: 'Какой аниме-жанр про роботов?', a: 'Меха' },
-        700: { q: 'Что такое «исэкай»?', a: 'Жанр про попадание в другой мир' },
-        800: { q: 'Как зовут главного героя «Тетради смерти»?', a: 'Лайт Ягами' },
-        900: { q: 'Какой аниме-фильм получил «Оскар»?', a: '«Унесённые призраками» (2003)' },
-        1000: { q: 'Кто такой «отаку»?', a: 'Фанат аниме и манги' }
-    },
-    'money': {
-        100: { q: 'Какая валюта в России?', a: 'Российский рубль (₽)' },
-        200: { q: 'Сколько копеек в одном рубле?', a: '100 копеек' },
-        300: { q: 'Какая самая крупная купюра России?', a: '5000 рублей' },
-        400: { q: 'Что изображено на купюре 100 рублей?', a: 'Аполлон и Большой театр' },
-        500: { q: 'Что такое «инфляция»?', a: 'Обесценивание денег, рост цен' },
-        600: { q: 'Какая самая дорогая монета России?', a: '«Полтина» Петра I / редкие экземпляры' },
-        700: { q: 'Что такое «депозит»?', a: 'Вклад денег в банк под проценты' },
-        800: { q: 'Что такое «биткоин»?', a: 'Первая криптовалюта' },
-        900: { q: 'Что такое «дивиденды»?', a: 'Часть прибыли акционерам' },
-        1000: { q: 'Что такое «ипотека»?', a: 'Кредит на покупку недвижимости' }
+        200: { q: 'Как называется спутник Земли?', a: 'Луна' },
+        300: { q: 'Кто первым полетел в космос?', a: 'Юрий Гагарин' },
+        400: { q: 'Как называется наша галактика?', a: 'Млечный Путь' },
+        500: { q: 'Сколько длился первый полёт человека в космос?', a: '1 час 48 минут (108 минут)' },
+        600: { q: 'Кто первая женщина-космонавт?', a: 'Валентина Терешкова' },
+        700: { q: 'Как называется космический корабль Гагарина?', a: '«Восток»' },
+        800: { q: 'Кто первым вышел в открытый космос?', a: 'Алексей Леонов' },
+        900: { q: 'Какая планета самая горячая в Солнечной системе?', a: 'Венера' },
+        1000: { q: 'Какая самая высокая гора в Солнечной системе?', a: 'Гора Олимп на Марсе (27 км)' }
     }
 };
 
@@ -665,15 +452,11 @@ function getAudioCtx() {
     if (audioCtx.state === 'suspended') audioCtx.resume();
     return audioCtx;
 }
-
 function toggleAudioMute() {
     isAudioMuted = !isAudioMuted;
     const icon = document.getElementById('mute-icon');
-    icon.className = isAudioMuted
-        ? 'fa-solid fa-volume-xmark text-rose-400 text-[10px] sm:text-xs'
-        : 'fa-solid fa-volume-high text-neo-cyan text-[10px] sm:text-xs';
+    icon.className = isAudioMuted ? 'fa-solid fa-volume-xmark' : 'fa-solid fa-volume-high';
 }
-
 function playSound(type) {
     if (isAudioMuted) return;
     try {
@@ -724,58 +507,20 @@ function playSound(type) {
                 g.gain.linearRampToValueAtTime(0.01, now + i * 0.07 + 0.2);
                 o.start(now + i * 0.07); o.stop(now + i * 0.07 + 0.2);
             });
-        } else if (type === 'spam') {
-            for (let i = 0; i < 8; i++) {
-                const o = ctx.createOscillator(), g = ctx.createGain();
-                o.connect(g); g.connect(ctx.destination);
-                o.type = i % 2 === 0 ? 'square' : 'sawtooth';
-                const freq = 200 + Math.random() * 1400;
-                o.frequency.setValueAtTime(freq, now + i * 0.09);
-                g.gain.setValueAtTime(0.12, now + i * 0.09);
-                g.gain.linearRampToValueAtTime(0.01, now + i * 0.09 + 0.08);
-                o.start(now + i * 0.09);
-                o.stop(now + i * 0.09 + 0.08);
-            }
-            const o2 = ctx.createOscillator(), g2 = ctx.createGain();
-            o2.connect(g2); g2.connect(ctx.destination);
-            o2.type = 'square';
-            o2.frequency.setValueAtTime(2000, now + 0.72);
-            o2.frequency.exponentialRampToValueAtTime(300, now + 1.1);
-            g2.gain.setValueAtTime(0.13, now + 0.72);
-            g2.gain.linearRampToValueAtTime(0.01, now + 1.1);
-            o2.start(now + 0.72); o2.stop(now + 1.1);
         }
     } catch(e) {}
 }
 
-function playSpamLoop() {
-    if (isAudioMuted) return;
-    if (spamLoopTimer) return;
-    playSound('spam');
-    spamLoopTimer = setInterval(() => {
-        if (document.getElementById('spam-ad-modal').classList.contains('hidden')) {
-            clearInterval(spamLoopTimer); spamLoopTimer = null; return;
-        }
-        playSound('spam');
-    }, 1300);
-}
-
-// ========== DENSITY (Плотность) ==========
+// ========== DENSITY ==========
 function applyDensity(mode) {
     document.body.setAttribute('data-density', mode);
     const icon = document.getElementById('density-icon');
-    if (mode === 'comfortable') {
-        icon.className = 'fa-solid fa-table-cells-large text-neo-gold text-[10px] sm:text-xs';
-    } else {
-        icon.className = 'fa-solid fa-table-cells text-neo-cyan text-[10px] sm:text-xs';
-    }
+    icon.className = mode === 'comfortable' ? 'fa-solid fa-table-cells-large' : 'fa-solid fa-table-cells';
     try { localStorage.setItem(DENSITY_KEY, mode); } catch(e) {}
 }
-
 function toggleDensity() {
     const current = document.body.getAttribute('data-density') || 'comfortable';
-    const next = current === 'comfortable' ? 'compact' : 'comfortable';
-    applyDensity(next);
+    applyDensity(current === 'comfortable' ? 'compact' : 'comfortable');
     playSound('click');
 }
 
@@ -798,17 +543,12 @@ function loadState() {
         } else {
             specialCells = generateSpecialCells();
         }
-    } catch (e) {
-        specialCells = generateSpecialCells();
-    }
-    // Плотность
+    } catch (e) { specialCells = generateSpecialCells(); }
     try {
         const d = localStorage.getItem(DENSITY_KEY);
-        if (d) applyDensity(d);
-        else applyDensity('comfortable');
+        if (d) applyDensity(d); else applyDensity('comfortable');
     } catch(e) { applyDensity('comfortable'); }
 }
-
 function saveState() {
     try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify({
@@ -825,45 +565,32 @@ function saveState() {
 function initGrid() {
     const masterGrid = document.getElementById('master-grid');
     masterGrid.innerHTML = '';
-
     categories.forEach(cat => {
         const colDiv = document.createElement('div');
-        colDiv.className = 'flex flex-col gap-1 h-full overflow-hidden';
-
+        colDiv.className = 'flex flex-col gap-1.5 h-full overflow-hidden';
         const headerDiv = document.createElement('div');
-        headerDiv.className = 'text-center pb-1.5 border-b border-white/5 shrink-0';
-        headerDiv.innerHTML = `
-            <div class="text-[7px] sm:text-[8px] md:text-[9px] font-black ${cat.color} uppercase font-display leading-tight flex items-center justify-center gap-1">
-                <i class="fa-solid ${cat.icon} text-[6px] sm:text-[7px]"></i>
-                <span class="truncate">${cat.name}</span>
-            </div>`;
+        headerDiv.className = 'shrink-0';
+        headerDiv.innerHTML = `<div class="cat-header rounded-lg" style="background: ${cat.color};">${cat.name}</div>`;
         colDiv.appendChild(headerDiv);
-
         const tiersDiv = document.createElement('div');
-        tiersDiv.className = 'flex flex-col gap-1 overflow-y-auto no-scrollbar flex-1';
-
+        tiersDiv.className = 'flex flex-col gap-1 sm:gap-1.5 overflow-y-auto no-scrollbar flex-1';
         pointValues.forEach(points => {
             const key = `${cat.id}-${points}`;
             const isPlayed = playedQuestions.has(key);
-
             const btn = document.createElement('button');
-            btn.className = `cell text-neo-gold font-black rounded-lg flex items-center justify-center font-mono relative shrink-0 ${isPlayed ? 'cell-done' : ''}`;
+            btn.className = `cell rounded-lg flex items-center justify-center ${isPlayed ? 'cell-done' : ''}`;
             btn.dataset.key = key;
-
             if (isPlayed) {
-                btn.innerHTML = `<i class="fa-solid fa-check text-emerald-400/60 text-[10px] sm:text-xs"></i>`;
+                btn.innerHTML = `<i class="fa-solid fa-check" style="color: #999;"></i>`;
             } else {
-                btn.innerHTML = `<span class="text-neo-gold font-mono font-black glow-text leading-none">${points}</span>`;
+                btn.innerHTML = `<span class="display" style="color: var(--black);">${points}</span>`;
             }
-
             btn.onclick = () => openQuestion(btn, key, cat.id, cat.name, points);
             tiersDiv.appendChild(btn);
         });
-
         colDiv.appendChild(tiersDiv);
         masterGrid.appendChild(colDiv);
     });
-
     updateTurnUI();
 }
 
@@ -873,35 +600,26 @@ function updateTurnUI() {
         const card = document.getElementById(`player-card-${idx}`);
         const badge = document.getElementById(`turn-badge-${idx}`);
         document.getElementById(`score-${idx}`).innerText = p.score;
-
         if (idx === activePlayerIndex) {
-            card.className = `glass rounded-2xl px-3 py-2 sm:px-4 sm:py-2.5 flex items-center justify-between relative transition-all pulse-glow`;
-            card.style.borderColor = idx === 0 ? 'rgba(255, 92, 157, 0.6)' : 'rgba(34, 211, 238, 0.6)';
+            card.className = `turn-card brutal rounded-xl px-2.5 py-2 sm:px-4 sm:py-3 flex items-center justify-between relative ${idx === 0 ? 'active-kira' : 'active-vitya'}`;
             badge.classList.remove('hidden');
         } else {
-            card.className = 'glass rounded-2xl px-3 py-2 sm:px-4 sm:py-2.5 flex items-center justify-between relative transition-all opacity-50';
-            card.style.borderColor = '';
+            card.className = 'turn-card brutal rounded-xl px-2.5 py-2 sm:px-4 sm:py-3 flex items-center justify-between relative inactive';
             badge.classList.add('hidden');
         }
     });
-
     const statusLine = document.getElementById('turn-status-line');
-    let statusText = `Ход: <strong class="text-neo-gold">${players[activePlayerIndex].name}</strong>`;
-    if (blockedPlayerIndex !== null) {
-        statusText += ` • 🚫 <span class="text-rose-400">${players[blockedPlayerIndex].name} пропускает</span>`;
-    }
+    let statusText = `Ход: <strong>${players[activePlayerIndex].name}</strong>`;
+    if (blockedPlayerIndex !== null) statusText += ` • 🚫 ${players[blockedPlayerIndex].name} пропускает`;
     statusLine.innerHTML = statusText;
-
     updateScoreButtonStates();
 }
-
 function updateScoreButtonStates() {
     if (!currentQuestion) return;
     for (let i = 0; i < 2; i++) {
         const block = document.getElementById(`score-block-${i}`);
         const tag = document.getElementById(`turn-tag-${i}`);
         if (!block || !tag) continue;
-
         if (i === activePlayerIndex) {
             block.classList.remove('score-block-locked');
             block.classList.add('score-block-active');
@@ -917,13 +635,27 @@ function updateScoreButtonStates() {
 // ========== QUESTION MODAL ==========
 function openQuestion(btnEl, key, catId, catName, points) {
     if (playedQuestions.has(key) || btnEl.classList.contains('cell-done')) return;
-
     playSound('click');
     activeCellElement = btnEl;
     activeCellKey = key;
-
     const diffInfo = getDifficulty(points);
     const special = getSpecialInfo(key);
+
+    if (special && (specialCells[key].type === 'bonus' || specialCells[key].type === 'penalty')) {
+        const isBonus = specialCells[key].type === 'bonus';
+        const delta = isBonus ? points : -points;
+        players[activePlayerIndex].score += delta;
+        if (isBonus) playSound('correct'); else playSound('wrong');
+        showInstantModal(isBonus, delta);
+        playedQuestions.add(key);
+        if (activeCellElement) {
+            activeCellElement.classList.add('cell-done');
+            activeCellElement.innerHTML = `<i class="fa-solid fa-check" style="color: #999;"></i>`;
+        }
+        saveState();
+        updateTurnUI();
+        return;
+    }
 
     currentQuestion = {
         key: key, catId: catId, category: catName,
@@ -931,9 +663,9 @@ function openQuestion(btnEl, key, catId, catName, points) {
         data: questionsDatabase[catId][points],
         special: special ? specialCells[key].type : null
     };
-
     document.getElementById('modal-category').innerText = catName;
-    document.getElementById('modal-points').innerText = `${points} pts`;
+    document.getElementById('modal-category').style.background = categories.find(c => c.id === catId).color;
+    document.getElementById('modal-points').innerText = `${points} PTS`;
     document.getElementById('modal-difficulty-hint').innerText = diffInfo.label;
     document.getElementById('modal-player-turn').innerText = players[activePlayerIndex].name;
     document.getElementById('modal-question-text').innerText = currentQuestion.data.q;
@@ -942,51 +674,36 @@ function openQuestion(btnEl, key, catId, catName, points) {
     const specialBadge = document.getElementById('modal-special');
     if (special) {
         specialBadge.classList.remove('hidden');
-        specialBadge.className = `text-[8px] sm:text-[9px] font-black px-2 py-1 rounded-lg font-display ${special.badgeCls}`;
+        specialBadge.style.background = special.bg;
+        specialBadge.style.color = special.white ? '#FFFFFF' : '#0A0A0A';
         specialBadge.innerText = `${special.emoji} ${special.label}`;
-    } else {
-        specialBadge.classList.add('hidden');
-    }
+    } else specialBadge.classList.add('hidden');
 
     const warnBox = document.getElementById('modal-special-warning');
     if (currentQuestion.special === 'double') {
-        warnBox.className = 'mt-3 w-full p-3 rounded-2xl text-center border-2 border-blue-500/60 bg-blue-950/60 text-blue-200';
-        warnBox.innerHTML = `<div class="text-[9px] font-black uppercase tracking-wider mb-1">💎 ×2 УДВОЕНИЕ</div><div class="text-xs font-bold">Верно → <strong class="text-white">+${points * 2}</strong><br>Ошибка → <strong class="text-rose-300">-${points}</strong></div>`;
+        warnBox.style.background = 'var(--cyan)';
+        warnBox.innerHTML = `<div class="display text-xs sm:text-sm mb-1">💎 ×2 УДВОЕНИЕ</div><div class="text-xs sm:text-sm font-bold">Верно → <strong>+${points * 2}</strong><br>Ошибка → <strong>-${points}</strong></div>`;
         warnBox.classList.remove('hidden');
     } else if (currentQuestion.special === 'trap') {
-        warnBox.className = 'mt-3 w-full p-3 rounded-2xl text-center border-2 border-rose-500/60 bg-rose-950/60 text-rose-200';
-        warnBox.innerHTML = `<div class="text-[9px] font-black uppercase tracking-wider mb-1">⚠️ ЛОВУШКА</div><div class="text-xs font-bold">Верно → <strong class="text-white">+${points}</strong><br>Ошибка → <strong class="text-rose-300">-${points * 2}</strong></div>`;
-        warnBox.classList.remove('hidden');
-    } else if (currentQuestion.special === 'spam_ad') {
-        warnBox.className = 'mt-3 w-full p-3 rounded-2xl text-center border-2 border-yellow-500/60 bg-yellow-950/60 text-yellow-200';
-        warnBox.innerHTML = `<div class="text-[9px] font-black uppercase tracking-wider mb-1">🎰 РЕКЛАМА</div><div class="text-xs font-bold">СЮРПРИЗ! Нажми «Показать ответ» 💎</div>`;
+        warnBox.style.background = 'var(--red)'; warnBox.style.color = '#FFFFFF';
+        warnBox.innerHTML = `<div class="display text-xs sm:text-sm mb-1">⚠️ ЛОВУШКА</div><div class="text-xs sm:text-sm font-bold">Верно → <strong>+${points}</strong><br>Ошибка → <strong>-${points * 2}</strong></div>`;
         warnBox.classList.remove('hidden');
     } else if (currentQuestion.special === 'jackpot') {
-        warnBox.className = 'mt-3 w-full p-3 rounded-2xl text-center border-2 border-fuchsia-500/60 bg-fuchsia-950/60 text-fuchsia-200';
-        warnBox.innerHTML = `<div class="text-[9px] font-black uppercase tracking-wider mb-1">🎁 ДЖЕКПОТ ×5</div><div class="text-xs font-bold">Верно → <strong class="text-white">+${points * 5}</strong>!!!<br>Ошибка → <strong class="text-rose-300">-${points}</strong></div>`;
-        warnBox.classList.remove('hidden');
-    } else if (currentQuestion.special === 'swap') {
-        warnBox.className = 'mt-3 w-full p-3 rounded-2xl text-center border-2 border-orange-500/60 bg-orange-950/60 text-orange-200';
-        warnBox.innerHTML = `<div class="text-[9px] font-black uppercase tracking-wider mb-1">🔄 ОБМЕН ОЧКАМИ</div><div class="text-xs font-bold">Игроки автоматически меняются счетами!</div>`;
+        warnBox.style.background = 'var(--purple)'; warnBox.style.color = '#FFFFFF';
+        warnBox.innerHTML = `<div class="display text-xs sm:text-sm mb-1">🎁 ДЖЕКПОТ ×5</div><div class="text-xs sm:text-sm font-bold">Верно → <strong>+${points * 5}</strong>!!!<br>Ошибка → <strong>-${points}</strong></div>`;
         warnBox.classList.remove('hidden');
     } else if (currentQuestion.special === 'block') {
-        warnBox.className = 'mt-3 w-full p-3 rounded-2xl text-center border-2 border-slate-500/60 bg-slate-800/60 text-slate-200';
-        warnBox.innerHTML = `<div class="text-[9px] font-black uppercase tracking-wider mb-1">🚫 БЛОКИРОВКА</div><div class="text-xs font-bold">Соперник пропустит следующий ход!</div>`;
-        warnBox.classList.remove('hidden');
-    } else if (currentQuestion.special === 'karaoke') {
-        warnBox.className = 'mt-3 w-full p-3 rounded-2xl text-center border-2 border-violet-500/60 bg-violet-950/60 text-violet-200';
-        warnBox.innerHTML = `<div class="text-[9px] font-black uppercase tracking-wider mb-1">🎵 КАРАОКЕ</div><div class="text-xs font-bold">Игрок должен СПЕТЬ строчку! Ведущий оценивает.</div>`;
+        warnBox.style.background = '#6B7280'; warnBox.style.color = '#FFFFFF';
+        warnBox.innerHTML = `<div class="display text-xs sm:text-sm mb-1">🚫 БЛОКИРОВКА</div><div class="text-xs sm:text-sm font-bold">Соперник пропустит следующий ход!</div>`;
         warnBox.classList.remove('hidden');
     } else {
-        warnBox.classList.add('hidden');
+        warnBox.classList.add('hidden'); warnBox.style.color = '';
     }
 
     updateScoreButtonLabels();
-
     document.getElementById('modal-answer-box').classList.add('hidden');
     document.getElementById('action-reveal-container').classList.remove('hidden');
     document.getElementById('question-modal').classList.remove('hidden');
-
     updateScoreButtonStates();
 }
 
@@ -997,50 +714,57 @@ function updateScoreButtonLabels() {
     if (s === 'double') { plusVal = p * 2; minusVal = p; }
     else if (s === 'trap') { plusVal = p; minusVal = p * 2; }
     else if (s === 'jackpot') { plusVal = p * 5; minusVal = p; }
-
     document.getElementById('btn-kira-plus').innerText = `+${plusVal}`;
     document.getElementById('btn-kira-minus').innerText = `-${minusVal}`;
     document.getElementById('btn-vitya-plus').innerText = `+${plusVal}`;
     document.getElementById('btn-vitya-minus').innerText = `-${minusVal}`;
 }
-
 function revealAnswer() {
     playSound('reveal');
     document.getElementById('modal-answer-box').classList.remove('hidden');
     document.getElementById('action-reveal-container').classList.add('hidden');
+}
 
-    if (currentQuestion && currentQuestion.special === 'spam_ad') {
-        openSpamAd();
+// ========== INSTANT MODAL ==========
+function showInstantModal(isBonus, delta) {
+    const card = document.getElementById('instant-card');
+    const icon = document.getElementById('instant-icon');
+    const title = document.getElementById('instant-title');
+    const desc = document.getElementById('instant-desc');
+    if (isBonus) {
+        card.style.background = 'var(--lime)';
+        icon.style.background = 'var(--white)';
+        icon.innerText = '🎲';
+        title.innerText = 'БОНУС!';
+        desc.innerText = `${players[activePlayerIndex].name} получает +${delta} очков!`;
+    } else {
+        card.style.background = 'var(--orange)';
+        icon.style.background = 'var(--white)';
+        icon.innerText = '💥';
+        title.innerText = 'ШТРАФ!';
+        desc.innerText = `${players[activePlayerIndex].name} теряет ${Math.abs(delta)} очков!`;
     }
+    document.getElementById('instant-modal').classList.remove('hidden');
 }
-
-// ========== SPAM AD ==========
-function openSpamAd() {
-    document.getElementById('spam-ad-modal').classList.remove('hidden');
-    playSpamLoop();
-}
-
-function closeSpamAd() {
-    document.getElementById('spam-ad-modal').classList.add('hidden');
-    if (spamLoopTimer) { clearInterval(spamLoopTimer); spamLoopTimer = null; }
+function closeInstantModal() {
+    document.getElementById('instant-modal').classList.add('hidden');
+    let next = activePlayerIndex === 0 ? 1 : 0;
+    if (blockedPlayerIndex !== null && next === blockedPlayerIndex) {
+        blockedPlayerIndex = null;
+        next = next === 0 ? 1 : 0;
+    }
+    activePlayerIndex = next;
+    saveState();
+    updateTurnUI();
+    checkGameCompletion();
 }
 
 // ========== SCORING ==========
 function scorePlayer(playerIdx, isCorrect) {
     if (!currentQuestion) return;
     if (playerIdx !== activePlayerIndex) { playSound('wrong'); return; }
-
     const p = currentQuestion.points;
     const s = currentQuestion.special;
-
-    if (s === 'swap') {
-        const temp = players[0].score;
-        players[0].score = players[1].score;
-        players[1].score = temp;
-        playSound('correct');
-        finishTurn(false);
-        return;
-    }
 
     if (s === 'block') {
         blockedPlayerIndex = activePlayerIndex === 0 ? 1 : 0;
@@ -1058,22 +782,17 @@ function scorePlayer(playerIdx, isCorrect) {
     if (!isCorrect && Math.abs(delta) >= 400) {
         if (!confirm(`Списать ${Math.abs(delta)} очков у ${players[playerIdx].name}?`)) return;
     }
-
-    if (isCorrect) playSound('correct');
-    else playSound('wrong');
-
+    if (isCorrect) playSound('correct'); else playSound('wrong');
     players[playerIdx].score += delta;
-    const keepTurn = isCorrect && s !== 'karaoke';
-    finishTurn(!keepTurn);
+    finishTurn(!isCorrect);
 }
 
 function finishTurn(switchPlayer) {
     if (activeCellKey) playedQuestions.add(activeCellKey);
     if (activeCellElement) {
         activeCellElement.classList.add('cell-done');
-        activeCellElement.innerHTML = `<i class="fa-solid fa-check text-emerald-400/60 text-xs"></i>`;
+        activeCellElement.innerHTML = `<i class="fa-solid fa-check" style="color: #999;"></i>`;
     }
-
     if (switchPlayer) {
         let next = activePlayerIndex === 0 ? 1 : 0;
         if (blockedPlayerIndex !== null && next === blockedPlayerIndex) {
@@ -1082,7 +801,6 @@ function finishTurn(switchPlayer) {
         }
         activePlayerIndex = next;
     }
-
     saveState();
     updateTurnUI();
     closeQuestionModal(true);
@@ -1093,7 +811,7 @@ function closeQuestionModal(skipDisable = false) {
         playedQuestions.add(activeCellKey);
         if (activeCellElement) {
             activeCellElement.classList.add('cell-done');
-            activeCellElement.innerHTML = `<i class="fa-solid fa-check text-emerald-400/60 text-xs"></i>`;
+            activeCellElement.innerHTML = `<i class="fa-solid fa-check" style="color: #999;"></i>`;
         }
         let next = activePlayerIndex === 0 ? 1 : 0;
         if (blockedPlayerIndex !== null && next === blockedPlayerIndex) {
@@ -1104,53 +822,36 @@ function closeQuestionModal(skipDisable = false) {
         saveState();
         updateTurnUI();
     }
-
     document.getElementById('question-modal').classList.add('hidden');
     document.getElementById('modal-special-warning').classList.add('hidden');
     document.getElementById('modal-special').classList.add('hidden');
-
     activeCellElement = null;
     activeCellKey = null;
     currentQuestion = null;
-
     checkGameCompletion();
 }
-
 function closeModal(modalId) { document.getElementById(modalId).classList.add('hidden'); }
-
 function checkGameCompletion() {
     const total = categories.length * pointValues.length;
-    if (playedQuestions.size >= total) {
-        setTimeout(() => showWinnerModal(), 400);
-    }
+    if (playedQuestions.size >= total) setTimeout(() => showWinnerModal(), 400);
 }
 
 function showWinnerModal() {
     playSound('win');
     let winnerText = "", winnerScoreText = "";
-    if (players[0].score > players[1].score) {
-        winnerText = "👑 Побеждает Кира!";
-        winnerScoreText = `С результатом ${players[0].score} очков!`;
-    } else if (players[1].score > players[0].score) {
-        winnerText = "👑 Побеждает Витя!";
-        winnerScoreText = `С результатом ${players[1].score} очков!`;
-    } else {
-        winnerText = "🤝 Абсолютная Ничья!";
-        winnerScoreText = `Оба набрали по ${players[0].score} очков!`;
-    }
+    if (players[0].score > players[1].score) { winnerText = "👑 КИРА ПОБЕДИЛА!"; winnerScoreText = `С результатом ${players[0].score} очков!`; }
+    else if (players[1].score > players[0].score) { winnerText = "👑 ВИТЯ ПОБЕДИЛ!"; winnerScoreText = `С результатом ${players[1].score} очков!`; }
+    else { winnerText = "🤝 НИЧЬЯ!"; winnerScoreText = `Оба набрали по ${players[0].score} очков!`; }
     document.getElementById('winner-name').innerText = winnerText;
     document.getElementById('winner-score').innerText = winnerScoreText;
     document.getElementById('final-score-0').innerText = players[0].score;
     document.getElementById('final-score-1').innerText = players[1].score;
     document.getElementById('winner-modal').classList.remove('hidden');
-
     if (window.confetti) {
         const duration = 3500, end = Date.now() + duration;
         (function frame() {
-            confetti({ particleCount: 6, angle: 60, spread: 55, origin: { x: 0 },
-                colors: ['#7C5CFF', '#FF5C9D', '#22D3EE', '#FFB547'] });
-            confetti({ particleCount: 6, angle: 120, spread: 55, origin: { x: 1 },
-                colors: ['#7C5CFF', '#FF5C9D', '#22D3EE', '#FFB547'] });
+            confetti({ particleCount: 8, angle: 60, spread: 60, origin: { x: 0 }, colors: ['#FF3D8B', '#FFE24B', '#00CFFF', '#A8FF3D', '#FF7A2F'] });
+            confetti({ particleCount: 8, angle: 120, spread: 60, origin: { x: 1 }, colors: ['#FF3D8B', '#FFE24B', '#00CFFF', '#A8FF3D', '#FF7A2F'] });
             if (Date.now() < end) requestAnimationFrame(frame);
         })();
     }
@@ -1166,23 +867,13 @@ function resetGame(confirmReset = false) {
     playedQuestions.clear();
     specialCells = generateSpecialCells();
     localStorage.removeItem(STORAGE_KEY);
-    closeSpamAd();
     saveState();
     initGrid();
 }
 
-// ========== ORIENTATION ==========
-function handleOrientation() {
-    // Небольшая задержка для Safari, чтобы пересчитал размеры
-    document.documentElement.style.setProperty('--vh', window.innerHeight * 0.01 + 'px');
-}
-window.addEventListener('resize', handleOrientation);
-window.addEventListener('orientationchange', () => setTimeout(handleOrientation, 200));
-
 window.onload = function() {
     loadState();
     initGrid();
-    handleOrientation();
 };
 </script>
 </body>
