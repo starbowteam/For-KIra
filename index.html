@@ -1,50 +1,49 @@
 <!DOCTYPE html>
-<html lang="ru" class="h-full">
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>СВОЯ ИГРА • PREMIUM</title>
+<title>Своя Игра</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root {
+:root{
   --sat: env(safe-area-inset-top, 0px);
   --sab: env(safe-area-inset-bottom, 0px);
   --sal: env(safe-area-inset-left, 0px);
   --sar: env(safe-area-inset-right, 0px);
-  --bg-0: #080B14;
-  --bg-1: #0E1320;
-  --bg-2: #141A2B;
-  --surface: rgba(255, 255, 255, 0.04);
-  --surface-hi: rgba(255, 255, 255, 0.07);
-  --border: rgba(255, 255, 255, 0.09);
-  --border-hi: rgba(255, 255, 255, 0.16);
-  --text: #E8EDF7;
-  --text-dim: #8992AB;
-  --text-faint: #5A6478;
-  --pink: #FF5C9D;
-  --violet: #A78BFA;
-  --cyan: #22D3EE;
-  --amber: #FBBF24;
-  --emerald: #34D399;
-  --red: #F87171;
-  --blue: #60A5FA;
-  --orange: #FB923C;
-  --green: #4ADE80;
+  --cream: #FDF6E3;
+  --cream-2: #F5E9CF;
+  --paper: #FFFCF5;
+  --ink: #3B2A1E;
+  --ink-soft: #6B564A;
+  --ink-faint: #A08F82;
+  --line: rgba(107, 86, 74, 0.12);
+  --line-hi: rgba(107, 86, 74, 0.22);
+  --coral: #FF6B6B;
+  --terracotta: #E76F51;
+  --mustard: #E9B44C;
+  --sage: #7FB069;
+  --sky: #4A9FF5;
+  --lavender: #9B7EDE;
+  --rose: #FF85C1;
+  --mint: #4ECDC4;
 }
-* { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
-body {
-  background: var(--bg-0);
+*{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background: var(--cream);
   background-image:
-    radial-gradient(ellipse 60% 40% at 15% 0%, rgba(167, 139, 250, 0.15), transparent 60%),
-    radial-gradient(ellipse 50% 40% at 85% 5%, rgba(255, 92, 157, 0.12), transparent 60%),
-    radial-gradient(ellipse 70% 50% at 50% 100%, rgba(34, 211, 238, 0.10), transparent 60%);
+    radial-gradient(circle at 20% 20%, rgba(255,107,107,0.08), transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(123,176,105,0.08), transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(233,180,76,0.06), transparent 60%),
+    radial-gradient(rgba(107,86,74,0.06) 1px, transparent 1px);
+  background-size: auto, auto, auto, 24px 24px;
   background-attachment: fixed;
-  color: var(--text);
+  color: var(--ink);
   font-family: 'Manrope', system-ui, sans-serif;
   height: 100vh;
   height: 100dvh;
@@ -55,1681 +54,1610 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  font-weight: 500;
 }
-.heading { font-family: 'Unbounded', sans-serif; font-weight: 700; letter-spacing: -0.02em; }
-
-.glass {
-  background: var(--surface);
-  backdrop-filter: blur(20px) saturate(1.4);
-  -webkit-backdrop-filter: blur(20px) saturate(1.4);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  box-shadow: 
-    0 1px 0 rgba(255, 255, 255, 0.04) inset,
-    0 10px 40px -10px rgba(0, 0, 0, 0.5);
+.serif{font-family:'Fraunces', serif;font-weight:700;letter-spacing:-0.02em;}
+.card{
+  background: var(--paper);
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.9) inset,
+    0 6px 24px -8px rgba(107,86,74,0.18),
+    0 2px 6px -2px rgba(107,86,74,0.1);
 }
-.glass-hi {
-  background: var(--surface-hi);
-  backdrop-filter: blur(20px) saturate(1.5);
-  -webkit-backdrop-filter: blur(20px) saturate(1.5);
-  border: 1px solid var(--border-hi);
-  border-radius: 18px;
+.card-hi{
+  background: var(--paper);
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.9) inset,
+    0 8px 32px -10px rgba(107,86,74,0.22);
 }
 
 /* HEADER */
-header {
+header{
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 12px 16px;
   gap: 12px;
-  padding: 10px 14px;
 }
-.brand {
-  display: flex; align-items: center; gap: 12px;
-  min-width: 0;
+.brand{display:flex;align-items:center;gap:12px;min-width:0;}
+.logo{
+  width:44px;height:44px;
+  border-radius:14px;
+  background: linear-gradient(135deg, var(--coral), var(--terracotta));
+  display:flex;align-items:center;justify-content:center;
+  color:white;font-size:20px;
+  box-shadow: 0 8px 20px -6px rgba(231,111,81,0.5);
+  transform: rotate(-3deg);
+  flex-shrink:0;
 }
-.brand-logo {
-  width: 42px; height: 42px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--violet), var(--pink));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
-  color: white;
-  box-shadow: 0 8px 24px -6px rgba(167, 139, 250, 0.6);
-  flex-shrink: 0;
-}
-.brand-text { min-width: 0; }
-.brand-title {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing: -0.02em;
-  color: var(--text);
-  line-height: 1.1;
-}
-.brand-sub {
-  font-size: 10px;
-  color: var(--text-dim);
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-top: 3px;
-}
-.header-actions {
-  display: flex; align-items: center; gap: 8px;
-  flex-shrink: 0;
-}
-
-.icon-btn {
-  width: 40px; height: 40px;
-  border-radius: 12px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--text-dim);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
+.brand-t{min-width:0;}
+.title{
+  font-family:'Fraunces', serif;
+  font-weight:900;
   font-size: 15px;
+  letter-spacing:-0.02em;
+  color: var(--ink);
+  line-height:1.1;
 }
-.icon-btn:hover {
-  background: var(--surface-hi);
-  color: var(--text);
-  border-color: var(--border-hi);
-  transform: translateY(-1px);
-}
-.icon-btn:active { transform: translateY(0) scale(0.96); }
-
-.pill-btn {
-  height: 40px;
-  padding: 0 16px;
-  border-radius: 12px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--text);
-  font-family: 'Manrope', sans-serif;
+.subtitle{
+  font-size:10px;
+  color: var(--ink-faint);
   font-weight: 700;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-.pill-btn:hover {
-  background: var(--surface-hi);
-  border-color: var(--border-hi);
-  transform: translateY(-1px);
-}
-.pill-btn:active { transform: translateY(0) scale(0.97); }
-.pill-btn.accent {
-  background: linear-gradient(135deg, var(--violet), var(--pink));
-  border-color: transparent;
-  color: white;
-  box-shadow: 0 8px 24px -8px rgba(167, 139, 250, 0.6);
-}
-.pill-btn.accent:hover { box-shadow: 0 12px 32px -8px rgba(167, 139, 250, 0.8); }
-
-/* PLAYERS ROW */
-.players {
-  flex-shrink: 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-.player {
-  padding: 12px 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  position: relative;
-  overflow: hidden;
-}
-.player::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.03));
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-.player.active::before { opacity: 1; }
-.player.active-kira {
-  border-color: rgba(255, 92, 157, 0.5);
-  box-shadow: 0 0 0 1px rgba(255, 92, 157, 0.3), 0 12px 40px -10px rgba(255, 92, 157, 0.4);
-}
-.player.active-vitya {
-  border-color: rgba(34, 211, 238, 0.5);
-  box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.3), 0 12px 40px -10px rgba(34, 211, 238, 0.4);
-}
-.player.inactive { opacity: 0.5; }
-
-.p-avatar {
-  width: 44px; height: 44px;
-  border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
-  color: white;
-  flex-shrink: 0;
-}
-.p-avatar.kira { background: linear-gradient(135deg, #FF5C9D, #F43F5E); }
-.p-avatar.vitya { background: linear-gradient(135deg, #22D3EE, #3B82F6); }
-.p-info { min-width: 0; flex: 1; }
-.p-name {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 700;
-  font-size: 13px;
-  color: var(--text);
-  line-height: 1.2;
-}
-.p-status {
-  font-size: 10px;
-  color: var(--text-dim);
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  margin-top: 3px;
-  display: flex; align-items: center; gap: 5px;
-}
-.p-status.active-kira { color: var(--pink); }
-.p-status.active-vitya { color: var(--cyan); }
-.p-status .dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: currentColor;
-  box-shadow: 0 0 8px currentColor;
-  animation: pulseDot 1.5s ease-in-out infinite;
-}
-@keyframes pulseDot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.7); }
-}
-.p-score {
-  text-align: right;
-  flex-shrink: 0;
-}
-.p-score-val {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 700;
-  font-size: 26px;
-  line-height: 1;
-  transition: transform 0.3s ease;
-}
-.p-score-val.kira { color: var(--pink); text-shadow: 0 0 20px rgba(255, 92, 157, 0.4); }
-.p-score-val.vitya { color: var(--cyan); text-shadow: 0 0 20px rgba(34, 211, 238, 0.4); }
-.p-score-val.pulse { animation: scorePulse 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
-@keyframes scorePulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
-}
-.p-score-lbl {
-  font-size: 9px;
-  color: var(--text-faint);
-  font-weight: 700;
-  text-transform: uppercase;
   letter-spacing: 0.1em;
+  text-transform: uppercase;
   margin-top: 3px;
 }
+.hact{display:flex;gap:8px;align-items:center;flex-shrink:0;}
 
-/* PROGRESS BAR */
-.progress-wrap {
-  flex-shrink: 0;
-  padding: 10px 14px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.icon-btn{
+  width:42px;height:42px;
+  border-radius:14px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  font-size:15px;
+  transition: all 0.2s cubic-bezier(0.34, 1.4, 0.64, 1);
+  box-shadow: 0 2px 6px -2px rgba(107,86,74,0.12);
 }
-.progress-info {
-  font-size: 11px;
-  color: var(--text-dim);
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.progress-info i { font-size: 12px; color: var(--violet); }
-.progress-track {
-  flex: 1;
-  height: 6px;
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 3px;
-  overflow: hidden;
-  position: relative;
-}
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--violet), var(--pink), var(--cyan));
-  border-radius: 3px;
-  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 0 12px rgba(167, 139, 250, 0.5);
-}
-.progress-pct {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 700;
+.icon-btn:hover{transform:translateY(-2px);color:var(--ink);box-shadow:0 6px 16px -4px rgba(107,86,74,0.2);}
+.icon-btn:active{transform:translateY(0) scale(0.95);}
+
+.pill{
+  height:42px;
+  padding:0 18px;
+  border-radius:14px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-family: 'Manrope', sans-serif;
+  font-weight: 800;
   font-size: 12px;
-  color: var(--violet);
-  flex-shrink: 0;
-  min-width: 40px;
-  text-align: right;
-}
-
-/* GRID */
-main {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-.grid-container {
-  flex: 1;
-  min-height: 0;
-  padding: 12px;
-  overflow: hidden;
-  display: flex;
-}
-#grid {
-  flex: 1;
-  min-height: 0;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  overflow-y: auto;
-  align-content: start;
-}
-#grid::-webkit-scrollbar { width: 6px; }
-#grid::-webkit-scrollbar-thumb { background: rgba(167, 139, 250, 0.3); border-radius: 3px; }
-#grid::-webkit-scrollbar-track { background: transparent; }
-
-.cat-col {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-height: 0;
-}
-.cat-header {
-  padding: 8px 6px;
-  border-radius: 10px;
-  text-align: center;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 700;
-  font-size: 9px;
-  letter-spacing: -0.01em;
-  color: white;
-  line-height: 1.2;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
+  display:inline-flex;align-items:center;gap:8px;
+  cursor:pointer;
+  transition: all 0.2s cubic-bezier(0.34, 1.4, 0.64, 1);
+  box-shadow: 0 2px 6px -2px rgba(107,86,74,0.12);
+}
+.pill:hover{transform:translateY(-2px);box-shadow:0 6px 16px -4px rgba(107,86,74,0.2);}
+.pill:active{transform:translateY(0) scale(0.97);}
+.pill.coral{background:linear-gradient(135deg,var(--coral),var(--terracotta));color:white;border-color:transparent;box-shadow:0 8px 20px -6px rgba(231,111,81,0.5);}
+.pill.coral:hover{box-shadow:0 12px 26px -6px rgba(231,111,81,0.7);}
+
+/* PLAYERS */
+.players{
+  flex-shrink:0;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.player{
+  padding:14px 16px;
+  border-radius:18px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  transition: all 0.4s cubic-bezier(0.34, 1.4, 0.64, 1);
+  position:relative;
+  overflow:hidden;
+}
+.player.active-kira{
+  background: linear-gradient(135deg, #FFF0F0, #FFE0DA);
+  border-color: rgba(255,107,107,0.4);
+  box-shadow: 0 8px 24px -8px rgba(255,107,107,0.4);
+}
+.player.active-vitya{
+  background: linear-gradient(135deg, #F0F6FF, #DFF0FF);
+  border-color: rgba(74,159,245,0.4);
+  box-shadow: 0 8px 24px -8px rgba(74,159,245,0.4);
+}
+.player.inactive{opacity:0.5;}
+.avatar{
+  width:48px;height:48px;
+  border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  color:white;font-size:20px;flex-shrink:0;
+  box-shadow: 0 6px 16px -4px currentColor;
+}
+.avatar.kira{background:linear-gradient(135deg,var(--coral),var(--terracotta));color:rgba(231,111,81,0.6);}
+.avatar.vitya{background:linear-gradient(135deg,var(--sky),var(--lavender));color:rgba(74,159,245,0.6);}
+.p-info{min-width:0;flex:1;}
+.p-name{
+  font-family:'Fraunces',serif;
+  font-weight:700;
+  font-size:15px;
+  color:var(--ink);
+  cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;
+  line-height:1.2;
+  padding:2px 6px;margin-left:-6px;
+  border-radius:8px;
+  transition: background 0.2s ease;
+}
+.p-name:hover{background:rgba(107,86,74,0.06);}
+.p-name .edit{font-size:10px;color:var(--ink-faint);opacity:0.6;}
+.p-meta{
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  margin-top:4px;
+  display:flex;align-items:center;gap:6px;
+  color:var(--ink-faint);
+}
+.p-meta .dot{width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor;animation:pulse 1.4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(0.7);}}
+.p-meta.kira-active{color:var(--coral);}
+.p-meta.vitya-active{color:var(--sky);}
+.p-score{text-align:right;flex-shrink:0;}
+.p-score-val{
+  font-family:'Fraunces',serif;
+  font-weight:900;
+  font-size:28px;
+  line-height:1;
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.p-score-val.kira{color:var(--coral);}
+.p-score-val.vitya{color:var(--sky);}
+.p-score-val.pulse{animation:scorePop 0.5s cubic-bezier(0.34,1.56,0.64,1);}
+@keyframes scorePop{0%{transform:scale(1);}50%{transform:scale(1.25);}100%{transform:scale(1);}}
+.p-score-lbl{
+  font-size:9px;
+  color:var(--ink-faint);
+  font-weight:800;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  margin-top:4px;
+}
+.streak-fire{
+  position:absolute;
+  top:8px;right:8px;
+  font-size:11px;
+  background:linear-gradient(135deg,var(--mustard),#F59E0B);
+  color:white;
+  padding:2px 8px;
+  border-radius:20px;
+  font-weight:800;
+  letter-spacing:0.05em;
+  box-shadow:0 4px 12px -2px rgba(233,180,76,0.6);
+  animation: streakPop 0.6s ease;
+}
+@keyframes streakPop{0%{transform:scale(0) rotate(-20deg);}70%{transform:scale(1.2) rotate(5deg);}100%{transform:scale(1) rotate(0);}}
+
+/* PROGRESS */
+.progress{
+  flex-shrink:0;
+  padding:12px 16px;
+  display:flex;align-items:center;gap:14px;
+}
+.prog-info{font-size:11px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-soft);flex-shrink:0;display:flex;align-items:center;gap:6px;}
+.prog-info i{color:var(--mustard);}
+.prog-track{flex:1;height:8px;background:rgba(107,86,74,0.08);border-radius:6px;overflow:hidden;position:relative;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--coral),var(--mustard),var(--sage));border-radius:6px;transition:width 0.6s cubic-bezier(0.4,0,0.2,1);box-shadow:0 0 12px rgba(233,180,76,0.4);}
+.prog-pct{font-family:'Fraunces',serif;font-weight:900;font-size:14px;color:var(--terracotta);min-width:42px;text-align:right;}
+
+/* MAIN */
+main{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden;}
+.grid-box{
+  flex:1;min-height:0;
+  padding:14px;
+  display:flex;
+  overflow:hidden;
+  border-radius:20px;
+}
+#grid{
+  flex:1;min-height:0;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  overflow-y:auto;
+  align-content:start;
+  padding-right:4px;
+}
+#grid::-webkit-scrollbar{width:6px;}
+#grid::-webkit-scrollbar-thumb{background:rgba(107,86,74,0.2);border-radius:3px;}
+
+.col{display:flex;flex-direction:column;gap:6px;min-height:0;}
+.cat-h{
+  padding:10px 8px;
+  border-radius:12px;
+  text-align:center;
+  font-family:'Fraunces',serif;
+  font-weight:700;
+  font-size:11px;
+  letter-spacing:-0.01em;
+  color:white;
+  line-height:1.15;
+  text-transform:uppercase;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 4px 12px -4px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.2);
   transition: all 0.3s ease;
 }
-.cat-header .done-badge {
-  display: none;
-  width: 14px; height: 14px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
-  color: #0A0A0A;
-  align-items: center;
-  justify-content: center;
-  font-size: 9px;
-}
-.cat-header.done .done-badge { display: inline-flex; }
-.cat-header::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), transparent);
-  pointer-events: none;
-}
+.cat-h .done-tick{display:none;width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,0.9);color:var(--ink);align-items:center;justify-content:center;font-size:9px;}
+.cat-h.done .done-tick{display:inline-flex;}
+.cat-h.done{filter:grayscale(0.3);opacity:0.8;}
 
-.tiers {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  min-height: 0;
-  overflow-y: auto;
-}
+.tiers{flex:1;display:flex;flex-direction:column;gap:5px;min-height:0;overflow-y:auto;}
 
-.cell {
-  border-radius: 10px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--text);
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 700;
-  font-size: 13px;
-  min-height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
+.cell{
+  border-radius:12px;
+  background:var(--paper);
+  border:1px solid var(--line);
+  color:var(--ink);
+  font-family:'Fraunces',serif;
+  font-weight:700;
+  font-size:14px;
+  min-height:44px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  transition: all 0.15s cubic-bezier(0.34, 1.4, 0.64, 1);
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 2px 6px -2px rgba(107,86,74,0.1);
 }
-.cell::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at center, rgba(167, 139, 250, 0.2), transparent 70%);
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  pointer-events: none;
+.cell:hover:not(.done){
+  background:#FFF9EC;
+  border-color:rgba(233,180,76,0.5);
+  transform:translateY(-2px) scale(1.02);
+  box-shadow:0 8px 20px -6px rgba(233,180,76,0.35);
+  color:var(--terracotta);
 }
-.cell:hover:not(.done) {
-  background: var(--surface-hi);
-  border-color: rgba(167, 139, 250, 0.5);
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px -6px rgba(167, 139, 250, 0.5);
+.cell:active:not(.done){transform:translateY(0) scale(0.96);}
+.cell.done{
+  background:rgba(127,176,105,0.1);
+  border-color:rgba(127,176,105,0.25);
+  color:rgba(127,176,105,0.55);
+  cursor:not-allowed;
 }
-.cell:hover:not(.done)::before { opacity: 1; }
-.cell:active:not(.done) { transform: translateY(0) scale(0.96); }
-.cell.done {
-  background: rgba(52, 211, 153, 0.08);
-  border-color: rgba(52, 211, 153, 0.2);
-  color: rgba(52, 211, 153, 0.4);
-  cursor: not-allowed;
-}
-.cell.done i { font-size: 14px; }
+.cell.done i{font-size:14px;}
+.cell.mega{border-color:rgba(155,126,222,0.4);background:linear-gradient(135deg,rgba(155,126,222,0.08),rgba(255,133,193,0.06));}
+.cell.mega:hover{box-shadow:0 8px 20px -6px rgba(155,126,222,0.5);}
 
-/* DESKTOP HORIZONTAL */
-@media (min-width: 1024px) {
-  #grid {
-    display: flex !important;
-    flex-direction: column;
-    gap: 7px;
-    overflow: hidden;
-  }
-  .cat-col {
-    flex: 1;
-    min-height: 0;
-    display: grid;
-    grid-template-columns: 130px repeat(10, 1fr);
-    gap: 7px;
-  }
-  .cat-header {
-    height: 100%;
-    font-size: 9px;
-    padding: 4px;
-    line-height: 1.2;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .tiers { display: contents; }
-  .cell { min-height: 0; height: 100%; font-size: 15px; }
+@media (min-width:1024px){
+  #grid{display:flex !important;flex-direction:column;gap:7px;overflow:hidden;}
+  .col{flex:1;min-height:0;display:grid;grid-template-columns:120px repeat(10,1fr);gap:7px;}
+  .cat-h{height:100%;font-size:10px;padding:6px 4px;flex-direction:column;gap:4px;line-height:1.15;}
+  .tiers{display:contents;}
+  .cell{min-height:0;height:100%;font-size:15px;}
 }
-@media (min-width: 640px) and (max-width: 1023px) {
-  #grid { grid-template-columns: repeat(3, 1fr); }
-}
-@media (min-width: 768px) and (max-width: 1023px) {
-  #grid { grid-template-columns: repeat(4, 1fr); }
-}
+@media (min-width:640px) and (max-width:1023px){#grid{grid-template-columns:repeat(3,1fr);}}
+@media (min-width:768px) and (max-width:1023px){#grid{grid-template-columns:repeat(4,1fr);}}
 
 /* FOOTER */
-footer {
-  flex-shrink: 0;
-  padding: 8px 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  flex-wrap: wrap;
+footer{
+  flex-shrink:0;
+  padding:10px 16px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  flex-wrap:wrap;
 }
-.legend {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  font-size: 10px;
-  color: var(--text-dim);
-  font-weight: 600;
-}
-.legend-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-}
-.legend-item i { font-size: 11px; }
-.legend-item.gem i { color: var(--cyan); }
-.legend-item.trap i { color: var(--red); }
-.legend-item.jackpot i { color: var(--violet); }
-.legend-item.bonus i { color: var(--emerald); }
-.legend-item.penalty i { color: var(--orange); }
-.legend-item.block i { color: var(--text-faint); }
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:10px;color:var(--ink-faint);font-weight:700;}
+.legend .li{display:inline-flex;align-items:center;gap:5px;}
+.legend .li i{font-size:12px;}
 
-/* MODAL */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(3, 5, 12, 0.8);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  z-index: 50;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  animation: fadeIn 0.2s ease;
+/* TOASTS */
+#toasts{
+  position:fixed;
+  top:calc(20px + var(--sat));
+  right:calc(20px + var(--sar));
+  z-index:200;
+  display:flex;flex-direction:column;gap:8px;
+  pointer-events:none;
+  max-width:280px;
 }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.toast{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:10px 14px;
+  display:flex;align-items:center;gap:10px;
+  box-shadow:0 12px 32px -8px rgba(107,86,74,0.3);
+  animation: toastIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  font-size:12px;
+  font-weight:700;
+  color:var(--ink);
+}
+.toast i{font-size:18px;flex-shrink:0;}
+.toast.gold{border-color:rgba(233,180,76,0.5);}
+.toast.gold i{color:var(--mustard);}
+.toast.pink{border-color:rgba(255,107,107,0.4);}
+.toast.pink i{color:var(--coral);}
+.toast.green{border-color:rgba(127,176,105,0.4);}
+.toast.green i{color:var(--sage);}
+.toast.blue{border-color:rgba(74,159,245,0.4);}
+.toast.blue i{color:var(--sky);}
+@keyframes toastIn{from{transform:translateX(120%);opacity:0;}to{transform:translateX(0);opacity:1;}}
+@keyframes toastOut{to{transform:translateX(120%);opacity:0;}}
 
-.sheet {
-  background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 100%);
-  border: 1px solid var(--border);
-  border-bottom: none;
-  border-radius: 24px 24px 0 0;
-  width: 100%;
-  max-width: 620px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  max-height: 92vh;
-  overflow-y: auto;
-  box-shadow: 0 -20px 60px -20px rgba(0, 0, 0, 0.8);
-  animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+/* OVERLAY */
+.ov{
+  position:fixed;inset:0;
+  background:rgba(59,42,30,0.5);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  z-index:50;
+  display:flex;align-items:flex-end;justify-content:center;
+  animation:fadeIn 0.25s ease;
 }
-@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.sheet{
+  background:var(--paper);
+  border-radius:28px 28px 0 0;
+  width:100%;
+  max-width:620px;
+  padding:20px 22px 22px;
+  display:flex;flex-direction:column;gap:16px;
+  max-height:92vh;
+  overflow-y:auto;
+  box-shadow:0 -20px 60px -20px rgba(59,42,30,0.5);
+  animation:slideUp 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+@keyframes slideUp{from{transform:translateY(40px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.handle{width:52px;height:5px;background:rgba(107,86,74,0.2);border-radius:3px;margin:0 auto -8px;}
+.sheet-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
+.badges{display:flex;gap:8px;flex-wrap:wrap;}
+.badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 12px;
+  border-radius:10px;
+  font-weight:800;font-size:10px;
+  letter-spacing:0.06em;text-transform:uppercase;
+  border:1px solid var(--line);
+  background:rgba(107,86,74,0.04);
+  color:var(--ink);
+}
+.badge.cat{color:white;border-color:transparent;font-family:'Fraunces',serif;font-weight:700;}
+.badge.points{background:linear-gradient(135deg,var(--mustard),#F59E0B);color:white;border-color:transparent;font-family:'Fraunces',serif;}
+.badge.spec{color:white;border-color:transparent;}
+.turn-line{font-size:12px;color:var(--ink-faint);font-weight:800;text-transform:uppercase;letter-spacing:0.06em;}
+.turn-line strong{color:var(--ink);font-weight:900;}
 
-.sheet-handle {
-  width: 48px; height: 4px;
-  background: var(--border-hi);
-  border-radius: 2px;
-  margin: 0 auto -6px;
+.sheet-body{padding:10px 0;text-align:center;}
+.diff{display:inline-flex;align-items:center;gap:7px;font-size:11px;color:var(--ink-faint);font-weight:800;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;}
+.diff i{color:var(--mustard);}
+.q-text{
+  font-family:'Fraunces',serif;
+  font-weight:700;
+  font-size:22px;
+  line-height:1.35;
+  color:var(--ink);
+  margin:6px 0 8px;
+  letter-spacing:-0.01em;
 }
-.sheet-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
+@media (min-width:640px){.q-text{font-size:24px;}}
+.answer{
+  background:linear-gradient(135deg,rgba(127,176,105,0.18),rgba(127,176,105,0.06));
+  border:1px solid rgba(127,176,105,0.35);
+  border-radius:16px;
+  padding:16px;
+  text-align:left;
+  margin-top:14px;
+  animation:popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
 }
-.badges { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 5px 10px;
-  border-radius: 8px;
-  font-family: 'Manrope', sans-serif;
-  font-weight: 700;
-  font-size: 10px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text);
-}
-.badge.cat { border-color: transparent; color: white; }
-.badge.points { background: linear-gradient(135deg, var(--amber), var(--orange)); color: #0A0A0A; border-color: transparent; font-family: 'Unbounded', sans-serif; }
-.badge.special { border-color: transparent; color: white; }
+@keyframes popIn{from{transform:scale(0.9);opacity:0;}to{transform:scale(1);opacity:1;}}
+.ans-lbl{font-size:10px;color:var(--sage);font-weight:900;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.ans-txt{font-family:'Fraunces',serif;font-weight:700;font-size:15px;color:var(--ink);line-height:1.4;}
 
-.turn-info {
-  font-size: 11px;
-  color: var(--text-dim);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+.warn{
+  border-radius:16px;
+  padding:14px;
+  margin-top:12px;
+  border:1px solid transparent;
+  text-align:center;
 }
-.turn-info strong { color: var(--text); font-weight: 800; }
+.warn-t{font-size:11px;font-weight:900;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:7px;}
+.warn-x{font-size:13px;font-weight:700;line-height:1.45;}
 
-.sheet-body {
-  text-align: center;
-  padding: 8px 0;
+.reveal{
+  width:100%;padding:16px;border-radius:16px;border:none;
+  background:linear-gradient(135deg,var(--coral),var(--terracotta));
+  color:white;
+  font-family:'Fraunces',serif;font-weight:700;
+  font-size:14px;letter-spacing:0.02em;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  box-shadow:0 10px 24px -8px rgba(231,111,81,0.55);
+  transition: all 0.2s cubic-bezier(0.34,1.4,0.64,1);
 }
-.diff-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 10px;
-  color: var(--text-dim);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 12px;
-}
-.diff-badge i { color: var(--violet); }
+.reveal:hover{transform:translateY(-2px);box-shadow:0 14px 32px -8px rgba(231,111,81,0.7);}
+.reveal:active{transform:translateY(0) scale(0.98);}
 
-.question-text {
-  font-family: 'Manrope', sans-serif;
-  font-weight: 700;
-  font-size: 20px;
-  line-height: 1.35;
-  color: var(--text);
-  margin: 4px 0 12px;
-  letter-spacing: -0.01em;
-}
-@media (min-width: 640px) {
-  .question-text { font-size: 22px; }
-}
-
-.answer-box {
-  background: linear-gradient(135deg, rgba(52, 211, 153, 0.15), rgba(52, 211, 153, 0.05));
-  border: 1px solid rgba(52, 211, 153, 0.3);
-  border-radius: 14px;
-  padding: 14px;
-  text-align: left;
-  margin-top: 12px;
-  animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-@keyframes popIn {
-  0% { transform: scale(0.9); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-.answer-label {
-  font-size: 10px;
-  color: var(--emerald);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 6px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.answer-text {
-  font-family: 'Manrope', sans-serif;
-  font-weight: 700;
-  font-size: 14px;
-  color: white;
-  line-height: 1.4;
-}
-
-.warn-box {
-  border-radius: 14px;
-  padding: 12px;
-  text-align: center;
-  margin-top: 12px;
-  border: 1px solid transparent;
-}
-.warn-title {
-  font-size: 11px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-}
-.warn-text {
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.4;
-}
-
-.reveal-btn {
-  width: 100%;
-  padding: 15px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, var(--violet), var(--pink));
-  color: white;
-  border: none;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 700;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  box-shadow: 0 8px 24px -8px rgba(167, 139, 250, 0.6);
-  transition: all 0.2s ease;
-}
-.reveal-btn:hover {
-  box-shadow: 0 12px 32px -8px rgba(167, 139, 250, 0.9);
-  transform: translateY(-1px);
-}
-.reveal-btn:active { transform: translateY(0) scale(0.98); }
-
-.score-blocks {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-.sblock {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.sblocks{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.sb{
+  background:rgba(107,86,74,0.04);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:14px;
+  display:flex;flex-direction:column;gap:10px;
   transition: all 0.3s ease;
 }
-.sblock.kira.active {
-  background: linear-gradient(135deg, rgba(255, 92, 157, 0.15), rgba(255, 92, 157, 0.05));
-  border-color: rgba(255, 92, 157, 0.4);
-  box-shadow: 0 0 0 1px rgba(255, 92, 157, 0.2), 0 8px 24px -8px rgba(255, 92, 157, 0.4);
-}
-.sblock.vitya.active {
-  background: linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(34, 211, 238, 0.05));
-  border-color: rgba(34, 211, 238, 0.4);
-  box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.2), 0 8px 24px -8px rgba(34, 211, 238, 0.4);
-}
-.sblock.locked { opacity: 0.35; pointer-events: none; }
-
-.sblock-title {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  font-size: 11px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-.sblock-title.kira { color: var(--pink); }
-.sblock-title.vitya { color: var(--cyan); }
-.sblock-title .tag {
-  padding: 2px 6px;
-  border-radius: 5px;
-  font-size: 8px;
-  background: currentColor;
-  color: var(--bg-0);
-  letter-spacing: 0.08em;
-}
-.sblock-btns {
-  display: flex;
-  gap: 6px;
-}
-.sbtn {
-  flex: 1;
-  padding: 11px 6px;
-  border-radius: 10px;
-  border: none;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 700;
-  font-size: 11px;
-  color: white;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
+.sb.kira.active{background:linear-gradient(135deg,rgba(255,107,107,0.14),rgba(231,111,81,0.06));border-color:rgba(255,107,107,0.4);box-shadow:0 0 0 3px rgba(255,107,107,0.15);}
+.sb.vitya.active{background:linear-gradient(135deg,rgba(74,159,245,0.14),rgba(155,126,222,0.06));border-color:rgba(74,159,245,0.4);box-shadow:0 0 0 3px rgba(74,159,245,0.15);}
+.sb.locked{opacity:0.35;pointer-events:none;}
+.sb-t{display:flex;align-items:center;justify-content:center;gap:7px;font-size:12px;font-weight:900;letter-spacing:0.05em;text-transform:uppercase;}
+.sb-t.kira{color:var(--coral);}
+.sb-t.vitya{color:var(--sky);}
+.sb-t .tag{padding:2px 7px;border-radius:6px;font-size:9px;background:currentColor;color:white;letter-spacing:0.1em;}
+.sb-btns{display:flex;gap:8px;}
+.sbtn{
+  flex:1;padding:12px 8px;border-radius:12px;border:none;
+  font-family:'Fraunces',serif;font-weight:700;font-size:13px;
+  color:white;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:5px;
   transition: all 0.15s ease;
 }
-.sbtn.plus { background: linear-gradient(135deg, var(--emerald), #10B981); box-shadow: 0 4px 12px -4px rgba(52, 211, 153, 0.5); }
-.sbtn.minus { background: linear-gradient(135deg, var(--red), #EF4444); box-shadow: 0 4px 12px -4px rgba(248, 113, 113, 0.5); }
-.sbtn:hover { transform: translateY(-1px); }
-.sbtn:active { transform: translateY(0) scale(0.96); }
+.sbtn.plus{background:linear-gradient(135deg,var(--sage),#5A9344);box-shadow:0 6px 16px -4px rgba(127,176,105,0.5);}
+.sbtn.minus{background:linear-gradient(135deg,var(--coral),#DC2626);box-shadow:0 6px 16px -4px rgba(255,107,107,0.5);}
+.sbtn:hover{transform:translateY(-2px);}
+.sbtn:active{transform:translateY(0) scale(0.96);}
 
-.skip {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  background: none;
-  border: none;
-  color: var(--text-faint);
-  font-family: 'Manrope', sans-serif;
-  font-weight: 700;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  transition: color 0.2s ease;
+.skip-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px;width:100%;
+  background:none;border:none;
+  color:var(--ink-faint);font-family:'Manrope',sans-serif;
+  font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;
+  cursor:pointer;transition:color 0.2s ease;
 }
-.skip:hover { color: var(--text-dim); }
+.skip-btn:hover{color:var(--ink-soft);}
 
-/* CENTER MODAL */
-.center-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(3, 5, 12, 0.85);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  z-index: 60;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  animation: fadeIn 0.25s ease;
+/* CENTER */
+.cov{position:fixed;inset:0;background:rgba(59,42,30,0.6);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);z-index:60;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn 0.25s ease;}
+.ccard{
+  background:var(--paper);
+  border-radius:24px;
+  padding:32px 28px;
+  max-width:420px;width:100%;
+  text-align:center;
+  box-shadow:0 30px 80px -20px rgba(59,42,30,0.6);
+  animation:popIn 0.45s cubic-bezier(0.34,1.56,0.64,1);
 }
-.center-card {
-  background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 100%);
-  border: 1px solid var(--border-hi);
-  border-radius: 24px;
-  padding: 28px;
-  max-width: 420px;
-  width: 100%;
-  text-align: center;
-  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.9);
-  animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+.cicon{
+  width:96px;height:96px;border-radius:26px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:44px;margin:0 auto 20px;color:white;
+  box-shadow:0 16px 40px -10px currentColor;
 }
-.center-icon {
-  width: 90px; height: 90px;
-  border-radius: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 40px;
-  margin: 0 auto 18px;
-  color: white;
+.ctitle{font-family:'Fraunces',serif;font-weight:900;font-size:26px;color:var(--ink);margin-bottom:10px;letter-spacing:-0.02em;}
+.cdesc{font-size:14px;color:var(--ink-soft);font-weight:600;margin-bottom:24px;line-height:1.5;}
+.cbtn{
+  width:100%;padding:16px;border-radius:16px;border:none;
+  font-family:'Fraunces',serif;font-weight:700;font-size:14px;letter-spacing:0.02em;
+  cursor:pointer;
+  background:linear-gradient(135deg,var(--coral),var(--terracotta));color:white;
+  box-shadow:0 10px 24px -8px rgba(231,111,81,0.55);
+  transition: all 0.2s cubic-bezier(0.34,1.4,0.64,1);
+  display:flex;align-items:center;justify-content:center;gap:10px;
 }
-.center-title {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 700;
-  font-size: 22px;
-  color: var(--text);
-  margin-bottom: 10px;
-  letter-spacing: -0.02em;
-}
-.center-desc {
-  font-size: 14px;
-  color: var(--text-dim);
-  font-weight: 600;
-  margin-bottom: 22px;
-  line-height: 1.5;
-}
-.center-btn {
-  width: 100%;
-  padding: 14px;
-  border-radius: 14px;
-  border: none;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 700;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  background: linear-gradient(135deg, var(--violet), var(--pink));
-  color: white;
-  box-shadow: 0 8px 24px -8px rgba(167, 139, 250, 0.6);
-  transition: all 0.2s ease;
-}
-.center-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px -8px rgba(167, 139, 250, 0.9); }
+.cbtn:hover{transform:translateY(-2px);box-shadow:0 14px 32px -8px rgba(231,111,81,0.7);}
+.finals{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
+.fbox{padding:18px;border-radius:16px;border:1px solid var(--line);}
+.fbox.kira{background:linear-gradient(135deg,rgba(255,107,107,0.15),rgba(255,107,107,0.04));border-color:rgba(255,107,107,0.35);}
+.fbox.vitya{background:linear-gradient(135deg,rgba(74,159,245,0.15),rgba(74,159,245,0.04));border-color:rgba(74,159,245,0.35);}
+.fbox-t{font-size:10px;font-weight:900;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px;}
+.fbox.kira .fbox-t{color:var(--coral);}
+.fbox.vitya .fbox-t{color:var(--sky);}
+.fbox-v{font-family:'Fraunces',serif;font-weight:900;font-size:36px;line-height:1;color:var(--ink);}
 
-.final-scores {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 22px;
-}
-.fbox {
-  padding: 16px;
-  border-radius: 14px;
-  border: 1px solid var(--border);
-}
-.fbox.kira { background: linear-gradient(135deg, rgba(255, 92, 157, 0.2), rgba(255, 92, 157, 0.05)); border-color: rgba(255, 92, 157, 0.4); }
-.fbox.vitya { background: linear-gradient(135deg, rgba(34, 211, 238, 0.2), rgba(34, 211, 238, 0.05)); border-color: rgba(34, 211, 238, 0.4); }
-.fbox-name {
-  font-size: 11px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 8px;
-}
-.fbox.kira .fbox-name { color: var(--pink); }
-.fbox.vitya .fbox-name { color: var(--cyan); }
-.fbox-val {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 700;
-  font-size: 32px;
-  line-height: 1;
-  color: white;
+.hidden{display:none !important;}
+
+.shake{animation:shake 0.5s cubic-bezier(0.36,0.07,0.19,0.97);}
+@keyframes shake{
+  10%,90%{transform:translate3d(-2px,0,0);}
+  20%,80%{transform:translate3d(4px,0,0);}
+  30%,50%,70%{transform:translate3d(-6px,0,0);}
+  40%,60%{transform:translate3d(6px,0,0);}
 }
 
-.streak-info {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border-radius: 20px;
-  background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(251, 146, 60, 0.1));
-  border: 1px solid rgba(251, 191, 36, 0.35);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--amber);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+/* HISTORY PANEL */
+.hist-btn{position:relative;}
+.hist-badge{position:absolute;top:-4px;right:-4px;background:var(--coral);color:white;font-size:9px;font-weight:900;padding:1px 5px;border-radius:8px;min-width:16px;text-align:center;box-shadow:0 2px 6px rgba(231,111,81,0.5);}
+.hist-panel{max-width:420px;}
+.hist-list{display:flex;flex-direction:column;gap:6px;max-height:340px;overflow-y:auto;padding:4px 0;}
+.hist-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;
+  background:rgba(107,86,74,0.04);
+  border-radius:12px;
+  font-size:12px;
+  font-weight:600;
+  border:1px solid var(--line);
 }
-
-.hidden { display: none !important; }
+.hist-item .ic{width:28px;height:28px;border-radius:9px;display:flex;align-items:center;justify-content:center;color:white;font-size:12px;flex-shrink:0;}
+.hist-item .inf{flex:1;min-width:0;}
+.hist-item .nm{font-weight:800;color:var(--ink);}
+.hist-item .dt{font-size:10px;color:var(--ink-faint);margin-top:2px;}
+.hist-item .vl{font-family:'Fraunces',serif;font-weight:900;font-size:15px;flex-shrink:0;}
+.hist-item .vl.pos{color:var(--sage);}
+.hist-item .vl.neg{color:var(--coral);}
+.hist-empty{text-align:center;padding:24px;color:var(--ink-faint);font-size:13px;}
 </style>
 </head>
 <body>
 
-<header class="glass">
+<header class="card">
   <div class="brand">
-    <div class="brand-logo"><i class="fa-solid fa-bolt"></i></div>
-    <div class="brand-text">
-      <div class="brand-title">СВОЯ ИГРА</div>
-      <div class="brand-sub" id="header-sub">120 вопросов · premium edition</div>
+    <div class="logo"><i class="fa-solid fa-dice-five"></i></div>
+    <div class="brand-t">
+      <div class="title">Своя Игра</div>
+      <div class="subtitle" id="subtitle">Cozy Edition</div>
     </div>
   </div>
-  <div class="header-actions">
-    <button class="icon-btn" id="random-btn" onclick="openRandom()" title="Случайная ячейка">
+  <div class="hact">
+    <button class="icon-btn hist-btn" onclick="openHistory()" title="История">
+      <i class="fa-solid fa-clock-rotate-left"></i>
+      <span class="hist-badge hidden" id="hist-badge">0</span>
+    </button>
+    <button class="icon-btn" onclick="openRandom()" title="Случайный вопрос">
       <i class="fa-solid fa-shuffle"></i>
     </button>
-    <button class="icon-btn" onclick="toggleAudio()">
-      <i class="fa-solid fa-volume-high" id="audio-icon"></i>
+    <button class="icon-btn" onclick="toggleSound()">
+      <i class="fa-solid fa-volume-high" id="snd-icon"></i>
     </button>
-    <button class="pill-btn accent" onclick="showWinner()">
-      <i class="fa-solid fa-crown"></i><span>Итоги</span>
+    <button class="pill coral" onclick="showWinner()">
+      <i class="fa-solid fa-trophy"></i><span>Итоги</span>
     </button>
   </div>
 </header>
 
 <section class="players">
-  <div class="player glass" id="p-card-0">
-    <div class="p-avatar kira"><i class="fa-solid fa-user-ninja"></i></div>
+  <div class="player card" id="pc-0">
+    <div class="avatar kira"><i class="fa-solid fa-user-ninja"></i></div>
     <div class="p-info">
-      <div class="p-name">Кира</div>
-      <div class="p-status" id="p-status-0"><span class="dot"></span><span>ждёт хода</span></div>
+      <div class="p-name" onclick="renamePlayer(0)"><span id="pname-0">Кира</span><i class="fa-solid fa-pen edit"></i></div>
+      <div class="p-meta" id="pmeta-0"><span class="dot"></span><span>ждёт хода</span></div>
     </div>
     <div class="p-score">
       <div class="p-score-val kira" id="score-0">0</div>
       <div class="p-score-lbl">очков</div>
     </div>
+    <div class="streak-fire hidden" id="streak-0"></div>
   </div>
-  <div class="player glass" id="p-card-1">
-    <div class="p-avatar vitya"><i class="fa-solid fa-user-astronaut"></i></div>
+  <div class="player card" id="pc-1">
+    <div class="avatar vitya"><i class="fa-solid fa-user-astronaut"></i></div>
     <div class="p-info">
-      <div class="p-name">Витя</div>
-      <div class="p-status" id="p-status-1"><span class="dot"></span><span>ждёт хода</span></div>
+      <div class="p-name" onclick="renamePlayer(1)"><span id="pname-1">Витя</span><i class="fa-solid fa-pen edit"></i></div>
+      <div class="p-meta" id="pmeta-1"><span class="dot"></span><span>ждёт хода</span></div>
     </div>
     <div class="p-score">
       <div class="p-score-val vitya" id="score-1">0</div>
       <div class="p-score-lbl">очков</div>
     </div>
+    <div class="streak-fire hidden" id="streak-1"></div>
   </div>
 </section>
 
-<section class="progress-wrap glass">
-  <div class="progress-info"><i class="fa-solid fa-chart-simple"></i><span id="progress-label">0 / 120</span></div>
-  <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
-  <div class="progress-pct" id="progress-pct">0%</div>
+<section class="progress card">
+  <div class="prog-info"><i class="fa-solid fa-chart-line"></i><span id="prog-label">0 / 120</span></div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+  <div class="prog-pct" id="prog-pct">0%</div>
 </section>
 
 <main>
-  <div class="grid-container glass">
+  <div class="grid-box card">
     <div id="grid"></div>
   </div>
 </main>
 
-<footer class="glass">
+<footer class="card">
   <div class="legend">
-    <span class="legend-item gem"><i class="fa-solid fa-gem"></i>×2</span>
-    <span class="legend-item trap"><i class="fa-solid fa-triangle-exclamation"></i>Ловушка</span>
-    <span class="legend-item jackpot"><i class="fa-solid fa-gift"></i>×5</span>
-    <span class="legend-item bonus"><i class="fa-solid fa-dice"></i>Бонус</span>
-    <span class="legend-item penalty"><i class="fa-solid fa-burst"></i>Штраф</span>
-    <span class="legend-item block"><i class="fa-solid fa-ban"></i>Блок</span>
+    <span class="li"><i class="fa-solid fa-gem" style="color:var(--mint)"></i>×2</span>
+    <span class="li"><i class="fa-solid fa-triangle-exclamation" style="color:var(--coral)"></i>Ловушка</span>
+    <span class="li"><i class="fa-solid fa-gift" style="color:var(--lavender)"></i>×5</span>
+    <span class="li"><i class="fa-solid fa-dice" style="color:var(--sage)"></i>Бонус</span>
+    <span class="li"><i class="fa-solid fa-burst" style="color:var(--terracotta)"></i>Штраф</span>
+    <span class="li"><i class="fa-solid fa-ban" style="color:var(--ink-faint)"></i>Блок</span>
+    <span class="li"><i class="fa-solid fa-slot-machine" style="color:var(--mustard)"></i>?</span>
   </div>
-  <button class="pill-btn" onclick="resetGame()" style="background:linear-gradient(135deg,rgba(248,113,113,0.2),rgba(239,68,68,0.1)); border-color:rgba(248,113,113,0.3); color:var(--red);">
+  <button class="pill" onclick="resetGame()" style="background:linear-gradient(135deg,rgba(255,107,107,0.15),rgba(231,111,81,0.08));color:var(--terracotta);border-color:rgba(255,107,107,0.3);">
     <i class="fa-solid fa-rotate-right"></i>Сброс
   </button>
 </footer>
 
+<div id="toasts"></div>
+
 <!-- QUESTION MODAL -->
-<div id="q-overlay" class="overlay hidden">
+<div id="q-ov" class="ov hidden">
   <div class="sheet">
-    <div class="sheet-handle"></div>
+    <div class="handle"></div>
     <div class="sheet-top">
       <div class="badges">
         <span class="badge cat" id="m-cat">Категория</span>
         <span class="badge points" id="m-points">500</span>
-        <span class="badge special hidden" id="m-special"></span>
+        <span class="badge spec hidden" id="m-spec"></span>
       </div>
-      <div class="turn-info">Ход: <strong id="m-turn">Кира</strong></div>
+      <div class="turn-line">Ход: <strong id="m-turn">Кира</strong></div>
     </div>
     <div class="sheet-body">
-      <div class="diff-badge" id="m-diff"><i class="fa-solid fa-seedling"></i> Разминка</div>
-      <p class="question-text" id="m-question">Вопрос...</p>
-      <div class="answer-box hidden" id="m-answer-box">
-        <div class="answer-label"><i class="fa-solid fa-circle-check"></i> Правильный ответ</div>
-        <div class="answer-text" id="m-answer"></div>
+      <div class="diff" id="m-diff"><i class="fa-solid fa-seedling"></i> Разминка</div>
+      <p class="q-text" id="m-q">Вопрос...</p>
+      <div class="answer hidden" id="m-ans">
+        <div class="ans-lbl"><i class="fa-solid fa-circle-check"></i> Правильный ответ</div>
+        <div class="ans-txt" id="m-ans-t"></div>
       </div>
-      <div class="warn-box hidden" id="m-warn"></div>
+      <div class="warn hidden" id="m-warn"></div>
     </div>
-    <div style="padding-top:14px; border-top:1px solid var(--border); display:flex; flex-direction:column; gap:10px;">
+    <div style="padding-top:14px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px;">
       <div id="reveal-wrap">
-        <button class="reveal-btn" onclick="revealAnswer()">
-          <i class="fa-solid fa-key"></i>Показать ответ
+        <button class="reveal" onclick="revealAnswer()">
+          <i class="fa-solid fa-eye"></i>Показать ответ
         </button>
       </div>
-      <div class="score-blocks">
-        <div class="sblock kira" id="sb-0">
-          <div class="sblock-title kira">
-            <i class="fa-solid fa-user-ninja"></i>Кира
-            <span class="tag hidden" id="tag-0">ход</span>
-          </div>
-          <div class="sblock-btns">
+      <div class="sblocks">
+        <div class="sb kira" id="sb-0">
+          <div class="sb-t kira"><i class="fa-solid fa-user-ninja"></i><span id="sb-n0">Кира</span><span class="tag hidden" id="tag-0">ход</span></div>
+          <div class="sb-btns">
             <button class="sbtn plus" onclick="score(0,true)"><i class="fa-solid fa-plus"></i><span id="kp">+100</span></button>
             <button class="sbtn minus" onclick="score(0,false)"><i class="fa-solid fa-minus"></i><span id="km">-100</span></button>
           </div>
         </div>
-        <div class="sblock vitya" id="sb-1">
-          <div class="sblock-title vitya">
-            <i class="fa-solid fa-user-astronaut"></i>Витя
-            <span class="tag hidden" id="tag-1">ход</span>
-          </div>
-          <div class="sblock-btns">
+        <div class="sb vitya" id="sb-1">
+          <div class="sb-t vitya"><i class="fa-solid fa-user-astronaut"></i><span id="sb-n1">Витя</span><span class="tag hidden" id="tag-1">ход</span></div>
+          <div class="sb-btns">
             <button class="sbtn plus" onclick="score(1,true)"><i class="fa-solid fa-plus"></i><span id="vp">+100</span></button>
             <button class="sbtn minus" onclick="score(1,false)"><i class="fa-solid fa-minus"></i><span id="vm">-100</span></button>
           </div>
         </div>
       </div>
-      <button class="skip" onclick="closeQ()"><i class="fa-solid fa-forward"></i> Пропустить — передать ход</button>
+      <button class="skip-btn" onclick="closeQ()"><i class="fa-solid fa-forward"></i> Пропустить — передать ход</button>
     </div>
   </div>
 </div>
 
 <!-- INSTANT MODAL -->
-<div id="i-overlay" class="center-overlay hidden">
-  <div class="center-card">
-    <div class="center-icon" id="i-icon" style="background:linear-gradient(135deg,var(--emerald),#10B981);"><i class="fa-solid fa-dice"></i></div>
-    <h2 class="center-title" id="i-title">Бонус!</h2>
-    <p class="center-desc" id="i-desc"></p>
-    <button class="center-btn" onclick="closeInstant()">Продолжить</button>
+<div id="i-ov" class="cov hidden">
+  <div class="ccard">
+    <div class="cicon" id="i-icon" style="background:linear-gradient(135deg,var(--sage),#5A9344);box-shadow:0 16px 40px -10px rgba(127,176,105,0.6);"><i class="fa-solid fa-dice"></i></div>
+    <h2 class="ctitle" id="i-title">Бонус!</h2>
+    <p class="cdesc" id="i-desc"></p>
+    <button class="cbtn" onclick="closeInstant()">Продолжить</button>
   </div>
 </div>
 
 <!-- WINNER MODAL -->
-<div id="w-overlay" class="center-overlay hidden">
-  <div class="center-card">
-    <div class="center-icon" style="background:linear-gradient(135deg,var(--amber),var(--orange));"><i class="fa-solid fa-crown"></i></div>
-    <h2 class="center-title">ФИНАЛ!</h2>
-    <p class="center-desc">Все 120 вопросов сыграны</p>
-    <p class="center-title" id="w-name" style="font-size:18px; margin-bottom:8px;"></p>
-    <div class="final-scores">
-      <div class="fbox kira"><div class="fbox-name">Кира</div><div class="fbox-val" id="w-0">0</div></div>
-      <div class="fbox vitya"><div class="fbox-name">Витя</div><div class="fbox-val" id="w-1">0</div></div>
+<div id="w-ov" class="cov hidden">
+  <div class="ccard">
+    <div class="cicon" style="background:linear-gradient(135deg,var(--mustard),#F59E0B);box-shadow:0 16px 40px -10px rgba(233,180,76,0.6);"><i class="fa-solid fa-trophy"></i></div>
+    <h2 class="ctitle">Игра завершена!</h2>
+    <p class="cdesc">Все 120 вопросов сыграны</p>
+    <p class="ctitle" id="w-name" style="font-size:18px;margin-bottom:12px;"></p>
+    <div class="finals">
+      <div class="fbox kira"><div class="fbox-t" id="fw-0">Игрок 1</div><div class="fbox-v" id="w-0">0</div></div>
+      <div class="fbox vitya"><div class="fbox-t" id="fw-1">Игрок 2</div><div class="fbox-v" id="w-1">0</div></div>
     </div>
-    <button class="center-btn" onclick="resetGame(); closeModal('w-overlay');"><i class="fa-solid fa-fire" style="margin-right:8px;"></i>Сыграть снова</button>
+    <button class="cbtn" onclick="resetGame(true);closeModal('w-ov');"><i class="fa-solid fa-rotate-right"></i>Сыграть снова</button>
+  </div>
+</div>
+
+<!-- HISTORY MODAL -->
+<div id="h-ov" class="cov hidden">
+  <div class="ccard hist-panel">
+    <div class="cicon" style="background:linear-gradient(135deg,var(--lavender),#7C5CFF);box-shadow:0 16px 40px -10px rgba(155,126,222,0.6);font-size:32px;"><i class="fa-solid fa-clock-rotate-left"></i></div>
+    <h2 class="ctitle" style="font-size:20px;">История ходов</h2>
+    <div class="hist-list" id="hist-list"></div>
+    <div style="display:flex;gap:8px;margin-top:16px;">
+      <button class="cbtn" onclick="undoLast()" id="undo-btn" style="background:linear-gradient(135deg,var(--mustard),#F59E0B);box-shadow:0 10px 24px -8px rgba(233,180,76,0.55);">
+        <i class="fa-solid fa-undo"></i>Отменить
+      </button>
+      <button class="cbtn" onclick="closeModal('h-ov')" style="background:linear-gradient(135deg,rgba(107,86,74,0.15),rgba(107,86,74,0.08));color:var(--ink);box-shadow:none;">
+        Закрыть
+      </button>
+    </div>
   </div>
 </div>
 
 <script>
-// ============= STATE =============
-let players = [{ name: "Кира", score: 0, streak: 0 }, { name: "Витя", score: 0, streak: 0 }];
-let active = 0;
-let cur = null;
-let curCell = null;
-let curKey = null;
-let muted = false;
-let blocked = null;
-let played = new Set();
-let specials = {};
+// ========== STATE ==========
+let players=[
+  {name:'Кира',score:0,streak:0,frozen:0},
+  {name:'Витя',score:0,streak:0,frozen:0}
+];
+let active=0;
+let cur=null, curCell=null, curKey=null;
+let soundOn=true;
+let blocked=null;
+let played=new Set();
+let specials={};
+let history=[];
+let bonuses={p0:{next:null},p1:{next:null}}; // next: 'sniper', 'mine', etc
 
-const STORAGE = 'jeopardy_premium_v1';
+const STORAGE='jeopardy_cozy_v2';
 
-// ============= CATEGORIES =============
-const cats = [
-  { id: 'angarsk', name: 'Ангарск', color: 'linear-gradient(135deg,#FB923C,#F59E0B)', icon: 'fa-location-dot' },
-  { id: 'brawl', name: 'Brawl Stars', color: 'linear-gradient(135deg,#FF5C9D,#EC4899)', icon: 'fa-skull-crossbones' },
-  { id: 'memes', name: 'Мемы', color: 'linear-gradient(135deg,#A78BFA,#8B5CF6)', icon: 'fa-face-laugh-squint' },
-  { id: 'music', name: 'Музыка', color: 'linear-gradient(135deg,#22D3EE,#06B6D4)', icon: 'fa-music' },
-  { id: 'movies', name: 'Кино', color: 'linear-gradient(135deg,#F87171,#EF4444)', icon: 'fa-film' },
-  { id: 'animals', name: 'Животные', color: 'linear-gradient(135deg,#34D399,#10B981)', icon: 'fa-paw' },
-  { id: 'food', name: 'Еда', color: 'linear-gradient(135deg,#FBBF24,#F59E0B)', icon: 'fa-burger' },
-  { id: 'sport', name: 'Спорт', color: 'linear-gradient(135deg,#60A5FA,#3B82F6)', icon: 'fa-futbol' },
-  { id: 'nature', name: 'Природа', color: 'linear-gradient(135deg,#4ADE80,#22C55E)', icon: 'fa-leaf' },
-  { id: 'books', name: 'Книги', color: 'linear-gradient(135deg,#C4B5FD,#A78BFA)', icon: 'fa-book' },
-  { id: 'school', name: 'Школа', color: 'linear-gradient(135deg,#818CF8,#6366F1)', icon: 'fa-graduation-cap' },
-  { id: 'holidays', name: 'Праздники', color: 'linear-gradient(135deg,#FB7185,#F43F5E)', icon: 'fa-gift' }
+// ========== CATEGORIES ==========
+const cats=[
+  {id:'angarsk',name:'Ангарск',color:'linear-gradient(135deg,#FF6B6B,#E76F51)',icon:'fa-mountain-sun'},
+  {id:'brawl',name:'Brawl Stars',color:'linear-gradient(135deg,#FF85C1,#9B7EDE)',icon:'fa-skull'},
+  {id:'memes',name:'Мемы',color:'linear-gradient(135deg,#9B7EDE,#7C5CFF)',icon:'fa-face-laugh-squint'},
+  {id:'music',name:'Музыка',color:'linear-gradient(135deg,#4ECDC4,#3BA99C)',icon:'fa-music'},
+  {id:'movies',name:'Кино',color:'linear-gradient(135deg,#E9B44C,#D99B2E)',icon:'fa-film'},
+  {id:'animals',name:'Животные',color:'linear-gradient(135deg,#7FB069,#5A9344)',icon:'fa-paw'},
+  {id:'food',name:'Еда',color:'linear-gradient(135deg,#FFB800,#F59E0B)',icon:'fa-utensils'},
+  {id:'sport',name:'Спорт',color:'linear-gradient(135deg,#4A9FF5,#3B82F6)',icon:'fa-futbol'},
+  {id:'nature',name:'Природа',color:'linear-gradient(135deg,#A8D06A,#7FB069)',icon:'fa-leaf'},
+  {id:'books',name:'Книги',color:'linear-gradient(135deg,#C4B5FD,#9B7EDE)',icon:'fa-book-open'},
+  {id:'school',name:'Школа',color:'linear-gradient(135deg,#818CF8,#6366F1)',icon:'fa-graduation-cap'},
+  {id:'holidays',name:'Праздники',color:'linear-gradient(135deg,#FF85C1,#F472B6)',icon:'fa-cake-candles'}
 ];
 
-const pts = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
+const pts=[100,200,300,400,500,600,700,800,900,1000];
 
-function diff(p) {
-  if (p <= 200) return { label: 'Разминка', icon: 'fa-seedling' };
-  if (p <= 400) return { label: 'Легко', icon: 'fa-bolt' };
-  if (p <= 600) return { label: 'Средне', icon: 'fa-bullseye' };
-  if (p <= 800) return { label: 'Сложно', icon: 'fa-fire' };
-  if (p <= 900) return { label: 'Очень сложно', icon: 'fa-skull' };
-  return { label: 'Хардкор', icon: 'fa-crown' };
+function diffOf(p){
+  if(p<=200)return{l:'Разминка',i:'fa-seedling'};
+  if(p<=400)return{l:'Легко',i:'fa-feather'};
+  if(p<=600)return{l:'Средне',i:'fa-bullseye'};
+  if(p<=800)return{l:'Сложно',i:'fa-fire'};
+  if(p<=900)return{l:'Очень сложно',i:'fa-skull-crossbones'};
+  return{l:'Хардкор',i:'fa-crown'};
 }
 
-// ============= SPECIAL CELLS =============
-function genSpecials() {
-  const map = {};
-  const types = [
-    { t: 'double', n: 6 },
-    { t: 'trap', n: 6 },
-    { t: 'jackpot', n: 3 },
-    { t: 'block', n: 3 },
-    { t: 'bonus', n: 5 },
-    { t: 'penalty', n: 5 }
+// ========== SPECIAL CELLS ==========
+function genSpecials(){
+  const map={};
+  const types=[
+    {t:'double',n:6},
+    {t:'trap',n:6},
+    {t:'jackpot',n:3},
+    {t:'block',n:3},
+    {t:'bonus',n:4},
+    {t:'penalty',n:4},
+    {t:'casino',n:2},
+    {t:'mine',n:2},
+    {t:'sniper',n:2},
+    {t:'freeze',n:2},
+    {t:'clover',n:2},
+    {t:'circus',n:1}
   ];
-  const keys = [];
-  cats.forEach(c => pts.forEach(p => keys.push(`${c.id}-${p}`)));
-  for (let i = keys.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [keys[i], keys[j]] = [keys[j], keys[i]];
-  }
-  let i = 0;
-  types.forEach(type => {
-    for (let k = 0; k < type.n && i < keys.length; k++, i++) {
-      map[keys[i]] = type.t;
-    }
-  });
+  const keys=[];
+  cats.forEach(c=>pts.forEach(p=>keys.push(`${c.id}-${p}`)));
+  for(let i=keys.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[keys[i],keys[j]]=[keys[j],keys[i]];}
+  let i=0;
+  types.forEach(ty=>{for(let k=0;k<ty.n&&i<keys.length;k++,i++){map[keys[i]]=ty.t;}});
   return map;
 }
 
-function specInfo(type) {
-  if (type === 'double') return { icon: 'fa-gem', label: '×2', bg: 'linear-gradient(135deg,#22D3EE,#06B6D4)' };
-  if (type === 'trap') return { icon: 'fa-triangle-exclamation', label: 'ЛОВУШКА', bg: 'linear-gradient(135deg,#F87171,#EF4444)' };
-  if (type === 'jackpot') return { icon: 'fa-gift', label: '×5 ДЖЕКПОТ', bg: 'linear-gradient(135deg,#A78BFA,#8B5CF6)' };
-  if (type === 'block') return { icon: 'fa-ban', label: 'БЛОК', bg: 'linear-gradient(135deg,#6B7280,#4B5563)' };
-  if (type === 'bonus') return { icon: 'fa-dice', label: 'БОНУС', bg: 'linear-gradient(135deg,#34D399,#10B981)' };
-  if (type === 'penalty') return { icon: 'fa-burst', label: 'ШТРАФ', bg: 'linear-gradient(135deg,#FB923C,#F59E0B)' };
+function specInfo(t){
+  if(t==='double')return{icon:'fa-gem',label:'×2',bg:'linear-gradient(135deg,#4ECDC4,#3BA99C)',color:'var(--mint)'};
+  if(t==='trap')return{icon:'fa-triangle-exclamation',label:'ЛОВУШКА',bg:'linear-gradient(135deg,#FF6B6B,#DC2626)',color:'var(--coral)'};
+  if(t==='jackpot')return{icon:'fa-gift',label:'×5 ДЖЕКПОТ',bg:'linear-gradient(135deg,#9B7EDE,#7C5CFF)',color:'var(--lavender)'};
+  if(t==='block')return{icon:'fa-ban',label:'БЛОК',bg:'linear-gradient(135deg,#6B564A,#4A3A2E)',color:'var(--ink-soft)'};
+  if(t==='bonus')return{icon:'fa-dice',label:'БОНУС',bg:'linear-gradient(135deg,#7FB069,#5A9344)',color:'var(--sage)'};
+  if(t==='penalty')return{icon:'fa-burst',label:'ШТРАФ',bg:'linear-gradient(135deg,#E76F51,#D05A3E)',color:'var(--terracotta)'};
+  if(t==='casino')return{icon:'fa-dice-five',label:'КАЗИНО',bg:'linear-gradient(135deg,#E9B44C,#D99B2E)',color:'var(--mustard)'};
+  if(t==='mine')return{icon:'fa-bomb',label:'МИНА',bg:'linear-gradient(135deg,#4A3A2E,#2E241C)',color:'var(--ink-soft)'};
+  if(t==='sniper')return{icon:'fa-crosshairs',label:'ТОЧНЫЙ УДАР',bg:'linear-gradient(135deg,#4A9FF5,#3B82F6)',color:'var(--sky)'};
+  if(t==='freeze')return{icon:'fa-snowflake',label:'ЗАМОРОЗКА',bg:'linear-gradient(135deg,#7DD3FC,#38BDF8)',color:'#7DD3FC'};
+  if(t==='clover')return{icon:'fa-clover',label:'КЛЕВЕР',bg:'linear-gradient(135deg,#4ADE80,#22C55E)',color:'var(--sage)'};
+  if(t==='circus')return{icon:'fa-hat-wizard',label:'ЦИРК',bg:'linear-gradient(135deg,#FF85C1,#F472B6)',color:'var(--rose)'};
   return null;
 }
 
-// ============= QUESTIONS (120 NEW) =============
-const db = {
-  angarsk: {
-    100: { q: 'Какой год считается годом основания Ангарска?', a: '1948' },
-    200: { q: 'Междуречье каких двух рек расположен Ангарск?', a: 'Ангары и Китоя' },
-    300: { q: 'Как называется главный проспект города?', a: 'Проспект Карла Маркса' },
-    400: { q: 'Какое предприятие является градообразующим?', a: 'АНХК (Ангарская нефтехимическая компания)' },
-    500: { q: 'Какой самолёт установлен на постаменте при въезде?', a: 'МиГ-17' },
-    600: { q: 'Какой известный музей есть в Ангарске?', a: 'Музей часов' },
-    700: { q: 'В каком году Ангарск получил статус города?', a: '30 мая 1951 года' },
-    800: { q: 'Какое водохранилище любят горожане летом?', a: 'Озеро «Квадраты»' },
-    900: { q: 'Как называется ангарский театр-студия?', a: '«Чудак»' },
-    1000: { q: 'Какая река омывает город с юго-востока?', a: 'Китой' }
+// ========== QUESTIONS ==========
+const db={
+  angarsk:{
+    100:{q:'На каком языке слово «Ангара» означает «разящая, как зверь»?',a:'На бурятском (или эвенкийском)'},
+    200:{q:'Какая река впадает в Ангару прямо в черте Ангарска?',a:'Китой'},
+    300:{q:'Как называется главный проспект города?',a:'Проспект Карла Маркса'},
+    400:{q:'Какой самолёт стоит на постаменте при въезде в город?',a:'МиГ-17'},
+    500:{q:'Какой музей в Ангарске считается единственным в своём роде в России?',a:'Музей часов'},
+    600:{q:'Какое предприятие является градообразующим?',a:'АНХК (Ангарская нефтехимическая компания)'},
+    700:{q:'В каком году Ангарск получил статус города?',a:'1951'},
+    800:{q:'Как называется водохранилище, любимое горожанами летом?',a:'«Квадраты»'},
+    900:{q:'Как называется ангарский театр-студия?',a:'«Чудак»'},
+    1000:{q:'Какой год считается годом основания Ангарска?',a:'1948'}
   },
-  brawl: {
-    100: { q: 'Какой бравлер доступен с самого старта?', a: 'Шелли' },
-    200: { q: 'Как называется главный сезонный пропуск в игре?', a: 'Brawl Pass' },
-    300: { q: 'Что тратится на прокачку бравлеров?', a: 'Монеты и очки силы' },
-    400: { q: 'Как называется режим с мячом и воротами?', a: 'Brawl Ball' },
-    500: { q: 'Какой бравлер становится невидимым в ульте?', a: 'Леон' },
-    600: { q: 'Сколько бравлеров на 2026 год?', a: 'Более 105' },
-    700: { q: 'Кто такой Спайк по редкости?', a: 'Легендарный бравлер-кактус' },
-    800: { q: 'На скольких кубках открывается Ранкед?', a: 'На 1000 кубков' },
-    900: { q: 'Какой бравлер выпускает ноты из гитары?', a: 'Поко' },
-    1000: { q: 'Какой бравлер бросает зажигательные бутылки?', a: 'Барли' }
+  brawl:{
+    100:{q:'Кто разработчик Brawl Stars?',a:'Supercell'},
+    200:{q:'Как называется главный сезонный пропуск?',a:'Brawl Pass'},
+    300:{q:'Какой бравлер стреляет нотами из гитары?',a:'Поко'},
+    400:{q:'Какая редкость у Шелли?',a:'Начальная (стартовая)'},
+    500:{q:'Какой бравлер может стать невидимым?',a:'Леон'},
+    600:{q:'Как называется режим с мячом и воротами?',a:'Brawl Ball (Броулбол)'},
+    700:{q:'На скольких кубках открывается Ранкед?',a:'На 1000 кубков'},
+    800:{q:'Кто такой Спайк по редкости?',a:'Легендарный бравлер-кактус'},
+    900:{q:'Что тратится на прокачку бравлеров?',a:'Монеты и очки силы'},
+    1000:{q:'Как называется главный киберспортивный турнир по Brawl Stars?',a:'Brawl Stars Championship'}
   },
-  memes: {
-    100: { q: 'Что означает слово «кринж»?', a: 'Неловко, стыдно смотреть' },
-    200: { q: 'Кто такой «сигма» в мемах?', a: 'Сильный независимый одиночка' },
-    300: { q: 'Что означает «жиза»?', a: 'Жизненно, прямо в точку' },
-    400: { q: 'Что означает слово «вайб»?', a: 'Атмосфера, настроение' },
-    500: { q: 'Что такое «рофл»?', a: 'Шутка, прикол' },
-    600: { q: 'Что такое «имба» в геймерском сленге?', a: 'Несправедливо сильное, overpowered' },
-    700: { q: 'Что означает слово «пон»?', a: 'Понял, осознал' },
-    800: { q: 'Кто такой «краш»?', a: 'Тот, кто очень нравится' },
-    900: { q: 'Что означает эмодзи 💀 в интернете?', a: 'Дикий ор, смерть от смеха' },
-    1000: { q: 'Что такое «чилл»?', a: 'Спокойный отдых, расслабон' }
+  memes:{
+    100:{q:'Что означает мем «АУФ»?',a:'Волчий сленг, выражение восторга'},
+    200:{q:'Что означает слово «кек»?',a:'Смех, лол'},
+    300:{q:'Что такое «пранк»?',a:'Розыгрыш, шутка над кем-то'},
+    400:{q:'Что означает «флекс»?',a:'Хвастовство, показной шик'},
+    500:{q:'Что такое «тильт»?',a:'Состояние злости и frustration в играх'},
+    600:{q:'Кто такой «душнила»?',a:'Занудный человек'},
+    700:{q:'Что означает «агриться»?',a:'Злиться, раздражаться'},
+    800:{q:'Что означает «хайп»?',a:'Шумиха, ажиотаж вокруг чего-то'},
+    900:{q:'Что означает «топчик»?',a:'Что-то классное, отличное'},
+    1000:{q:'Что такое «збс» в интернет-сленге?',a:'«Заебись» — очень хорошо'}
   },
-  music: {
-    100: { q: 'Кто поёт «Позови меня с собой»?', a: 'Алла Пугачёва' },
-    200: { q: 'Какая группа исполнила «Ты неси меня, река»?', a: 'Любэ' },
-    300: { q: 'Кто поёт «Между нами тает лёд»?', a: 'Грибы' },
-    400: { q: 'Кто автор «Владимирского централа»?', a: 'Михаил Круг' },
-    500: { q: 'Кто исполнил «Я русский»?', a: 'SHAMAN' },
-    600: { q: 'Какая группа поёт «Как упоительны в России вечера»?', a: 'Белый Орёл' },
-    700: { q: 'Кто лидер группы «Кино»?', a: 'Виктор Цой' },
-    800: { q: 'Кто такой Егор Летов?', a: 'Лидер «Гражданской обороны»' },
-    900: { q: 'Какая песня Любэ посвящена реке?', a: '«Ты неси меня, река»' },
-    1000: { q: 'Кто написал музыку «Подмосковных вечеров»?', a: 'Василий Соловьёв-Седой' }
+  music:{
+    100:{q:'Кто исполнил «Миллион алых роз»?',a:'Алла Пугачёва'},
+    200:{q:'Какая песня начинается со слов «Расцветали яблони и груши»?',a:'«Катюша»'},
+    300:{q:'Какая песня считается неофициальным гимном космонавтов?',a:'«Трава у дома»'},
+    400:{q:'Кто автор музыки «Дня Победы»?',a:'Давид Тухманов'},
+    500:{q:'Кто исполнил «Надежду»?',a:'Анна Герман'},
+    600:{q:'Какая группа исполняет «Как на войне»?',a:'Агата Кристи'},
+    700:{q:'Кто написал песню «Чистые пруды»?',a:'Игорь Тальков'},
+    800:{q:'Кто лидер группы «Мумий Тролль»?',a:'Илья Лагутенко'},
+    900:{q:'Какая песня Виктора Цоя начинается со слов «Я сижу в своей комнате»?',a:'«Перемен» / «Восьмиклассница»'},
+    1000:{q:'Кто исполнил «Розовое вино» вместе с Федуком?',a:'Элджей'}
   },
-  movies: {
-    100: { q: 'Как зовут друга Чебурашки?', a: 'Крокодил Гена' },
-    200: { q: 'Как зовут кота из Простоквашино?', a: 'Матроскин' },
-    300: { q: 'Кто режиссёр «Иронии судьбы»?', a: 'Эльдар Рязанов' },
-    400: { q: 'Как зовут главного героя «Брата»?', a: 'Данила Багров' },
-    500: { q: 'Кто озвучил Волка в «Ну, погоди!»?', a: 'Анатолий Папанов' },
-    600: { q: 'Кто сыграл Штирлица?', a: 'Вячеслав Тихонов' },
-    700: { q: 'Кто режиссёр «Москва слезам не верит»?', a: 'Владимир Меньшов' },
-    800: { q: 'Сколько богатырей в мультфильме?', a: 'Три' },
-    900: { q: 'Кем работал крокодил Гена в зоопарке?', a: 'Крокодилом' },
-    1000: { q: 'Какого цвета был шарик у Ослика Иа?', a: 'Зелёный' }
+  movies:{
+    100:{q:'Как зовут друга Чебурашки?',a:'Крокодил Гена'},
+    200:{q:'Какая студия сделала «Историю игрушек»?',a:'Pixar'},
+    300:{q:'Кто сыграл Джека Воробья?',a:'Джонни Депп'},
+    400:{q:'Кто режиссёр «Аватара»?',a:'Джеймс Кэмерон'},
+    500:{q:'Кто сыграл Железного человека?',a:'Роберт Дауни-младший'},
+    600:{q:'Как называется главный герой «Матрицы»?',a:'Нео'},
+    700:{q:'Какая студия сняла «Шрека»?',a:'DreamWorks'},
+    800:{q:'Кто режиссёр «Интерстеллара»?',a:'Кристофер Нолан'},
+    900:{q:'Кто озвучил Дона Кихота в «Человеке-пауке»?',a:'Владимир Этуш (нет, ошибка)'},
+    1000:{q:'Какой фильм получил «Оскар» за лучший фильм в 2024 году?',a:'«Оппенгеймер»'}
   },
-  animals: {
-    100: { q: 'Какое животное строит хатку?', a: 'Бобр' },
-    200: { q: 'Какое самое высокое животное?', a: 'Жираф' },
-    300: { q: 'Какое морское животное самое большое?', a: 'Синий кит' },
-    400: { q: 'Какая птица не умеет летать?', a: 'Пингвин (и страус)' },
-    500: { q: 'Какое животное называют царём зверей?', a: 'Лев' },
-    600: { q: 'Какая птица подбрасывает яйца в чужие гнёзда?', a: 'Кукушка' },
-    700: { q: 'Какое насекомое даёт мёд?', a: 'Пчела' },
-    800: { q: 'Какое животное носит детёныша в сумке?', a: 'Кенгуру' },
-    900: { q: 'Какое млекопитающее умеет летать?', a: 'Летучая мышь' },
-    1000: { q: 'Сколько сердец у осьминога?', a: 'Три' }
+  animals:{
+    100:{q:'Сколько ног у паука?',a:'8'},
+    200:{q:'Какое животное самое быстрое на суше?',a:'Гепард'},
+    300:{q:'Какая птица самая большая?',a:'Страус'},
+    400:{q:'Какого цвета кровь у осьминога?',a:'Голубая'},
+    500:{q:'Что едят панды?',a:'Бамбук'},
+    600:{q:'Какое млекопитающее откладывает яйца?',a:'Утконос'},
+    700:{q:'Сколько лет живёт слон в дикой природе?',a:'60-70 лет'},
+    800:{q:'Сколько сердец у дождевого червя?',a:'5'},
+    900:{q:'Какое самое ядовитое морское существо?',a:'Кубомедуза'},
+    1000:{q:'Сколько камер в сердце у крокодила?',a:'4'}
   },
-  food: {
-    100: { q: 'Из чего варят борщ?', a: 'Свёкла, капуста, мясо, картофель' },
-    200: { q: 'Что такое сырники?', a: 'Творожные оладьи' },
-    300: { q: 'Из чего делают пельмени?', a: 'Тесто и фарш' },
-    400: { q: 'Что такое Оливье?', a: 'Салат с варёными овощами и майонезом' },
-    500: { q: 'Какая рыба — символ Нового года?', a: 'Селёдка' },
-    600: { q: 'Какая самая популярная крупа в России?', a: 'Гречка' },
-    700: { q: 'Что такое сгущёнка?', a: 'Сгущённое молоко с сахаром' },
-    800: { q: 'Из чего делают пломбир?', a: 'Молоко, сливки, сахар, яйца' },
-    900: { q: 'Какой напиток делают из берёзового сока?', a: 'Квас' },
-    1000: { q: 'Что такое «сельдь под шубой»?', a: 'Слоёный салат с селёдкой и овощами' }
+  food:{
+    100:{q:'Какого цвета морковь была изначально?',a:'Фиолетовая'},
+    200:{q:'Из чего делают хлеб?',a:'Мука'},
+    300:{q:'Какая страна родина пиццы?',a:'Италия'},
+    400:{q:'Из чего делают шоколад?',a:'Какао-бобы'},
+    500:{q:'Какая страна родина чая?',a:'Китай'},
+    600:{q:'Что такое «хачапури»?',a:'Грузинская лепёшка с сыром'},
+    700:{q:'Из чего делают сыр?',a:'Молоко'},
+    800:{q:'Какая страна родина картофеля?',a:'Перу (Южная Америка)'},
+    900:{q:'Что такое «моцарелла»?',a:'Итальянский сыр'},
+    1000:{q:'Какой самый дорогой гриб в мире?',a:'Трюфель'}
   },
-  sport: {
-    100: { q: 'Сколько игроков в футбольной команде?', a: '11' },
-    200: { q: 'В каком виде спорта есть шайба?', a: 'Хоккей' },
-    300: { q: 'Как часто проводятся Олимпийские игры?', a: 'Раз в 4 года' },
-    400: { q: 'Сколько игроков в баскетбольной команде?', a: '5' },
-    500: { q: 'Что такое биатлон?', a: 'Лыжи + стрельба' },
-    600: { q: 'Сколько колец на олимпийском флаге?', a: '5' },
-    700: { q: 'Какой вид спорта называют королевой?', a: 'Лёгкая атлетика' },
-    800: { q: 'В каком виде спорта есть пенальти?', a: 'Футбол' },
-    900: { q: 'Какой самый популярный вид спорта в мире?', a: 'Футбол' },
-    1000: { q: 'Как называется главный турнир по теннису на траве?', a: 'Уимблдон' }
+  sport:{
+    100:{q:'Сколько игроков в волейбольной команде?',a:'6'},
+    200:{q:'Сколько таймов в футболе?',a:'2'},
+    300:{q:'Сколько игроков в футбольной команде?',a:'11'},
+    400:{q:'Что такое «хет-трик»?',a:'3 гола одного игрока за матч'},
+    500:{q:'Кто самый титулованный олимпиец в истории?',a:'Майкл Фелпс'},
+    600:{q:'В каком виде спорта есть «слэм-данк»?',a:'Баскетбол'},
+    700:{q:'В каком виде спорта есть «нокаут»?',a:'Бокс'},
+    800:{q:'Какая страна родина Олимпийских игр?',a:'Греция'},
+    900:{q:'Как называется главный турнир по теннису на траве?',a:'Уимблдон'},
+    1000:{q:'Сколько колец на олимпийском флаге?',a:'5'}
   },
-  nature: {
-    100: { q: 'Сколько цветов в радуге?', a: '7' },
-    200: { q: 'Самое глубокое озеро в мире?', a: 'Байкал' },
-    300: { q: 'Самая высокая гора?', a: 'Эверест' },
-    400: { q: 'Самое высокое дерево?', a: 'Секвойя' },
-    500: { q: 'Самый большой океан?', a: 'Тихий' },
-    600: { q: 'Самый большой материк?', a: 'Евразия' },
-    700: { q: 'Дерево — символ России?', a: 'Берёза' },
-    800: { q: 'Сколько материков на Земле?', a: '6' },
-    900: { q: 'Самый крупный цветок в мире?', a: 'Раффлезия' },
-    1000: { q: 'Где появились первые арбузы?', a: 'В Африке' }
+  nature:{
+    100:{q:'Какого цвета небо в ясный день?',a:'Голубое'},
+    200:{q:'Самое большое дерево в мире?',a:'Секвойя'},
+    300:{q:'Сколько океанов на Земле?',a:'5'},
+    400:{q:'Как называется наука о погоде?',a:'Метеорология'},
+    500:{q:'Что такое «цунами»?',a:'Огромная волна'},
+    600:{q:'Что такое «торнадо»?',a:'Вихрь, смерч'},
+    700:{q:'Самая длинная река в мире?',a:'Нил'},
+    800:{q:'Самое солёное озеро?',a:'Мёртвое море'},
+    900:{q:'Что такое «северное сияние»?',a:'Свечение в атмосфере'},
+    1000:{q:'Как называется самая маленькая птица в мире?',a:'Колибри'}
   },
-  books: {
-    100: { q: 'Кто написал «Колобка»?', a: 'Русская народная сказка' },
-    200: { q: 'Кто автор «Войны и мира»?', a: 'Лев Толстой' },
-    300: { q: 'Кто написал «Евгения Онегина»?', a: 'Александр Пушкин' },
-    400: { q: 'Что потеряла Золушка на балу?', a: 'Хрустальную туфельку' },
-    500: { q: 'Кто автор «Мастера и Маргариты»?', a: 'Михаил Булгаков' },
-    600: { q: 'Как звали деревянного мальчика?', a: 'Буратино' },
-    700: { q: 'Кто написал «Преступление и наказание»?', a: 'Фёдор Достоевский' },
-    800: { q: 'Кто съел Колобка?', a: 'Лиса' },
-    900: { q: 'Сколько богатырей на картине Васнецова?', a: 'Три' },
-    1000: { q: 'Кто автор «Гарри Поттера»?', a: 'Джоан Роулинг' }
+  books:{
+    100:{q:'Кто автор «Мухи-Цокотухи»?',a:'Корней Чуковский'},
+    200:{q:'Кто написал «Сказку о рыбаке и рыбке»?',a:'Александр Пушкин'},
+    300:{q:'Кто автор «Дюймовочки»?',a:'Ганс Христиан Андерсен'},
+    400:{q:'Кто написал «Винни-Пуха»?',a:'Алан Милн'},
+    500:{q:'Кто автор «Тимура и его команды»?',a:'Аркадий Гайдар'},
+    600:{q:'Кто написал «Робинзона Крузо»?',a:'Даниэль Дефо'},
+    700:{q:'Кто автор «Маленького принца»?',a:'Антуан де Сент-Экзюпери'},
+    800:{q:'Кто написал «Гарри Поттера»?',a:'Джоан Роулинг'},
+    900:{q:'Кто автор «Войны и мира»?',a:'Лев Толстой'},
+    1000:{q:'Кто написал «Преступление и наказание»?',a:'Фёдор Достоевский'}
   },
-  school: {
-    100: { q: 'Сколько букв в русском алфавите?', a: '33' },
-    200: { q: 'Сколько дней в неделе?', a: '7' },
-    300: { q: 'Сколько месяцев в году?', a: '12' },
-    400: { q: 'Сколько минут в часе?', a: '60' },
-    500: { q: 'Самая высокая оценка в школе?', a: '5' },
-    600: { q: 'Что изучает математика?', a: 'Числа и фигуры' },
-    700: { q: 'Как называется перерыв между уроками?', a: 'Перемена' },
-    800: { q: 'Сколько будет 7 × 8?', a: '56' },
-    900: { q: 'Как называется книга с оценками?', a: 'Дневник' },
-    1000: { q: 'Сколько цветов в радуге?', a: '7' }
+  school:{
+    100:{q:'Сколько будет 9 × 9?',a:'81'},
+    200:{q:'Сколько букв в английском алфавите?',a:'26'},
+    300:{q:'Что такое H₂O?',a:'Вода'},
+    400:{q:'Сколько сторон у квадрата?',a:'4'},
+    500:{q:'Как называется столица России?',a:'Москва'},
+    600:{q:'Сколько минут в 2 часах?',a:'120'},
+    700:{q:'Что такое «периметр»?',a:'Сумма длин всех сторон'},
+    800:{q:'Сколько континентов на Земле?',a:'6'},
+    900:{q:'Как называется главный закон страны?',a:'Конституция'},
+    1000:{q:'Чему равно число π (два знака)?',a:'3,14'}
   },
-  holidays: {
-    100: { q: 'Какого числа Новый год?', a: '1 января' },
-    200: { q: 'Какого числа Рождество в России?', a: '7 января' },
-    300: { q: 'Когда отмечают 8 Марта?', a: '8 марта' },
-    400: { q: 'Что пекут на Масленицу?', a: 'Блины' },
-    500: { q: 'Какого числа День Победы?', a: '9 мая' },
-    600: { q: 'Кто приносит подарки на Новый год в России?', a: 'Дед Мороз' },
-    700: { q: 'Внучка Деда Мороза?', a: 'Снегурочка' },
-    800: { q: 'Что красят на Пасху?', a: 'Яйца' },
-    900: { q: 'Какого числа День России?', a: '12 июня' },
-    1000: { q: 'Что сжигают в конце Масленицы?', a: 'Чучело зимы' }
+  holidays:{
+    100:{q:'Какого числа Новый год?',a:'1 января'},
+    200:{q:'Какого числа Рождество в России?',a:'7 января'},
+    300:{q:'Какого числа День защитника Отечества?',a:'23 февраля'},
+    400:{q:'Какого числа День Победы?',a:'9 мая'},
+    500:{q:'Какого числа День России?',a:'12 июня'},
+    600:{q:'Какого числа День знаний?',a:'1 сентября'},
+    700:{q:'Какого числа День народного единства?',a:'4 ноября'},
+    800:{q:'Какого числа День космонавтики?',a:'12 апреля'},
+    900:{q:'Какого числа Татьянин день?',a:'25 января'},
+    1000:{q:'Какого числа Хэллоуин?',a:'31 октября'}
   }
 };
 
-// ============= AUDIO =============
-let audioCtx = null;
-function ac() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  if (audioCtx.state === 'suspended') audioCtx.resume();
-  return audioCtx;
-}
-function sfx(type) {
-  if (muted) return;
-  try {
-    const ctx = ac(), now = ctx.currentTime;
-    if (type === 'click') {
-      const o = ctx.createOscillator(), g = ctx.createGain();
-      o.connect(g); g.connect(ctx.destination);
-      o.frequency.setValueAtTime(600, now);
-      o.frequency.exponentialRampToValueAtTime(900, now + 0.04);
-      g.gain.setValueAtTime(0.05, now);
-      g.gain.linearRampToValueAtTime(0.001, now + 0.05);
-      o.start(now); o.stop(now + 0.05);
-    } else if (type === 'correct') {
-      [523, 659, 784, 1047].forEach((f, i) => {
-        const o = ctx.createOscillator(), g = ctx.createGain();
-        o.connect(g); g.connect(ctx.destination);
-        o.type = 'sine';
-        o.frequency.setValueAtTime(f, now + i * 0.06);
-        g.gain.setValueAtTime(0.08, now + i * 0.06);
-        g.gain.linearRampToValueAtTime(0.001, now + i * 0.06 + 0.15);
-        o.start(now + i * 0.06); o.stop(now + i * 0.06 + 0.15);
+// ========== AUDIO ==========
+let actx=null;
+function ac(){if(!actx)actx=new (window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume();return actx;}
+function sfx(type){
+  if(!soundOn)return;
+  try{
+    const c=ac(),n=c.currentTime;
+    if(type==='click'){
+      const o=c.createOscillator(),g=c.createGain();
+      o.connect(g);g.connect(c.destination);
+      o.frequency.setValueAtTime(700,n);
+      o.frequency.exponentialRampToValueAtTime(900,n+0.04);
+      g.gain.setValueAtTime(0.05,n);
+      g.gain.linearRampToValueAtTime(0.001,n+0.05);
+      o.start(n);o.stop(n+0.05);
+    }else if(type==='correct'){
+      [523,659,784,1047].forEach((f,i)=>{
+        const o=c.createOscillator(),g=c.createGain();
+        o.connect(g);g.connect(c.destination);
+        o.type='sine';
+        o.frequency.setValueAtTime(f,n+i*0.06);
+        g.gain.setValueAtTime(0.08,n+i*0.06);
+        g.gain.linearRampToValueAtTime(0.001,n+i*0.06+0.15);
+        o.start(n+i*0.06);o.stop(n+i*0.06+0.15);
       });
-    } else if (type === 'wrong') {
-      const o = ctx.createOscillator(), g = ctx.createGain();
-      o.connect(g); g.connect(ctx.destination);
-      o.type = 'sawtooth';
-      o.frequency.setValueAtTime(220, now);
-      o.frequency.linearRampToValueAtTime(80, now + 0.2);
-      g.gain.setValueAtTime(0.08, now);
-      g.gain.linearRampToValueAtTime(0.001, now + 0.2);
-      o.start(now); o.stop(now + 0.2);
-    } else if (type === 'win') {
-      [392, 523, 659, 784, 1047].forEach((f, i) => {
-        const o = ctx.createOscillator(), g = ctx.createGain();
-        o.connect(g); g.connect(ctx.destination);
-        o.type = 'triangle';
-        o.frequency.setValueAtTime(f, now + i * 0.08);
-        g.gain.setValueAtTime(0.09, now + i * 0.08);
-        g.gain.linearRampToValueAtTime(0.001, now + i * 0.08 + 0.25);
-        o.start(now + i * 0.08); o.stop(now + i * 0.08 + 0.25);
+    }else if(type==='wrong'){
+      const o=c.createOscillator(),g=c.createGain();
+      o.connect(g);g.connect(c.destination);
+      o.type='sawtooth';
+      o.frequency.setValueAtTime(260,n);
+      o.frequency.linearRampToValueAtTime(90,n+0.22);
+      g.gain.setValueAtTime(0.08,n);
+      g.gain.linearRampToValueAtTime(0.001,n+0.22);
+      o.start(n);o.stop(n+0.22);
+    }else if(type==='win'){
+      [392,523,659,784,1047,1319].forEach((f,i)=>{
+        const o=c.createOscillator(),g=c.createGain();
+        o.connect(g);g.connect(c.destination);
+        o.type='triangle';
+        o.frequency.setValueAtTime(f,n+i*0.08);
+        g.gain.setValueAtTime(0.09,n+i*0.08);
+        g.gain.linearRampToValueAtTime(0.001,n+i*0.08+0.25);
+        o.start(n+i*0.08);o.stop(n+i*0.08+0.25);
       });
     }
-  } catch(e) {}
+  }catch(e){}
 }
-function toggleAudio() {
-  muted = !muted;
-  document.getElementById('audio-icon').className = muted ? 'fa-solid fa-volume-xmark' : 'fa-solid fa-volume-high';
+function toggleSound(){
+  soundOn=!soundOn;
+  document.getElementById('snd-icon').className=soundOn?'fa-solid fa-volume-high':'fa-solid fa-volume-xmark';
 }
 
-// ============= PERSISTENCE =============
-function save() {
-  try {
-    localStorage.setItem(STORAGE, JSON.stringify({
-      players, active, played: [...played], specials, blocked
+// ========== TOASTS ==========
+function toast(text,icon,color){
+  const box=document.getElementById('toasts');
+  const el=document.createElement('div');
+  el.className='toast '+color;
+  el.innerHTML=`<i class="fa-solid ${icon}"></i><span>${text}</span>`;
+  box.appendChild(el);
+  setTimeout(()=>{
+    el.style.animation='toastOut 0.35s ease forwards';
+    setTimeout(()=>el.remove(),350);
+  },3000);
+}
+
+// ========== PERSISTENCE ==========
+function save(){
+  try{
+    localStorage.setItem(STORAGE,JSON.stringify({
+      players,active,played:[...played],specials,blocked,history,bonuses
     }));
-  } catch(e) {}
+  }catch(e){}
 }
-function load() {
-  try {
-    const raw = localStorage.getItem(STORAGE);
-    if (!raw) { specials = genSpecials(); return; }
-    const d = JSON.parse(raw);
-    if (d.players) players = d.players.map(p => ({...p, streak: p.streak || 0}));
-    if (typeof d.active === 'number') active = d.active;
-    if (d.played) played = new Set(d.played);
-    if (d.specials && Object.keys(d.specials).length) specials = d.specials;
-    else specials = genSpecials();
-    if (d.blocked !== undefined) blocked = d.blocked;
-  } catch(e) { specials = genSpecials(); }
+function load(){
+  try{
+    const raw=localStorage.getItem(STORAGE);
+    if(!raw){specials=genSpecials();return;}
+    const d=JSON.parse(raw);
+    if(d.players)players=d.players;
+    if(typeof d.active==='number')active=d.active;
+    if(d.played)played=new Set(d.played);
+    if(d.specials&&Object.keys(d.specials).length)specials=d.specials;
+    else specials=genSpecials();
+    if(d.blocked!==undefined)blocked=d.blocked;
+    if(d.history)history=d.history;
+    if(d.bonuses)bonuses=d.bonuses;
+  }catch(e){specials=genSpecials();}
 }
 
-// ============= RENDER =============
-function render() {
-  const grid = document.getElementById('grid');
-  grid.innerHTML = '';
-  cats.forEach(cat => {
-    const col = document.createElement('div');
-    col.className = 'cat-col';
-
-    const doneCount = pts.filter(p => played.has(`${cat.id}-${p}`)).length;
-    const isDone = doneCount === pts.length;
-
-    const header = document.createElement('div');
-    header.className = 'cat-header' + (isDone ? ' done' : '');
-    header.style.background = cat.color;
-    header.innerHTML = `<i class="fa-solid ${cat.icon}"></i><span>${cat.name}</span><span class="done-badge"><i class="fa-solid fa-check"></i></span>`;
-    col.appendChild(header);
-
-    const tiers = document.createElement('div');
-    tiers.className = 'tiers';
-    pts.forEach(p => {
-      const key = `${cat.id}-${p}`;
-      const isPlayed = played.has(key);
-      const cell = document.createElement('button');
-      cell.className = 'cell' + (isPlayed ? ' done' : '');
-      if (isPlayed) {
-        cell.innerHTML = '<i class="fa-solid fa-check"></i>';
-      } else {
-        cell.textContent = p;
-      }
-      cell.onclick = () => openQ(cell, key, cat, p);
+// ========== RENDER ==========
+function render(){
+  const grid=document.getElementById('grid');
+  grid.innerHTML='';
+  cats.forEach(cat=>{
+    const col=document.createElement('div');
+    col.className='col';
+    const doneCount=pts.filter(p=>played.has(`${cat.id}-${p}`)).length;
+    const isDone=doneCount===pts.length;
+    const h=document.createElement('div');
+    h.className='cat-h'+(isDone?' done':'');
+    h.style.background=cat.color;
+    h.innerHTML=`<i class="fa-solid ${cat.icon}"></i><span>${cat.name}</span><span class="done-tick"><i class="fa-solid fa-check"></i></span>`;
+    col.appendChild(h);
+    const tiers=document.createElement('div');
+    tiers.className='tiers';
+    pts.forEach(p=>{
+      const key=`${cat.id}-${p}`;
+      const isPlayed=played.has(key);
+      const cell=document.createElement('button');
+      const isMega=specials[key]&&['jackpot','sniper','clover','circus'].includes(specials[key]);
+      cell.className='cell'+(isPlayed?' done':'')+(isMega?' mega':'');
+      cell.dataset.key=key;
+      if(isPlayed){cell.innerHTML='<i class="fa-solid fa-check"></i>';}
+      else{cell.textContent=p;}
+      cell.onclick=()=>openQ(cell,key,cat,p);
       tiers.appendChild(cell);
     });
     col.appendChild(tiers);
     grid.appendChild(col);
   });
   updateHUD();
+  renderHistoryBadge();
 }
 
-function updateHUD() {
-  document.getElementById('score-0').textContent = players[0].score;
-  document.getElementById('score-1').textContent = players[1].score;
+function updateHUD(){
+  document.getElementById('score-0').textContent=players[0].score;
+  document.getElementById('score-1').textContent=players[1].score;
+  document.getElementById('pname-0').textContent=players[0].name;
+  document.getElementById('pname-1').textContent=players[1].name;
 
-  const p0 = document.getElementById('p-card-0');
-  const p1 = document.getElementById('p-card-1');
-  const s0 = document.getElementById('p-status-0');
-  const s1 = document.getElementById('p-status-1');
+  const pc0=document.getElementById('pc-0'),pc1=document.getElementById('pc-1');
+  const pm0=document.getElementById('pmeta-0'),pm1=document.getElementById('pmeta-1');
+  const s0=document.getElementById('streak-0'),s1=document.getElementById('streak-1');
 
-  if (active === 0) {
-    p0.className = 'player glass active active-kira';
-    p1.className = 'player glass inactive';
-    s0.innerHTML = '<span class="dot"></span><span>ходит сейчас</span>';
-    s1.innerHTML = '<span>ждёт хода</span>';
-    s0.className = 'p-status active-kira';
-    s1.className = 'p-status';
-  } else {
-    p0.className = 'player glass inactive';
-    p1.className = 'player glass active active-vitya';
-    s0.innerHTML = '<span>ждёт хода</span>';
-    s1.innerHTML = '<span class="dot"></span><span>ходит сейчас</span>';
-    s0.className = 'p-status';
-    s1.className = 'p-status active-vitya';
+  if(active===0){
+    pc0.className='player card active-kira';
+    pc1.className='player card inactive';
+    pm0.className='p-meta kira-active';
+    pm0.innerHTML='<span class="dot"></span><span>ходит сейчас</span>';
+    pm1.className='p-meta';
+    pm1.innerHTML='<span>ждёт хода</span>';
+  }else{
+    pc0.className='player card inactive';
+    pc1.className='player card active-vitya';
+    pm0.className='p-meta';
+    pm0.innerHTML='<span>ждёт хода</span>';
+    pm1.className='p-meta vitya-active';
+    pm1.innerHTML='<span class="dot"></span><span>ходит сейчас</span>';
   }
 
-  const total = cats.length * pts.length;
-  const done = played.size;
-  const pct = Math.round((done / total) * 100);
-  document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('progress-pct').textContent = pct + '%';
-  document.getElementById('progress-label').textContent = `${done} / ${total}`;
+  // Streak badges
+  [0,1].forEach(i=>{
+    const s=document.getElementById(`streak-${i}`);
+    if(players[i].streak>=2){
+      s.classList.remove('hidden');
+      s.innerHTML=`<i class="fa-solid fa-fire"></i> ×${players[i].streak}`;
+    }else{
+      s.classList.add('hidden');
+    }
+  });
+
+  // Frozen indicator
+  [0,1].forEach(i=>{
+    if(players[i].frozen>0){
+      const pm=document.getElementById(`pmeta-${i}`);
+      pm.innerHTML+=` <span style="color:#38BDF8;font-weight:900;">❄ ${players[i].frozen}</span>`;
+    }
+  });
+
+  const total=cats.length*pts.length;
+  const done=played.size;
+  const pct=Math.round((done/total)*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-pct').textContent=pct+'%';
+  document.getElementById('prog-label').textContent=`${done} / ${total}`;
 }
 
-function pulseScore(idx) {
-  const el = document.getElementById(`score-${idx}`);
+function pulseScore(idx){
+  const el=document.getElementById(`score-${idx}`);
   el.classList.remove('pulse');
   void el.offsetWidth;
   el.classList.add('pulse');
 }
 
-// ============= OPEN QUESTION =============
-function openQ(cell, key, cat, points) {
-  if (played.has(key)) return;
+function renderHistoryBadge(){
+  const b=document.getElementById('hist-badge');
+  if(history.length>0){b.textContent=history.length;b.classList.remove('hidden');}
+  else b.classList.add('hidden');
+}
+
+// ========== OPEN QUESTION ==========
+function openQ(cell,key,cat,points){
+  if(played.has(key))return;
   sfx('click');
-  curCell = cell;
-  curKey = key;
+  curCell=cell;curKey=key;
+  const sp=specials[key];
+  const info=sp?specInfo(sp):null;
 
-  const special = specials[key];
-  const info = special ? specInfo(special) : null;
-
-  // INSTANT CELLS
-  if (special === 'bonus' || special === 'penalty') {
-    const isBonus = special === 'bonus';
-    const delta = isBonus ? points : -points;
-    players[active].score += delta;
+  // Instant cells
+  if(sp==='bonus'||sp==='penalty'){
+    const isBonus=sp==='bonus';
+    const delta=isBonus?points:-points;
+    players[active].score+=delta;
     pulseScore(active);
-    if (isBonus) sfx('correct'); else sfx('wrong');
-    showInstant(isBonus, delta);
+    if(isBonus)sfx('correct');else sfx('wrong');
+    addHistory(active,cat,points,delta,sp);
+    showInstant(isBonus,delta);
     played.add(key);
     cell.classList.add('done');
-    cell.innerHTML = '<i class="fa-solid fa-check"></i>';
-    save();
-    render();
+    cell.innerHTML='<i class="fa-solid fa-check"></i>';
+    save();render();
     return;
   }
 
-  cur = { key, cat, points, data: db[cat.id][points], special };
+  if(sp==='casino'){
+    // 50/50 random
+    const win=Math.random()<0.5;
+    const delta=win?points*2:-points*2;
+    players[active].score+=delta;
+    pulseScore(active);
+    if(win)sfx('correct');else sfx('wrong');
+    addHistory(active,cat,points,delta,sp);
+    showInstant(win,delta,'casino');
+    played.add(key);
+    cell.classList.add('done');
+    cell.innerHTML='<i class="fa-solid fa-check"></i>';
+    save();render();
+    return;
+  }
 
-  document.getElementById('m-cat').textContent = cat.name;
-  document.getElementById('m-cat').style.background = cat.color;
-  document.getElementById('m-points').textContent = points + ' pts';
-  const d = diff(points);
-  document.getElementById('m-diff').innerHTML = `<i class="fa-solid ${d.icon}"></i> ${d.label}`;
-  document.getElementById('m-turn').textContent = players[active].name;
-  document.getElementById('m-question').textContent = cur.data.q;
-  document.getElementById('m-answer').textContent = cur.data.a;
+  if(sp==='circus'){
+    // Swap scores!
+    const t=players[0].score;
+    players[0].score=players[1].score;
+    players[1].score=t;
+    pulseScore(0);pulseScore(1);
+    sfx('correct');
+    addHistory(active,cat,points,0,'circus');
+    showInstant(true,0,'circus');
+    played.add(key);
+    cell.classList.add('done');
+    cell.innerHTML='<i class="fa-solid fa-check"></i>';
+    save();render();
+    return;
+  }
 
-  const sb = document.getElementById('m-special');
-  if (info) {
+  cur={key,cat,points,data:db[cat.id][points],special:sp};
+
+  document.getElementById('m-cat').textContent=cat.name;
+  document.getElementById('m-cat').style.background=cat.color;
+  document.getElementById('m-points').textContent=points+' pts';
+  const d=diffOf(points);
+  document.getElementById('m-diff').innerHTML=`<i class="fa-solid ${d.i}"></i> ${d.l}`;
+  document.getElementById('m-turn').textContent=players[active].name;
+  document.getElementById('m-q').textContent=cur.data.q;
+  document.getElementById('m-ans-t').textContent=cur.data.a;
+
+  const sb=document.getElementById('m-spec');
+  if(info){
     sb.classList.remove('hidden');
-    sb.style.background = info.bg;
-    sb.innerHTML = `<i class="fa-solid ${info.icon}"></i> ${info.label}`;
-  } else sb.classList.add('hidden');
+    sb.style.background=info.bg;
+    sb.innerHTML=`<i class="fa-solid ${info.icon}"></i> ${info.label}`;
+  }else sb.classList.add('hidden');
 
-  const warn = document.getElementById('m-warn');
-  if (special === 'double') {
-    warn.className = 'warn-box';
-    warn.style.background = 'linear-gradient(135deg,rgba(34,211,238,0.15),rgba(34,211,238,0.05))';
-    warn.style.borderColor = 'rgba(34,211,238,0.4)';
-    warn.innerHTML = `<div class="warn-title" style="color:var(--cyan)"><i class="fa-solid fa-gem"></i>×2 УДВОЕНИЕ</div><div class="warn-text">Верно → <strong>+${points*2}</strong><br>Ошибка → <strong>-${points}</strong></div>`;
-  } else if (special === 'trap') {
-    warn.className = 'warn-box';
-    warn.style.background = 'linear-gradient(135deg,rgba(248,113,113,0.15),rgba(248,113,113,0.05))';
-    warn.style.borderColor = 'rgba(248,113,113,0.4)';
-    warn.innerHTML = `<div class="warn-title" style="color:var(--red)"><i class="fa-solid fa-triangle-exclamation"></i>ЛОВУШКА</div><div class="warn-text">Верно → <strong>+${points}</strong><br>Ошибка → <strong>-${points*2}</strong></div>`;
-  } else if (special === 'jackpot') {
-    warn.className = 'warn-box';
-    warn.style.background = 'linear-gradient(135deg,rgba(167,139,250,0.2),rgba(167,139,250,0.05))';
-    warn.style.borderColor = 'rgba(167,139,250,0.5)';
-    warn.innerHTML = `<div class="warn-title" style="color:var(--violet)"><i class="fa-solid fa-gift"></i>ДЖЕКПОТ ×5</div><div class="warn-text">Верно → <strong>+${points*5}</strong>!!!<br>Ошибка → <strong>-${points}</strong></div>`;
-  } else if (special === 'block') {
-    warn.className = 'warn-box';
-    warn.style.background = 'linear-gradient(135deg,rgba(107,114,128,0.25),rgba(107,114,128,0.1))';
-    warn.style.borderColor = 'rgba(107,114,128,0.5)';
-    warn.innerHTML = `<div class="warn-title" style="color:#9CA3AF"><i class="fa-solid fa-ban"></i>БЛОКИРОВКА</div><div class="warn-text">Соперник пропустит следующий ход</div>`;
-  } else {
-    warn.className = 'warn-box hidden';
+  const warn=document.getElementById('m-warn');
+  warn.className='warn';
+  if(sp==='double'){
+    warn.style.background='linear-gradient(135deg,rgba(78,205,196,0.18),rgba(78,205,196,0.05))';
+    warn.style.borderColor='rgba(78,205,196,0.4)';
+    warn.innerHTML=`<div class="warn-t" style="color:var(--mint)"><i class="fa-solid fa-gem"></i>×2 УДВОЕНИЕ</div><div class="warn-x">Верно → <strong>+${points*2}</strong><br>Ошибка → <strong>-${points}</strong></div>`;
+  }else if(sp==='trap'){
+    warn.style.background='linear-gradient(135deg,rgba(255,107,107,0.18),rgba(255,107,107,0.05))';
+    warn.style.borderColor='rgba(255,107,107,0.4)';
+    warn.innerHTML=`<div class="warn-t" style="color:var(--coral)"><i class="fa-solid fa-triangle-exclamation"></i>ЛОВУШКА</div><div class="warn-x">Верно → <strong>+${points}</strong><br>Ошибка → <strong>-${points*2}</strong></div>`;
+  }else if(sp==='jackpot'){
+    warn.style.background='linear-gradient(135deg,rgba(155,126,222,0.2),rgba(155,126,222,0.06))';
+    warn.style.borderColor='rgba(155,126,222,0.5)';
+    warn.innerHTML=`<div class="warn-t" style="color:var(--lavender)"><i class="fa-solid fa-gift"></i>ДЖЕКПОТ ×5</div><div class="warn-x">Верно → <strong>+${points*5}</strong>!!!<br>Ошибка → <strong>-${points}</strong></div>`;
+  }else if(sp==='block'){
+    warn.style.background='linear-gradient(135deg,rgba(107,86,74,0.2),rgba(107,86,74,0.06))';
+    warn.style.borderColor='rgba(107,86,74,0.4)';
+    warn.innerHTML=`<div class="warn-t" style="color:var(--ink-soft)"><i class="fa-solid fa-ban"></i>БЛОКИРОВКА</div><div class="warn-x">Соперник пропустит следующий ход</div>`;
+  }else if(sp==='mine'){
+    warn.style.background='linear-gradient(135deg,rgba(74,58,46,0.2),rgba(74,58,46,0.06))';
+    warn.style.borderColor='rgba(74,58,46,0.4)';
+    warn.innerHTML=`<div class="warn-t" style="color:var(--ink-soft)"><i class="fa-solid fa-bomb"></i>МИНА</div><div class="warn-x">Ответишь неверно — штраф <strong>×2</strong></div>`;
+  }else if(sp==='sniper'){
+    warn.style.background='linear-gradient(135deg,rgba(74,159,245,0.2),rgba(74,159,245,0.06))';
+    warn.style.borderColor='rgba(74,159,245,0.4)';
+    warn.innerHTML=`<div class="warn-t" style="color:var(--sky)"><i class="fa-solid fa-crosshairs"></i>ТОЧНЫЙ УДАР</div><div class="warn-x">Верный ответ принесёт <strong>×3</strong>!</div>`;
+  }else if(sp==='freeze'){
+    warn.style.background='linear-gradient(135deg,rgba(125,211,252,0.2),rgba(125,211,252,0.06))';
+    warn.style.borderColor='rgba(125,211,252,0.5)';
+    warn.innerHTML=`<div class="warn-t" style="color:#38BDF8"><i class="fa-solid fa-snowflake"></i>ЗАМОРОЗКА</div><div class="warn-x">Соперник пропустит <strong>2 хода</strong></div>`;
+  }else if(sp==='clover'){
+    warn.style.background='linear-gradient(135deg,rgba(74,222,128,0.2),rgba(74,222,128,0.06))';
+    warn.style.borderColor='rgba(74,222,128,0.4)';
+    warn.innerHTML=`<div class="warn-t" style="color:var(--sage)"><i class="fa-solid fa-clover"></i>КЛЕВЕР</div><div class="warn-x">Заберёшь <strong>50%</strong> очков соперника!</div>`;
+  }else{
+    warn.classList.add('hidden');
   }
 
   updateScoreLabels();
-  document.getElementById('m-answer-box').classList.add('hidden');
+  document.getElementById('m-ans').classList.add('hidden');
   document.getElementById('reveal-wrap').classList.remove('hidden');
-  document.getElementById('q-overlay').classList.remove('hidden');
+  document.getElementById('q-ov').classList.remove('hidden');
   updateSBlocks();
 }
 
-function updateScoreLabels() {
-  const p = cur.points, s = cur.special;
-  let plus = p, minus = p;
-  if (s === 'double') { plus = p * 2; minus = p; }
-  else if (s === 'trap') { plus = p; minus = p * 2; }
-  else if (s === 'jackpot') { plus = p * 5; minus = p; }
-  document.getElementById('kp').textContent = '+' + plus;
-  document.getElementById('km').textContent = '-' + minus;
-  document.getElementById('vp').textContent = '+' + plus;
-  document.getElementById('vm').textContent = '-' + minus;
+function updateScoreLabels(){
+  const p=cur.points,s=cur.special;
+  let plus=p,minus=p;
+  if(s==='double'){plus=p*2;minus=p;}
+  else if(s==='trap'){plus=p;minus=p*2;}
+  else if(s==='jackpot'){plus=p*5;minus=p;}
+  else if(s==='sniper'){plus=p*3;minus=p;}
+  else if(s==='mine'){plus=p;minus=p*2;}
+
+  // Apply player bonuses
+  if(bonuses.p0.next==='sniper')plus=p*3;
+  if(bonuses.p1.next==='sniper')plus=p*3;
+
+  document.getElementById('kp').textContent='+'+plus;
+  document.getElementById('km').textContent='-'+minus;
+  document.getElementById('vp').textContent='+'+plus;
+  document.getElementById('vm').textContent='-'+minus;
+  document.getElementById('sb-n0').textContent=players[0].name;
+  document.getElementById('sb-n1').textContent=players[1].name;
 }
 
-function updateSBlocks() {
-  for (let i = 0; i < 2; i++) {
-    const b = document.getElementById('sb-' + i);
-    const t = document.getElementById('tag-' + i);
-    if (i === active) {
-      b.classList.remove('locked');
-      b.classList.add('active');
-      t.classList.remove('hidden');
-    } else {
-      b.classList.add('locked');
-      b.classList.remove('active');
-      t.classList.add('hidden');
-    }
+function updateSBlocks(){
+  for(let i=0;i<2;i++){
+    const b=document.getElementById('sb-'+i),t=document.getElementById('tag-'+i);
+    if(i===active){b.classList.remove('locked');b.classList.add('active');t.classList.remove('hidden');}
+    else{b.classList.add('locked');b.classList.remove('active');t.classList.add('hidden');}
   }
 }
 
-function revealAnswer() {
+function revealAnswer(){
   sfx('click');
-  document.getElementById('m-answer-box').classList.remove('hidden');
+  document.getElementById('m-ans').classList.remove('hidden');
   document.getElementById('reveal-wrap').classList.add('hidden');
 }
 
-// ============= SCORING =============
-function score(idx, correct) {
-  if (!cur) return;
-  if (idx !== active) { sfx('wrong'); return; }
-  const p = cur.points, s = cur.special;
+// ========== SCORING ==========
+function score(idx,correct){
+  if(!cur)return;
+  if(idx!==active){sfx('wrong');return;}
+  const p=cur.points,s=cur.special;
 
-  if (s === 'block') {
-    blocked = active === 0 ? 1 : 0;
+  if(s==='block'){
+    blocked=active===0?1:0;
     sfx('correct');
+    toast(`${players[active].name} блокирует соперника!`,'fa-ban','blue');
+    addHistory(active,cur.cat,p,0,'block');
+    finishTurn(false);
+    return;
+  }
+
+  if(s==='freeze'){
+    const opp=active===0?1:0;
+    players[opp].frozen=2;
+    sfx('correct');
+    toast(`${players[opp].name} заморожен на 2 хода!`,'fa-snowflake','blue');
+    addHistory(active,cur.cat,p,0,'freeze');
+    finishTurn(false);
+    return;
+  }
+
+  if(s==='clover'){
+    const opp=active===0?1:0;
+    const steal=Math.floor(players[opp].score/2);
+    players[opp].score-=steal;
+    players[active].score+=steal;
+    pulseScore(0);pulseScore(1);
+    sfx('correct');
+    toast(`Украдено ${steal} очков!`,'fa-clover','green');
+    addHistory(active,cur.cat,p,steal,'clover');
     finishTurn(false);
     return;
   }
 
   let delta;
-  if (s === 'double') delta = correct ? p * 2 : -p;
-  else if (s === 'trap') delta = correct ? p : -p * 2;
-  else if (s === 'jackpot') delta = correct ? p * 5 : -p;
-  else delta = correct ? p : -p;
+  if(s==='double')delta=correct?p*2:-p;
+  else if(s==='trap')delta=correct?p:-p*2;
+  else if(s==='jackpot')delta=correct?p*5:-p;
+  else if(s==='sniper')delta=correct?p*3:-p;
+  else if(s==='mine')delta=correct?p:-p*2;
+  else delta=correct?p:-p;
 
-  // STREAK BONUS
-  if (correct) {
-    players[idx].streak = (players[idx].streak || 0) + 1;
-    if (players[idx].streak >= 3) {
-      delta = Math.round(delta * 1.5);
+  // Apply active bonuses
+  if(correct&&bonuses['p'+active].next==='sniper')delta*=3;
+  if(!correct&&bonuses['p'+active].next==='mine')delta*=2;
+
+  // Streak bonus
+  if(correct){
+    players[idx].streak=(players[idx].streak||0)+1;
+    if(players[idx].streak>=3){
+      delta=Math.round(delta*1.5);
+      toast(`Стрик ×${players[idx].streak}! Бонус ×1.5`,'fa-fire','gold');
     }
-  } else {
-    players[idx].streak = 0;
+    // Reset consumed bonuses
+    if(bonuses['p'+active].next==='sniper')bonuses['p'+active].next=null;
+    // Apply mine as persistent effect
+    if(s==='mine'){bonuses['p'+active].next='mine';toast(`Установлена мина на след. ошибку!`,'fa-bomb','pink');}
+  }else{
+    if(bonuses['p'+active].next==='mine')bonuses['p'+active].next=null;
+    players[idx].streak=0;
+    // Screen shake
+    document.body.classList.add('shake');
+    setTimeout(()=>document.body.classList.remove('shake'),500);
   }
 
-  if (!correct && Math.abs(delta) >= 400) {
-    if (!confirm(`Списать ${Math.abs(delta)} очков у ${players[idx].name}?`)) return;
+  if(!correct&&Math.abs(delta)>=400){
+    if(!confirm(`Списать ${Math.abs(delta)} очков у ${players[idx].name}?`))return;
   }
 
-  if (correct) sfx('correct'); else sfx('wrong');
-  players[idx].score += delta;
+  if(correct)sfx('correct');else sfx('wrong');
+  players[idx].score+=delta;
   pulseScore(idx);
+  addHistory(idx,cur.cat,p,delta,s);
 
   finishTurn(!correct);
 }
 
-function finishTurn(switchTurn) {
-  if (curKey) played.add(curKey);
-  if (curCell) {
-    curCell.classList.add('done');
-    curCell.innerHTML = '<i class="fa-solid fa-check"></i>';
-  }
-
-  if (switchTurn) {
-    let next = active === 0 ? 1 : 0;
-    if (blocked !== null && next === blocked) {
-      blocked = null;
-      next = next === 0 ? 1 : 0;
-    }
-    active = next;
-  }
-
+function addHistory(idx,cat,points,delta,spec){
+  history.push({idx,cat:cat.name,color:cat.color,points,delta,spec,time:Date.now()});
+  if(history.length>30)history.shift();
   save();
-  render();
-  closeQ(true);
+  renderHistoryBadge();
 }
 
-function closeQ(skip) {
-  if (curKey && !skip) {
+function finishTurn(switchTurn){
+  if(curKey)played.add(curKey);
+  if(curCell){curCell.classList.add('done');curCell.innerHTML='<i class="fa-solid fa-check"></i>';}
+
+  if(switchTurn){
+    let next=active===0?1:0;
+    if(blocked!==null&&next===blocked){blocked=null;next=next===0?1:0;}
+    if(players[next].frozen>0){
+      players[next].frozen--;
+      toast(`${players[next].name} пропускает ход (заморозка)`,'fa-snowflake','blue');
+      next=next===0?1:0;
+    }
+    active=next;
+  }
+
+  save();render();closeQ(true);
+  checkAchievements();
+}
+
+function closeQ(skip){
+  if(curKey&&!skip){
     played.add(curKey);
-    if (curCell) {
-      curCell.classList.add('done');
-      curCell.innerHTML = '<i class="fa-solid fa-check"></i>';
-    }
-    let next = active === 0 ? 1 : 0;
-    if (blocked !== null && next === blocked) {
-      blocked = null;
-      next = next === 0 ? 1 : 0;
-    }
-    active = next;
-    save();
-    render();
+    if(curCell){curCell.classList.add('done');curCell.innerHTML='<i class="fa-solid fa-check"></i>';}
+    let next=active===0?1:0;
+    if(blocked!==null&&next===blocked){blocked=null;next=next===0?1:0;}
+    if(players[next].frozen>0){players[next].frozen--;next=next===0?1:0;}
+    active=next;
+    save();render();
   }
-  document.getElementById('q-overlay').classList.add('hidden');
-  cur = null; curCell = null; curKey = null;
+  document.getElementById('q-ov').classList.add('hidden');
+  cur=null;curCell=null;curKey=null;
   checkDone();
 }
 
-// ============= INSTANT =============
-function showInstant(isBonus, delta) {
-  const icon = document.getElementById('i-icon');
-  const title = document.getElementById('i-title');
-  const desc = document.getElementById('i-desc');
-  if (isBonus) {
-    icon.style.background = 'linear-gradient(135deg,var(--emerald),#10B981)';
-    icon.innerHTML = '<i class="fa-solid fa-dice"></i>';
-    title.textContent = 'Бонус!';
-    desc.textContent = `${players[active].name} получает +${delta} очков!`;
-  } else {
-    icon.style.background = 'linear-gradient(135deg,var(--orange),#F59E0B)';
-    icon.innerHTML = '<i class="fa-solid fa-burst"></i>';
-    title.textContent = 'Штраф!';
-    desc.textContent = `${players[active].name} теряет ${Math.abs(delta)} очков!`;
+// ========== INSTANT ==========
+function showInstant(isWin,delta,kind){
+  const icon=document.getElementById('i-icon');
+  const title=document.getElementById('i-title');
+  const desc=document.getElementById('i-desc');
+
+  if(kind==='casino'){
+    if(isWin){
+      icon.style.background='linear-gradient(135deg,var(--mustard),#F59E0B)';
+      icon.innerHTML='<i class="fa-solid fa-trophy"></i>';
+      title.textContent='Казино! Победа!';
+      desc.textContent=`${players[active].name} получает +${delta} очков!`;
+    }else{
+      icon.style.background='linear-gradient(135deg,var(--coral),#DC2626)';
+      icon.innerHTML='<i class="fa-solid fa-face-dizzy"></i>';
+      title.textContent='Казино! Проигрыш!';
+      desc.textContent=`${players[active].name} теряет ${Math.abs(delta)} очков!`;
+    }
+  }else if(kind==='circus'){
+    icon.style.background='linear-gradient(135deg,#FF85C1,#F472B6)';
+    icon.innerHTML='<i class="fa-solid fa-hat-wizard"></i>';
+    title.textContent='Цирк!';
+    desc.textContent='Игроки обменялись очками!';
+  }else if(isWin){
+    icon.style.background='linear-gradient(135deg,var(--sage),#5A9344)';
+    icon.innerHTML='<i class="fa-solid fa-dice"></i>';
+    title.textContent='Бонус!';
+    desc.textContent=`${players[active].name} получает +${delta} очков!`;
+  }else{
+    icon.style.background='linear-gradient(135deg,var(--terracotta),#D05A3E)';
+    icon.innerHTML='<i class="fa-solid fa-burst"></i>';
+    title.textContent='Штраф!';
+    desc.textContent=`${players[active].name} теряет ${Math.abs(delta)} очков!`;
   }
-  document.getElementById('i-overlay').classList.remove('hidden');
+  document.getElementById('i-ov').classList.remove('hidden');
+  if(isWin&&delta>0){
+    confetti({particleCount:40,spread:70,origin:{y:0.6},colors:['#E9B44C','#7FB069','#4ECDC4']});
+  }
 }
 
-function closeInstant() {
-  document.getElementById('i-overlay').classList.add('hidden');
-  let next = active === 0 ? 1 : 0;
-  if (blocked !== null && next === blocked) {
-    blocked = null;
-    next = next === 0 ? 1 : 0;
-  }
-  active = next;
-  save();
-  render();
+function closeInstant(){
+  document.getElementById('i-ov').classList.add('hidden');
+  let next=active===0?1:0;
+  if(blocked!==null&&next===blocked){blocked=null;next=next===0?1:0;}
+  if(players[next].frozen>0){players[next].frozen--;next=next===0?1:0;}
+  active=next;
+  save();render();
   checkDone();
+  checkAchievements();
 }
 
-// ============= RANDOM CELL =============
-function openRandom() {
-  const remaining = [];
-  cats.forEach(c => pts.forEach(p => {
-    const k = `${c.id}-${p}`;
-    if (!played.has(k)) remaining.push({ cat: c, p, key: k });
-  }));
-  if (!remaining.length) return;
-  const pick = remaining[Math.floor(Math.random() * remaining.length)];
-  const cell = document.querySelector(`[data-key="${pick.key}"]`);
-  // Find the cell element in grid
-  let target = null;
-  document.querySelectorAll('.cat-col').forEach(col => {
-    if (col.querySelector('.cat-header').textContent.includes(pick.cat.name)) {
-      target = col.querySelectorAll('.cell')[pts.indexOf(pick.p)];
+// ========== ACHIEVEMENTS ==========
+const achDone=new Set();
+function checkAchievements(){
+  const total=players[0].score+players[1].score;
+  if(!achDone.has('first')&&played.size>=1){
+    achDone.add('first');toast('Первая ячейка открыта!','fa-star','gold');
+  }
+  if(!achDone.has('half')&&played.size>=60){
+    achDone.add('half');toast('Половина игры пройдена!','fa-flag-checkered','blue');
+  }
+  [0,1].forEach(i=>{
+    if(!achDone.has('streak3-'+i)&&players[i].streak>=3){
+      achDone.add('streak3-'+i);toast(`${players[i].name}: стрик ×3!`,'fa-fire','gold');
+    }
+    if(!achDone.has('big-'+i)&&players[i].score>=2000){
+      achDone.add('big-'+i);toast(`${players[i].name} набрал 2000!`,'fa-crown','gold');
     }
   });
-  if (target) target.click();
 }
 
-// ============= WIN =============
-function checkDone() {
-  const total = cats.length * pts.length;
-  if (played.size >= total) {
-    setTimeout(() => showWinner(), 500);
+// ========== RANDOM ==========
+function openRandom(){
+  const remaining=[];
+  cats.forEach(c=>pts.forEach(p=>{
+    const k=`${c.id}-${p}`;
+    if(!played.has(k))remaining.push({cat:c,p,k});
+  }));
+  if(!remaining.length)return;
+  const pick=remaining[Math.floor(Math.random()*remaining.length)];
+  document.querySelectorAll('.cell').forEach(cell=>{
+    if(cell.dataset.key===pick.k&&!cell.classList.contains('done'))cell.click();
+  });
+}
+
+// ========== HISTORY ==========
+function openHistory(){
+  const list=document.getElementById('hist-list');
+  if(history.length===0){
+    list.innerHTML='<div class="hist-empty">Пока нет ходов</div>';
+  }else{
+    list.innerHTML=history.slice().reverse().map((h,i)=>{
+      const sign=h.delta>0?'+':(h.delta<0?'':''),
+      cls=h.delta>0?'pos':(h.delta<0?'neg':'');
+      const iconCls=h.idx===0?'linear-gradient(135deg,var(--coral),var(--terracotta))':'linear-gradient(135deg,var(--sky),var(--lavender))';
+      const valTxt=h.delta!==0?`${sign}${h.delta}`:'—';
+      return `<div class="hist-item">
+        <div class="ic" style="background:${iconCls}">${h.idx===0?'К':'В'}</div>
+        <div class="inf">
+          <div class="nm">${h.cat} · ${h.points}pts</div>
+          <div class="dt">${new Date(h.time).toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})}</div>
+        </div>
+        <div class="vl ${cls}">${valTxt}</div>
+      </div>`;
+    }).join('');
+  }
+  const undoBtn=document.getElementById('undo-btn');
+  if(history.length>0)undoBtn.style.display='flex';
+  else undoBtn.style.display='none';
+  document.getElementById('h-ov').classList.remove('hidden');
+}
+
+function undoLast(){
+  if(history.length===0)return;
+  const last=history[history.length-1];
+  players[last.idx].score-=last.delta;
+  // Free the cell
+  const cat=cats.find(c=>c.name===last.cat);
+  if(cat){
+    const key=`${cat.id}-${last.points}`;
+    played.delete(key);
+    // Clear from grid
+    document.querySelectorAll('.cell').forEach(c=>{
+      if(c.dataset.key===key){c.classList.remove('done');c.textContent=last.points;}
+    });
+  }
+  history.pop();
+  active=last.idx;
+  save();render();
+  openHistory(); // refresh
+  toast('Ход отменён','fa-undo','blue');
+}
+
+// ========== RENAME ==========
+function renamePlayer(idx){
+  const current=players[idx].name;
+  const name=prompt('Новое имя:',current);
+  if(name&&name.trim()){
+    players[idx].name=name.trim().slice(0,20);
+    save();render();
+    toast(`${players[idx].name} в игре!`,'fa-pen','blue');
   }
 }
 
-function showWinner() {
-  sfx('win');
-  let name = '', desc = '';
-  if (players[0].score > players[1].score) { name = 'Кира побеждает!'; desc = `${players[0].score} против ${players[1].score}`; }
-  else if (players[1].score > players[0].score) { name = 'Витя побеждает!'; desc = `${players[1].score} против ${players[0].score}`; }
-  else { name = 'Ничья!'; desc = `Оба по ${players[0].score}`; }
-  document.getElementById('w-name').textContent = name;
-  document.getElementById('w-1').textContent = players[1].score;
-  document.getElementById('w-0').textContent = players[0].score;
-  document.getElementById('w-overlay').classList.remove('hidden');
+// ========== WIN ==========
+function checkDone(){
+  const total=cats.length*pts.length;
+  if(played.size>=total)setTimeout(()=>showWinner(),500);
+}
 
-  if (window.confetti) {
-    const end = Date.now() + 3500;
-    (function frame() {
-      confetti({ particleCount: 8, angle: 60, spread: 60, origin: { x: 0 }, colors: ['#A78BFA','#FF5C9D','#22D3EE','#FBBF24'] });
-      confetti({ particleCount: 8, angle: 120, spread: 60, origin: { x: 1 }, colors: ['#A78BFA','#FF5C9D','#22D3EE','#FBBF24'] });
-      if (Date.now() < end) requestAnimationFrame(frame);
+function showWinner(){
+  sfx('win');
+  const n0=players[0].name,n1=players[1].name;
+  document.getElementById('fw-0').textContent=n0.toUpperCase();
+  document.getElementById('fw-1').textContent=n1.toUpperCase();
+  document.getElementById('w-0').textContent=players[0].score;
+  document.getElementById('w-1').textContent=players[1].score;
+  let name='';
+  if(players[0].score>players[1].score)name=`${n0} побеждает!`;
+  else if(players[1].score>players[0].score)name=`${n1} побеждает!`;
+  else name='Ничья!';
+  document.getElementById('w-name').textContent=name;
+  document.getElementById('w-ov').classList.remove('hidden');
+  if(window.confetti){
+    const end=Date.now()+3500;
+    (function frame(){
+      confetti({particleCount:8,angle:60,spread:60,origin:{x:0},colors:['#FF6B6B','#E9B44C','#7FB069','#9B7EDE']});
+      confetti({particleCount:8,angle:120,spread:60,origin:{x:1},colors:['#FF6B6B','#E9B44C','#7FB069','#9B7EDE']});
+      if(Date.now()<end)requestAnimationFrame(frame);
     })();
   }
 }
 
-function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+function closeModal(id){document.getElementById(id).classList.add('hidden');}
 
-// ============= RESET =============
-function resetGame() {
-  if (played.size > 0 && !confirm('Сбросить игру? Все очки и ячейки обнулятся!')) return;
+// ========== RESET ==========
+function resetGame(force){
+  if(!force&&played.size>0&&!confirm('Сбросить игру? Очки и ячейки обнулятся!'))return;
   sfx('click');
-  players = [{ name: 'Кира', score: 0, streak: 0 }, { name: 'Витя', score: 0, streak: 0 }];
-  active = 0;
-  blocked = null;
-  played.clear();
-  specials = genSpecials();
+  players=[{name:players[0].name,score:0,streak:0,frozen:0},{name:players[1].name,score:0,streak:0,frozen:0}];
+  active=0;blocked=null;played.clear();specials=genSpecials();
+  history=[];bonuses={p0:{next:null},p1:{next:null}};achDone.clear();
   localStorage.removeItem(STORAGE);
-  save();
-  render();
+  save();render();
 }
 
-// ============= INIT =============
-window.addEventListener('DOMContentLoaded', () => {
-  load();
-  render();
-});
+// ========== INIT ==========
+window.addEventListener('DOMContentLoaded',()=>{load();render();});
 </script>
 </body>
 </html>
