@@ -1,1624 +1,1735 @@
 <!DOCTYPE html>
 <html lang="ru" class="h-full">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>СВОЯ ИГРА • PIXEL EDITION</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --sat: env(safe-area-inset-top, 0px);
-            --sab: env(safe-area-inset-bottom, 0px);
-            --sal: env(safe-area-inset-left, 0px);
-            --sar: env(safe-area-inset-right, 0px);
-            --black: #0A0A0A;
-            --cream: #FFF8E7;
-            --white: #FFFFFF;
-            --pink: #FF5C8A;
-            --yellow: #FFD93D;
-            --cyan: #4ECDC4;
-            --lime: #A8FF3D;
-            --orange: #FF8C42;
-            --purple: #A855F7;
-            --green: #22C55E;
-            --red: #FF3D3D;
-            --blue: #3B82F6;
-        }
-        * { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; -webkit-user-drag: none; box-sizing: border-box; }
-        html, body { touch-action: manipulation; -webkit-text-size-adjust: 100%; margin: 0; }
-        
-        body {
-            background: var(--cream);
-            background-image:
-                radial-gradient(circle at 12% 15%, rgba(255, 92, 138, 0.10), transparent 35%),
-                radial-gradient(circle at 88% 85%, rgba(78, 205, 196, 0.10), transparent 35%),
-                radial-gradient(circle at 50% 50%, rgba(255, 217, 61, 0.08), transparent 50%);
-            background-attachment: fixed;
-            color: var(--black);
-            font-family: 'Space Grotesk', sans-serif;
-            height: 100vh;
-            height: 100dvh;
-            height: -webkit-fill-available;
-            overflow: hidden;
-            padding: max(6px, var(--sat)) max(6px, var(--sar)) max(6px, var(--sab)) max(6px, var(--sal));
-            -webkit-font-smoothing: antialiased;
-            display: flex;
-            flex-direction: column;
-        }
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: 
-                linear-gradient(rgba(10,10,10,0.035) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(10,10,10,0.035) 1px, transparent 1px);
-            background-size: 20px 20px;
-            pointer-events: none;
-            z-index: 0;
-        }
-        body > * { position: relative; z-index: 1; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>СВОЯ ИГРА • PREMIUM</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+  --bg-0: #080B14;
+  --bg-1: #0E1320;
+  --bg-2: #141A2B;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-hi: rgba(255, 255, 255, 0.07);
+  --border: rgba(255, 255, 255, 0.09);
+  --border-hi: rgba(255, 255, 255, 0.16);
+  --text: #E8EDF7;
+  --text-dim: #8992AB;
+  --text-faint: #5A6478;
+  --pink: #FF5C9D;
+  --violet: #A78BFA;
+  --cyan: #22D3EE;
+  --amber: #FBBF24;
+  --emerald: #34D399;
+  --red: #F87171;
+  --blue: #60A5FA;
+  --orange: #FB923C;
+  --green: #4ADE80;
+}
+* { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg-0);
+  background-image:
+    radial-gradient(ellipse 60% 40% at 15% 0%, rgba(167, 139, 250, 0.15), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 85% 5%, rgba(255, 92, 157, 0.12), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 50% 100%, rgba(34, 211, 238, 0.10), transparent 60%);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: 'Manrope', system-ui, sans-serif;
+  height: 100vh;
+  height: 100dvh;
+  height: -webkit-fill-available;
+  overflow: hidden;
+  padding: max(10px, var(--sat)) max(10px, var(--sar)) max(10px, var(--sab)) max(10px, var(--sal));
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-weight: 500;
+}
+.heading { font-family: 'Unbounded', sans-serif; font-weight: 700; letter-spacing: -0.02em; }
 
-        .display { font-family: 'Press Start 2P', monospace; letter-spacing: -0.02em; line-height: 1.2; }
-        .pixel { font-family: 'Pixelify Sans', sans-serif; letter-spacing: 0.01em; }
+.glass {
+  background: var(--surface);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: 
+    0 1px 0 rgba(255, 255, 255, 0.04) inset,
+    0 10px 40px -10px rgba(0, 0, 0, 0.5);
+}
+.glass-hi {
+  background: var(--surface-hi);
+  backdrop-filter: blur(20px) saturate(1.5);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  border: 1px solid var(--border-hi);
+  border-radius: 18px;
+}
 
-        .brutal {
-            background: var(--white);
-            border: 3px solid var(--black);
-            box-shadow: 5px 5px 0 var(--black), 10px 10px 0 rgba(10,10,10,0.08);
-        }
-        .brutal-flat {
-            background: var(--white);
-            border: 3px solid var(--black);
-        }
-        .brutal-sm {
-            background: var(--white);
-            border: 2px solid var(--black);
-            box-shadow: 3px 3px 0 var(--black);
-        }
+/* HEADER */
+header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+}
+.brand {
+  display: flex; align-items: center; gap: 12px;
+  min-width: 0;
+}
+.brand-logo {
+  width: 42px; height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--violet), var(--pink));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  color: white;
+  box-shadow: 0 8px 24px -6px rgba(167, 139, 250, 0.6);
+  flex-shrink: 0;
+}
+.brand-text { min-width: 0; }
+.brand-title {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  line-height: 1.1;
+}
+.brand-sub {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+.header-actions {
+  display: flex; align-items: center; gap: 8px;
+  flex-shrink: 0;
+}
 
-        /* ========== HEADER ========== */
-        .top-header {
-            flex-shrink: 0;
-            width: 100%;
-            padding: 4px 4px 8px 4px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-        }
-        .brand-icon {
-            width: 44px; height: 44px;
-            background: var(--yellow);
-            border: 3px solid var(--black);
-            box-shadow: 4px 4px 0 var(--black);
-            border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px;
-            transform: rotate(-4deg);
-            flex-shrink: 0;
-        }
-        .brand-title {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 11px;
-            letter-spacing: -0.02em;
-            line-height: 1.3;
-        }
-        .brand-sub {
-            font-family: 'Pixelify Sans', sans-serif;
-            font-size: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            opacity: 0.65;
-            margin-top: 2px;
-        }
+.icon-btn {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 15px;
+}
+.icon-btn:hover {
+  background: var(--surface-hi);
+  color: var(--text);
+  border-color: var(--border-hi);
+  transform: translateY(-1px);
+}
+.icon-btn:active { transform: translateY(0) scale(0.96); }
 
-        .top-btn {
-            height: 40px;
-            min-width: 40px;
-            padding: 0 10px;
-            border: 3px solid var(--black);
-            box-shadow: 3px 3px 0 var(--black);
-            border-radius: 8px;
-            font-family: 'Pixelify Sans', sans-serif;
-            font-weight: 700;
-            font-size: 11px;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            cursor: pointer;
-            transition: transform 0.08s ease, box-shadow 0.08s ease;
-            color: var(--black);
-        }
-        .top-btn:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--black); }
-        @media (hover: hover) {
-            .top-btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--black); }
-            .top-btn:hover:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--black); }
-        }
+.pill-btn {
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'Manrope', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.pill-btn:hover {
+  background: var(--surface-hi);
+  border-color: var(--border-hi);
+  transform: translateY(-1px);
+}
+.pill-btn:active { transform: translateY(0) scale(0.97); }
+.pill-btn.accent {
+  background: linear-gradient(135deg, var(--violet), var(--pink));
+  border-color: transparent;
+  color: white;
+  box-shadow: 0 8px 24px -8px rgba(167, 139, 250, 0.6);
+}
+.pill-btn.accent:hover { box-shadow: 0 12px 32px -8px rgba(167, 139, 250, 0.8); }
 
-        /* ========== PLAYERS ========== */
-        .players-row {
-            flex-shrink: 0;
-            width: 100%;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            padding: 0 4px 10px 4px;
-        }
-        .player-card {
-            background: var(--white);
-            border: 3px solid var(--black);
-            box-shadow: 5px 5px 0 var(--black);
-            border-radius: 12px;
-            padding: 8px 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-            position: relative;
-        }
-        .player-card.active-kira {
-            background: var(--pink);
-            color: var(--white);
-            transform: rotate(-1.5deg) scale(1.02);
-            box-shadow: 7px 7px 0 var(--black);
-        }
-        .player-card.active-vitya {
-            background: var(--cyan);
-            transform: rotate(1.5deg) scale(1.02);
-            box-shadow: 7px 7px 0 var(--black);
-        }
-        .player-card.inactive { opacity: 0.55; }
-        .player-avatar {
-            width: 40px; height: 40px;
-            border-radius: 8px;
-            border: 2px solid var(--black);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-        .player-name {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 10px;
-            letter-spacing: -0.03em;
-        }
-        .player-score {
-            font-family: 'Pixelify Sans', sans-serif;
-            font-weight: 700;
-            font-size: 26px;
-            line-height: 1;
-        }
-        .turn-badge {
-            font-family: 'Pixelify Sans', sans-serif;
-            font-weight: 700;
-            font-size: 9px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-top: 2px;
-            display: inline-flex;
-            align-items: center;
-            gap: 3px;
-        }
+/* PLAYERS ROW */
+.players {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.player {
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+}
+.player::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.03));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.player.active::before { opacity: 1; }
+.player.active-kira {
+  border-color: rgba(255, 92, 157, 0.5);
+  box-shadow: 0 0 0 1px rgba(255, 92, 157, 0.3), 0 12px 40px -10px rgba(255, 92, 157, 0.4);
+}
+.player.active-vitya {
+  border-color: rgba(34, 211, 238, 0.5);
+  box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.3), 0 12px 40px -10px rgba(34, 211, 238, 0.4);
+}
+.player.inactive { opacity: 0.5; }
 
-        /* ========== STATUS LINE ========== */
-        .status-line-wrap {
-            flex-shrink: 0;
-            text-align: center;
-            padding-bottom: 8px;
-        }
-        .status-line {
-            display: inline-block;
-            padding: 5px 12px;
-            background: var(--white);
-            border: 2px solid var(--black);
-            box-shadow: 3px 3px 0 var(--black);
-            border-radius: 20px;
-            font-family: 'Pixelify Sans', sans-serif;
-            font-weight: 700;
-            font-size: 11px;
-            text-transform: uppercase;
-        }
+.p-avatar {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  color: white;
+  flex-shrink: 0;
+}
+.p-avatar.kira { background: linear-gradient(135deg, #FF5C9D, #F43F5E); }
+.p-avatar.vitya { background: linear-gradient(135deg, #22D3EE, #3B82F6); }
+.p-info { min-width: 0; flex: 1; }
+.p-name {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.2;
+}
+.p-status {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-top: 3px;
+  display: flex; align-items: center; gap: 5px;
+}
+.p-status.active-kira { color: var(--pink); }
+.p-status.active-vitya { color: var(--cyan); }
+.p-status .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 8px currentColor;
+  animation: pulseDot 1.5s ease-in-out infinite;
+}
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
+}
+.p-score {
+  text-align: right;
+  flex-shrink: 0;
+}
+.p-score-val {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1;
+  transition: transform 0.3s ease;
+}
+.p-score-val.kira { color: var(--pink); text-shadow: 0 0 20px rgba(255, 92, 157, 0.4); }
+.p-score-val.vitya { color: var(--cyan); text-shadow: 0 0 20px rgba(34, 211, 238, 0.4); }
+.p-score-val.pulse { animation: scorePulse 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes scorePulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+.p-score-lbl {
+  font-size: 9px;
+  color: var(--text-faint);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 3px;
+}
 
-        /* ========== GRID ========== */
-        main {
-            flex: 1;
-            min-height: 0;
-            display: flex;
-            flex-direction: column;
-            padding: 0 4px 8px 4px;
-            overflow: hidden;
-        }
-        .grid-wrap {
-            flex: 1;
-            min-height: 0;
-            background: var(--white);
-            border: 3px solid var(--black);
-            box-shadow: 5px 5px 0 var(--black);
-            border-radius: 16px;
-            padding: 8px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        #master-grid {
-            flex: 1;
-            min-height: 0;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-auto-rows: 1fr;
-            gap: 8px;
-            overflow-y: auto;
-        }
+/* PROGRESS BAR */
+.progress-wrap {
+  flex-shrink: 0;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.progress-info {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.progress-info i { font-size: 12px; color: var(--violet); }
+.progress-track {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--violet), var(--pink), var(--cyan));
+  border-radius: 3px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 12px rgba(167, 139, 250, 0.5);
+}
+.progress-pct {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--violet);
+  flex-shrink: 0;
+  min-width: 40px;
+  text-align: right;
+}
 
-        .cat-col {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            min-height: 0;
-        }
-        .cat-header {
-            flex-shrink: 0;
-            border: 2px solid var(--black);
-            box-shadow: 3px 3px 0 var(--black);
-            border-radius: 6px;
-            padding: 5px 6px;
-            text-align: center;
-            font-family: 'Press Start 2P', monospace;
-            font-size: 8px;
-            line-height: 1.3;
-            text-transform: uppercase;
-            color: var(--black);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .tiers {
-            flex: 1;
-            min-height: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            overflow-y: auto;
-        }
+/* GRID */
+main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.grid-container {
+  flex: 1;
+  min-height: 0;
+  padding: 12px;
+  overflow: hidden;
+  display: flex;
+}
+#grid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  overflow-y: auto;
+  align-content: start;
+}
+#grid::-webkit-scrollbar { width: 6px; }
+#grid::-webkit-scrollbar-thumb { background: rgba(167, 139, 250, 0.3); border-radius: 3px; }
+#grid::-webkit-scrollbar-track { background: transparent; }
 
-        /* ========== CELLS ========== */
-        .cell {
-            background: var(--white);
-            border: 2px solid var(--black);
-            box-shadow: 3px 3px 0 var(--black);
-            border-radius: 6px;
-            min-height: 40px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.1s ease;
-            font-family: 'Pixelify Sans', sans-serif;
-            font-weight: 700;
-            font-size: 15px;
-            color: var(--black);
-            flex-shrink: 0;
-        }
-        .cell:active:not(.cell-done) {
-            transform: translate(3px, 3px);
-            box-shadow: 0 0 0 var(--black);
-        }
-        @media (hover: hover) {
-            .cell:hover:not(.cell-done) {
-                background: var(--yellow);
-                transform: translate(-1px, -1px);
-                box-shadow: 4px 4px 0 var(--black);
-            }
-            .cell:hover:not(.cell-done):active {
-                transform: translate(3px, 3px);
-                box-shadow: 0 0 0 var(--black);
-            }
-        }
-        .cell-done {
-            opacity: 0.28;
-            pointer-events: none;
-            background: var(--cream);
-            box-shadow: none;
-            border-style: dashed;
-            border-color: #999;
-            color: #999;
-        }
+.cat-col {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 0;
+}
+.cat-header {
+  padding: 8px 6px;
+  border-radius: 10px;
+  text-align: center;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: 9px;
+  letter-spacing: -0.01em;
+  color: white;
+  line-height: 1.2;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: all 0.3s ease;
+}
+.cat-header .done-badge {
+  display: none;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  color: #0A0A0A;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+}
+.cat-header.done .done-badge { display: inline-flex; }
+.cat-header::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), transparent);
+  pointer-events: none;
+}
 
-        /* ========== DESKTOP HORIZONTAL STRIPS ========== */
-        @media (min-width: 1024px) {
-            #master-grid {
-                display: flex !important;
-                flex-direction: column;
-                gap: 5px;
-                overflow-y: hidden;
-            }
-            .cat-col {
-                flex: 1;
-                min-height: 0;
-                display: grid;
-                grid-template-columns: 150px repeat(10, 1fr);
-                gap: 5px;
-            }
-            .cat-header {
-                height: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                white-space: normal;
-                font-size: 7px;
-                line-height: 1.25;
-                text-align: center;
-                padding: 2px 4px;
-            }
-            .tiers {
-                display: contents !important;
-            }
-            .cell {
-                height: 100%;
-                min-height: 0;
-                font-size: 16px;
-            }
-        }
-        @media (min-width: 1600px) {
-            .cat-header { font-size: 8px; }
-            .cell { font-size: 18px; }
-        }
+.tiers {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-height: 0;
+  overflow-y: auto;
+}
 
-        /* ========== TABLET ========== */
-        @media (min-width: 640px) and (max-width: 1023px) {
-            #master-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 8px;
-            }
-            .cat-header { font-size: 8px; }
-            .cell { min-height: 44px; font-size: 16px; }
-        }
-        @media (min-width: 768px) and (max-width: 1023px) {
-            #master-grid { grid-template-columns: repeat(4, 1fr); }
-        }
+.cell {
+  border-radius: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+.cell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(167, 139, 250, 0.2), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.cell:hover:not(.done) {
+  background: var(--surface-hi);
+  border-color: rgba(167, 139, 250, 0.5);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -6px rgba(167, 139, 250, 0.5);
+}
+.cell:hover:not(.done)::before { opacity: 1; }
+.cell:active:not(.done) { transform: translateY(0) scale(0.96); }
+.cell.done {
+  background: rgba(52, 211, 153, 0.08);
+  border-color: rgba(52, 211, 153, 0.2);
+  color: rgba(52, 211, 153, 0.4);
+  cursor: not-allowed;
+}
+.cell.done i { font-size: 14px; }
 
-        /* ========== SMALL ========== */
-        @media (max-width: 480px) {
-            .brand-title { font-size: 9px; }
-            .brand-sub { font-size: 8px; }
-            .brand-icon { width: 38px; height: 38px; font-size: 15px; }
-            .top-btn { height: 36px; padding: 0 8px; font-size: 10px; }
-            .player-avatar { width: 34px; height: 34px; font-size: 14px; }
-            .player-name { font-size: 8px; }
-            .player-score { font-size: 22px; }
-            .cat-header { font-size: 7px; }
-            .cell { min-height: 36px; font-size: 13px; }
-        }
+/* DESKTOP HORIZONTAL */
+@media (min-width: 1024px) {
+  #grid {
+    display: flex !important;
+    flex-direction: column;
+    gap: 7px;
+    overflow: hidden;
+  }
+  .cat-col {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 130px repeat(10, 1fr);
+    gap: 7px;
+  }
+  .cat-header {
+    height: 100%;
+    font-size: 9px;
+    padding: 4px;
+    line-height: 1.2;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .tiers { display: contents; }
+  .cell { min-height: 0; height: 100%; font-size: 15px; }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  #grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  #grid { grid-template-columns: repeat(4, 1fr); }
+}
 
-        /* ========== SHORT SCREEN ========== */
-        @media (max-height: 600px) and (min-width: 1024px) {
-            .cat-header { font-size: 6px; }
-            .cell { font-size: 13px; }
-            .players-row { padding-bottom: 6px; }
-            .status-line-wrap { padding-bottom: 4px; }
-        }
+/* FOOTER */
+footer {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.legend {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 10px;
+  color: var(--text-dim);
+  font-weight: 600;
+}
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.legend-item i { font-size: 11px; }
+.legend-item.gem i { color: var(--cyan); }
+.legend-item.trap i { color: var(--red); }
+.legend-item.jackpot i { color: var(--violet); }
+.legend-item.bonus i { color: var(--emerald); }
+.legend-item.penalty i { color: var(--orange); }
+.legend-item.block i { color: var(--text-faint); }
 
-        /* ========== SCROLLBAR ========== */
-        .tiers::-webkit-scrollbar, #master-grid::-webkit-scrollbar { width: 5px; height: 5px; }
-        .tiers::-webkit-scrollbar-thumb, #master-grid::-webkit-scrollbar-thumb { background: var(--black); }
-        .tiers::-webkit-scrollbar-track, #master-grid::-webkit-scrollbar-track { background: transparent; }
+/* MODAL */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 5, 12, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 50;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* ========== FOOTER ========== */
-        footer {
-            flex-shrink: 0;
-            padding: 4px 4px 0 4px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 8px;
-        }
-        .reset-btn {
-            padding: 6px 12px;
-            background: var(--red);
-            color: var(--white);
-            border: 2px solid var(--black);
-            box-shadow: 3px 3px 0 var(--black);
-            border-radius: 8px;
-            font-family: 'Pixelify Sans', sans-serif;
-            font-weight: 700;
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            transition: transform 0.08s ease, box-shadow 0.08s ease;
-        }
-        .reset-btn:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--black); }
-        .footer-tag {
-            font-family: 'Pixelify Sans', sans-serif;
-            font-size: 9px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            opacity: 0.5;
-        }
+.sheet {
+  background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 100%);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 24px 24px 0 0;
+  width: 100%;
+  max-width: 620px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 92vh;
+  overflow-y: auto;
+  box-shadow: 0 -20px 60px -20px rgba(0, 0, 0, 0.8);
+  animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        /* ========== BADGE ========== */
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            border: 2px solid var(--black);
-            box-shadow: 2px 2px 0 var(--black);
-            padding: 3px 8px;
-            font-family: 'Pixelify Sans', sans-serif;
-            font-weight: 700;
-            font-size: 10px;
-            text-transform: uppercase;
-            color: var(--black);
-            border-radius: 4px;
-        }
+.sheet-handle {
+  width: 48px; height: 4px;
+  background: var(--border-hi);
+  border-radius: 2px;
+  margin: 0 auto -6px;
+}
+.sheet-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.badges { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+.badge.cat { border-color: transparent; color: white; }
+.badge.points { background: linear-gradient(135deg, var(--amber), var(--orange)); color: #0A0A0A; border-color: transparent; font-family: 'Unbounded', sans-serif; }
+.badge.special { border-color: transparent; color: white; }
 
-        /* ========== MODAL ========== */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(10, 10, 10, 0.7);
-            backdrop-filter: blur(6px);
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            z-index: 50;
-        }
-        .modal-sheet {
-            background: var(--white);
-            border: 3px solid var(--black);
-            border-bottom: none;
-            border-radius: 20px 20px 0 0;
-            box-shadow: 0 -8px 0 var(--black);
-            width: 100%;
-            max-width: 640px;
-            margin: 0 auto;
-            padding: 14px 16px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-height: 95vh;
-            overflow-y: auto;
-            animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        @keyframes slide-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        @keyframes pop-in {
-            0% { transform: scale(0.5) rotate(-8deg); opacity: 0; }
-            70% { transform: scale(1.05) rotate(2deg); }
-            100% { transform: scale(1) rotate(0deg); opacity: 1; }
-        }
-        .pop-in { animation: pop-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        @keyframes pop-big { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
-        .pop-big { animation: pop-big 0.8s ease-in-out infinite; }
+.turn-info {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.turn-info strong { color: var(--text); font-weight: 800; }
 
-        .modal-handle {
-            width: 60px; height: 5px;
-            background: var(--black);
-            border-radius: 4px;
-            margin: 0 auto 4px;
-        }
-        .modal-topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--black);
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .modal-body { padding: 10px 0; text-align: center; }
-        .modal-question {
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            font-size: 20px;
-            line-height: 1.3;
-            margin: 12px 0;
-        }
-        .modal-answer {
-            background: var(--lime);
-            border: 3px solid var(--black);
-            border-radius: 10px;
-            padding: 12px;
-            text-align: left;
-            margin-top: 12px;
-        }
-        .modal-answer-label {
-            font-family: 'Pixelify Sans', sans-serif;
-            font-weight: 700;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .modal-answer-text {
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            font-size: 15px;
-            line-height: 1.35;
-        }
-        .warn-box {
-            border: 3px solid var(--black);
-            border-radius: 10px;
-            padding: 12px;
-            text-align: center;
-            margin-top: 10px;
-        }
-        .warn-title {
-            font-family: 'Pixelify Sans', sans-serif;
-            font-weight: 700;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-        .warn-text {
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            font-size: 13px;
-            line-height: 1.4;
-        }
+.sheet-body {
+  text-align: center;
+  padding: 8px 0;
+}
+.diff-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: var(--text-dim);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+.diff-badge i { color: var(--violet); }
 
-        .reveal-btn {
-            width: 100%;
-            padding: 14px;
-            background: var(--yellow);
-            border: 3px solid var(--black);
-            box-shadow: 4px 4px 0 var(--black);
-            border-radius: 10px;
-            font-family: 'Press Start 2P', monospace;
-            font-size: 11px;
-            text-transform: uppercase;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: transform 0.08s ease, box-shadow 0.08s ease;
-        }
-        .reveal-btn:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--black); }
+.question-text {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.35;
+  color: var(--text);
+  margin: 4px 0 12px;
+  letter-spacing: -0.01em;
+}
+@media (min-width: 640px) {
+  .question-text { font-size: 22px; }
+}
 
-        .score-blocks {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        .score-block {
-            background: var(--white);
-            border: 3px solid var(--black);
-            border-radius: 10px;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            transition: all 0.2s ease;
-        }
-        .score-block-locked { opacity: 0.3; pointer-events: none; }
-        .score-block-active {
-            background: var(--yellow);
-            animation: pop-big 1.2s ease-in-out infinite;
-        }
-        .score-block-name {
-            font-family: 'Pixelify Sans', sans-serif;
-            font-weight: 700;
-            font-size: 12px;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-        .score-btns {
-            display: flex;
-            gap: 6px;
-        }
-        .score-btn {
-            flex: 1;
-            padding: 10px 6px;
-            border: 2px solid var(--black);
-            box-shadow: 3px 3px 0 var(--black);
-            border-radius: 8px;
-            font-family: 'Pixelify Sans', sans-serif;
-            font-weight: 700;
-            font-size: 13px;
-            color: var(--white);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            transition: transform 0.08s ease, box-shadow 0.08s ease;
-        }
-        .score-btn:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--black); }
-        .score-btn.plus { background: var(--green); }
-        .score-btn.minus { background: var(--red); }
+.answer-box {
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.15), rgba(52, 211, 153, 0.05));
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  border-radius: 14px;
+  padding: 14px;
+  text-align: left;
+  margin-top: 12px;
+  animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes popIn {
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.answer-label {
+  font-size: 10px;
+  color: var(--emerald);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.answer-text {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: white;
+  line-height: 1.4;
+}
 
-        .skip-btn {
-            display: block;
-            margin: 10px auto 0;
-            font-family: 'Pixelify Sans', sans-serif;
-            font-weight: 700;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            text-decoration: underline;
-            opacity: 0.5;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-        .skip-btn:hover { opacity: 1; }
+.warn-box {
+  border-radius: 14px;
+  padding: 12px;
+  text-align: center;
+  margin-top: 12px;
+  border: 1px solid transparent;
+}
+.warn-title {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.warn-text {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+}
 
-        /* ========== INSTANT / WINNER ========== */
-        .center-modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(10, 10, 10, 0.75);
-            backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-            z-index: 50;
-        }
-        .center-card {
-            background: var(--white);
-            border: 3px solid var(--black);
-            box-shadow: 8px 8px 0 var(--black);
-            border-radius: 20px;
-            padding: 24px;
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-        }
-        .center-icon {
-            width: 100px; height: 100px;
-            border: 3px solid var(--black);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            margin: 0 auto 16px;
-        }
-        .center-title {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 18px;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-        }
-        .center-desc {
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-        .center-btn {
-            width: 100%;
-            padding: 14px;
-            background: var(--yellow);
-            border: 3px solid var(--black);
-            box-shadow: 4px 4px 0 var(--black);
-            border-radius: 10px;
-            font-family: 'Press Start 2P', monospace;
-            font-size: 11px;
-            text-transform: uppercase;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: transform 0.08s ease, box-shadow 0.08s ease;
-        }
-        .center-btn:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--black); }
-        .final-scores {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        .final-score-box {
-            border: 3px solid var(--black);
-            border-radius: 12px;
-            padding: 12px;
-            text-align: center;
-        }
-        .final-score-name {
-            font-family: 'Pixelify Sans', sans-serif;
-            font-weight: 700;
-            font-size: 11px;
-            text-transform: uppercase;
-            margin-bottom: 6px;
-        }
-        .final-score-val {
-            font-family: 'Pixelify Sans', sans-serif;
-            font-weight: 700;
-            font-size: 32px;
-            line-height: 1;
-        }
+.reveal-btn {
+  width: 100%;
+  padding: 15px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--violet), var(--pink));
+  color: white;
+  border: none;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 8px 24px -8px rgba(167, 139, 250, 0.6);
+  transition: all 0.2s ease;
+}
+.reveal-btn:hover {
+  box-shadow: 0 12px 32px -8px rgba(167, 139, 250, 0.9);
+  transform: translateY(-1px);
+}
+.reveal-btn:active { transform: translateY(0) scale(0.98); }
 
-        .hidden { display: none !important; }
-    </style>
+.score-blocks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.sblock {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+.sblock.kira.active {
+  background: linear-gradient(135deg, rgba(255, 92, 157, 0.15), rgba(255, 92, 157, 0.05));
+  border-color: rgba(255, 92, 157, 0.4);
+  box-shadow: 0 0 0 1px rgba(255, 92, 157, 0.2), 0 8px 24px -8px rgba(255, 92, 157, 0.4);
+}
+.sblock.vitya.active {
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(34, 211, 238, 0.05));
+  border-color: rgba(34, 211, 238, 0.4);
+  box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.2), 0 8px 24px -8px rgba(34, 211, 238, 0.4);
+}
+.sblock.locked { opacity: 0.35; pointer-events: none; }
+
+.sblock-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.sblock-title.kira { color: var(--pink); }
+.sblock-title.vitya { color: var(--cyan); }
+.sblock-title .tag {
+  padding: 2px 6px;
+  border-radius: 5px;
+  font-size: 8px;
+  background: currentColor;
+  color: var(--bg-0);
+  letter-spacing: 0.08em;
+}
+.sblock-btns {
+  display: flex;
+  gap: 6px;
+}
+.sbtn {
+  flex: 1;
+  padding: 11px 6px;
+  border-radius: 10px;
+  border: none;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: all 0.15s ease;
+}
+.sbtn.plus { background: linear-gradient(135deg, var(--emerald), #10B981); box-shadow: 0 4px 12px -4px rgba(52, 211, 153, 0.5); }
+.sbtn.minus { background: linear-gradient(135deg, var(--red), #EF4444); box-shadow: 0 4px 12px -4px rgba(248, 113, 113, 0.5); }
+.sbtn:hover { transform: translateY(-1px); }
+.sbtn:active { transform: translateY(0) scale(0.96); }
+
+.skip {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  font-family: 'Manrope', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.skip:hover { color: var(--text-dim); }
+
+/* CENTER MODAL */
+.center-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 5, 12, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.25s ease;
+}
+.center-card {
+  background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 100%);
+  border: 1px solid var(--border-hi);
+  border-radius: 24px;
+  padding: 28px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.9);
+  animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.center-icon {
+  width: 90px; height: 90px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  margin: 0 auto 18px;
+  color: white;
+}
+.center-title {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--text);
+  margin-bottom: 10px;
+  letter-spacing: -0.02em;
+}
+.center-desc {
+  font-size: 14px;
+  color: var(--text-dim);
+  font-weight: 600;
+  margin-bottom: 22px;
+  line-height: 1.5;
+}
+.center-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--violet), var(--pink));
+  color: white;
+  box-shadow: 0 8px 24px -8px rgba(167, 139, 250, 0.6);
+  transition: all 0.2s ease;
+}
+.center-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px -8px rgba(167, 139, 250, 0.9); }
+
+.final-scores {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+.fbox {
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+}
+.fbox.kira { background: linear-gradient(135deg, rgba(255, 92, 157, 0.2), rgba(255, 92, 157, 0.05)); border-color: rgba(255, 92, 157, 0.4); }
+.fbox.vitya { background: linear-gradient(135deg, rgba(34, 211, 238, 0.2), rgba(34, 211, 238, 0.05)); border-color: rgba(34, 211, 238, 0.4); }
+.fbox-name {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+.fbox.kira .fbox-name { color: var(--pink); }
+.fbox.vitya .fbox-name { color: var(--cyan); }
+.fbox-val {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 1;
+  color: white;
+}
+
+.streak-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(251, 146, 60, 0.1));
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--amber);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.hidden { display: none !important; }
+</style>
 </head>
 <body>
 
-<!-- HEADER -->
-<header class="top-header">
-    <div class="flex items-center gap-3 min-w-0" style="min-width:0;">
-        <div class="brand-icon">
-            <i class="fa-solid fa-bolt"></i>
-        </div>
-        <div class="min-w-0">
-            <h1 class="brand-title">СВОЯ ИГРА</h1>
-            <p class="brand-sub">PIXEL EDITION • 120 ВОПРОСОВ</p>
-        </div>
+<header class="glass">
+  <div class="brand">
+    <div class="brand-logo"><i class="fa-solid fa-bolt"></i></div>
+    <div class="brand-text">
+      <div class="brand-title">СВОЯ ИГРА</div>
+      <div class="brand-sub" id="header-sub">120 вопросов · premium edition</div>
     </div>
-    <div class="flex items-center gap-2 shrink-0">
-        <button id="density-btn" class="top-btn" onclick="toggleDensity()" style="background:var(--lime); display:none;">
-            <i class="fa-solid fa-table-cells-large" id="density-icon"></i>
-        </button>
-        <button class="top-btn" onclick="toggleAudioMute()" style="background:var(--cyan);">
-            <i class="fa-solid fa-volume-high" id="mute-icon"></i>
-        </button>
-        <button class="top-btn" onclick="showWinnerModal(true)" style="background:var(--pink); color:var(--white);">
-            <i class="fa-solid fa-crown"></i><span class="hidden sm:inline">ИТОГИ</span>
-        </button>
-    </div>
+  </div>
+  <div class="header-actions">
+    <button class="icon-btn" id="random-btn" onclick="openRandom()" title="Случайная ячейка">
+      <i class="fa-solid fa-shuffle"></i>
+    </button>
+    <button class="icon-btn" onclick="toggleAudio()">
+      <i class="fa-solid fa-volume-high" id="audio-icon"></i>
+    </button>
+    <button class="pill-btn accent" onclick="showWinner()">
+      <i class="fa-solid fa-crown"></i><span>Итоги</span>
+    </button>
+  </div>
 </header>
 
-<!-- PLAYERS -->
-<section class="players-row">
-    <div id="player-card-0" class="player-card">
-        <div class="flex items-center gap-2 min-w-0" style="min-width:0;">
-            <div class="player-avatar" style="background:var(--pink); color:var(--white);">
-                <i class="fa-solid fa-user-ninja"></i>
-            </div>
-            <div class="min-w-0">
-                <div class="player-name">КИРА</div>
-                <span id="turn-badge-0" class="turn-badge hidden">
-                    <i class="fa-solid fa-play"></i> ХОДИТ
-                </span>
-            </div>
-        </div>
-        <div class="text-right shrink-0">
-            <div id="score-0" class="player-score">0</div>
-            <div class="pixel" style="font-size:9px; opacity:0.6; text-transform:uppercase; letter-spacing:0.1em;">очков</div>
-        </div>
+<section class="players">
+  <div class="player glass" id="p-card-0">
+    <div class="p-avatar kira"><i class="fa-solid fa-user-ninja"></i></div>
+    <div class="p-info">
+      <div class="p-name">Кира</div>
+      <div class="p-status" id="p-status-0"><span class="dot"></span><span>ждёт хода</span></div>
     </div>
-    <div id="player-card-1" class="player-card">
-        <div class="flex items-center gap-2 min-w-0" style="min-width:0;">
-            <div class="player-avatar" style="background:var(--cyan);">
-                <i class="fa-solid fa-user-astronaut"></i>
-            </div>
-            <div class="min-w-0">
-                <div class="player-name">ВИТЯ</div>
-                <span id="turn-badge-1" class="turn-badge hidden">
-                    <i class="fa-solid fa-play"></i> ХОДИТ
-                </span>
-            </div>
-        </div>
-        <div class="text-right shrink-0">
-            <div id="score-1" class="player-score">0</div>
-            <div class="pixel" style="font-size:9px; opacity:0.6; text-transform:uppercase; letter-spacing:0.1em;">очков</div>
-        </div>
+    <div class="p-score">
+      <div class="p-score-val kira" id="score-0">0</div>
+      <div class="p-score-lbl">очков</div>
     </div>
+  </div>
+  <div class="player glass" id="p-card-1">
+    <div class="p-avatar vitya"><i class="fa-solid fa-user-astronaut"></i></div>
+    <div class="p-info">
+      <div class="p-name">Витя</div>
+      <div class="p-status" id="p-status-1"><span class="dot"></span><span>ждёт хода</span></div>
+    </div>
+    <div class="p-score">
+      <div class="p-score-val vitya" id="score-1">0</div>
+      <div class="p-score-lbl">очков</div>
+    </div>
+  </div>
 </section>
 
-<div class="status-line-wrap">
-    <div class="status-line">
-        <span id="turn-status-line">Ход: Кира</span>
-    </div>
-</div>
+<section class="progress-wrap glass">
+  <div class="progress-info"><i class="fa-solid fa-chart-simple"></i><span id="progress-label">0 / 120</span></div>
+  <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  <div class="progress-pct" id="progress-pct">0%</div>
+</section>
 
-<!-- GRID -->
 <main>
-    <div class="grid-wrap">
-        <div id="master-grid"></div>
-    </div>
+  <div class="grid-container glass">
+    <div id="grid"></div>
+  </div>
 </main>
 
-<!-- FOOTER -->
-<footer>
-    <button class="reset-btn" onclick="resetGame(true)">
-        <i class="fa-solid fa-rotate-right"></i> СБРОС
-    </button>
-    <span class="footer-tag">12 × 10 • PIXEL</span>
+<footer class="glass">
+  <div class="legend">
+    <span class="legend-item gem"><i class="fa-solid fa-gem"></i>×2</span>
+    <span class="legend-item trap"><i class="fa-solid fa-triangle-exclamation"></i>Ловушка</span>
+    <span class="legend-item jackpot"><i class="fa-solid fa-gift"></i>×5</span>
+    <span class="legend-item bonus"><i class="fa-solid fa-dice"></i>Бонус</span>
+    <span class="legend-item penalty"><i class="fa-solid fa-burst"></i>Штраф</span>
+    <span class="legend-item block"><i class="fa-solid fa-ban"></i>Блок</span>
+  </div>
+  <button class="pill-btn" onclick="resetGame()" style="background:linear-gradient(135deg,rgba(248,113,113,0.2),rgba(239,68,68,0.1)); border-color:rgba(248,113,113,0.3); color:var(--red);">
+    <i class="fa-solid fa-rotate-right"></i>Сброс
+  </button>
 </footer>
 
 <!-- QUESTION MODAL -->
-<div id="question-modal" class="modal-overlay hidden">
-    <div class="modal-sheet">
-        <div class="modal-handle"></div>
-        <div class="modal-topbar">
-            <div class="flex items-center gap-2 flex-wrap">
-                <span id="modal-category" class="badge">Категория</span>
-                <span id="modal-points" class="badge" style="background:var(--pink); color:var(--white);">500</span>
-                <span id="modal-special" class="badge hidden"></span>
-            </div>
-            <div class="pixel" style="font-size:11px; font-weight:700; text-transform:uppercase;">
-                Ход: <span id="modal-player-turn" style="text-decoration:underline;">Кира</span>
-            </div>
-        </div>
-        <div class="modal-body">
-            <div class="badge" id="modal-difficulty-hint" style="margin-bottom:8px;">Сложность</div>
-            <p id="modal-question-text" class="modal-question">Текст вопроса...</p>
-            <div id="modal-answer-box" class="modal-answer hidden">
-                <div class="modal-answer-label">
-                    <i class="fa-solid fa-circle-check"></i> ПРАВИЛЬНЫЙ ОТВЕТ:
-                </div>
-                <div id="modal-answer-text" class="modal-answer-text"></div>
-            </div>
-            <div id="modal-special-warning" class="warn-box hidden"></div>
-        </div>
-        <div style="padding-top:10px; border-top:2px solid var(--black);">
-            <div id="action-reveal-container">
-                <button class="reveal-btn" onclick="revealAnswer()">
-                    <i class="fa-solid fa-key"></i> ПОКАЗАТЬ ОТВЕТ
-                </button>
-            </div>
-            <div id="score-buttons-container" class="score-blocks" style="margin-top:10px;">
-                <div id="score-block-0" class="score-block">
-                    <div class="score-block-name">
-                        <i class="fa-solid fa-user-ninja" style="color:var(--pink);"></i> КИРА
-                        <span id="turn-tag-0" class="badge hidden" style="font-size:8px; padding:2px 5px;">ХОД</span>
-                    </div>
-                    <div class="score-btns">
-                        <button class="score-btn plus" onclick="scorePlayer(0, true)">
-                            <i class="fa-solid fa-plus"></i><span id="btn-kira-plus">+100</span>
-                        </button>
-                        <button class="score-btn minus" onclick="scorePlayer(0, false)">
-                            <i class="fa-solid fa-minus"></i><span id="btn-kira-minus">-100</span>
-                        </button>
-                    </div>
-                </div>
-                <div id="score-block-1" class="score-block">
-                    <div class="score-block-name">
-                        <i class="fa-solid fa-user-astronaut" style="color:var(--cyan);"></i> ВИТЯ
-                        <span id="turn-tag-1" class="badge hidden" style="font-size:8px; padding:2px 5px;">ХОД</span>
-                    </div>
-                    <div class="score-btns">
-                        <button class="score-btn plus" onclick="scorePlayer(1, true)">
-                            <i class="fa-solid fa-plus"></i><span id="btn-vitya-plus">+100</span>
-                        </button>
-                        <button class="score-btn minus" onclick="scorePlayer(1, false)">
-                            <i class="fa-solid fa-minus"></i><span id="btn-vitya-minus">-100</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <button class="skip-btn" onclick="closeQuestionModal()">
-                <i class="fa-solid fa-forward"></i> ПРОПУСТИТЬ → ПЕРЕДАТЬ ХОД
-            </button>
-        </div>
+<div id="q-overlay" class="overlay hidden">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-top">
+      <div class="badges">
+        <span class="badge cat" id="m-cat">Категория</span>
+        <span class="badge points" id="m-points">500</span>
+        <span class="badge special hidden" id="m-special"></span>
+      </div>
+      <div class="turn-info">Ход: <strong id="m-turn">Кира</strong></div>
     </div>
+    <div class="sheet-body">
+      <div class="diff-badge" id="m-diff"><i class="fa-solid fa-seedling"></i> Разминка</div>
+      <p class="question-text" id="m-question">Вопрос...</p>
+      <div class="answer-box hidden" id="m-answer-box">
+        <div class="answer-label"><i class="fa-solid fa-circle-check"></i> Правильный ответ</div>
+        <div class="answer-text" id="m-answer"></div>
+      </div>
+      <div class="warn-box hidden" id="m-warn"></div>
+    </div>
+    <div style="padding-top:14px; border-top:1px solid var(--border); display:flex; flex-direction:column; gap:10px;">
+      <div id="reveal-wrap">
+        <button class="reveal-btn" onclick="revealAnswer()">
+          <i class="fa-solid fa-key"></i>Показать ответ
+        </button>
+      </div>
+      <div class="score-blocks">
+        <div class="sblock kira" id="sb-0">
+          <div class="sblock-title kira">
+            <i class="fa-solid fa-user-ninja"></i>Кира
+            <span class="tag hidden" id="tag-0">ход</span>
+          </div>
+          <div class="sblock-btns">
+            <button class="sbtn plus" onclick="score(0,true)"><i class="fa-solid fa-plus"></i><span id="kp">+100</span></button>
+            <button class="sbtn minus" onclick="score(0,false)"><i class="fa-solid fa-minus"></i><span id="km">-100</span></button>
+          </div>
+        </div>
+        <div class="sblock vitya" id="sb-1">
+          <div class="sblock-title vitya">
+            <i class="fa-solid fa-user-astronaut"></i>Витя
+            <span class="tag hidden" id="tag-1">ход</span>
+          </div>
+          <div class="sblock-btns">
+            <button class="sbtn plus" onclick="score(1,true)"><i class="fa-solid fa-plus"></i><span id="vp">+100</span></button>
+            <button class="sbtn minus" onclick="score(1,false)"><i class="fa-solid fa-minus"></i><span id="vm">-100</span></button>
+          </div>
+        </div>
+      </div>
+      <button class="skip" onclick="closeQ()"><i class="fa-solid fa-forward"></i> Пропустить — передать ход</button>
+    </div>
+  </div>
 </div>
 
 <!-- INSTANT MODAL -->
-<div id="instant-modal" class="center-modal hidden">
-    <div id="instant-card" class="center-card pop-in" style="transform:rotate(-2deg);">
-        <div id="instant-icon" class="center-icon pop-big"></div>
-        <h2 id="instant-title" class="center-title"></h2>
-        <p id="instant-desc" class="center-desc"></p>
-        <button class="center-btn" onclick="closeInstantModal()">
-            ПРОДОЛЖИТЬ <i class="fa-solid fa-arrow-right"></i>
-        </button>
-    </div>
+<div id="i-overlay" class="center-overlay hidden">
+  <div class="center-card">
+    <div class="center-icon" id="i-icon" style="background:linear-gradient(135deg,var(--emerald),#10B981);"><i class="fa-solid fa-dice"></i></div>
+    <h2 class="center-title" id="i-title">Бонус!</h2>
+    <p class="center-desc" id="i-desc"></p>
+    <button class="center-btn" onclick="closeInstant()">Продолжить</button>
+  </div>
 </div>
 
 <!-- WINNER MODAL -->
-<div id="winner-modal" class="center-modal hidden">
-    <div class="center-card pop-in" style="transform:rotate(-1deg);">
-        <div class="center-icon" style="background:var(--yellow); transform:rotate(4deg);">
-            <i class="fa-solid fa-crown"></i>
-        </div>
-        <h2 class="center-title">ФИНАЛ!</h2>
-        <p class="pixel" style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; opacity:0.6; margin-bottom:16px;">120 вопросов сыграно</p>
-        <p id="winner-name" class="center-title" style="font-size:16px;"></p>
-        <p id="winner-score" class="center-desc"></p>
-        <div class="final-scores">
-            <div class="final-score-box" style="background:var(--pink); color:var(--white);">
-                <div class="final-score-name">КИРА</div>
-                <div id="final-score-0" class="final-score-val">0</div>
-            </div>
-            <div class="final-score-box" style="background:var(--cyan);">
-                <div class="final-score-name">ВИТЯ</div>
-                <div id="final-score-1" class="final-score-val">0</div>
-            </div>
-        </div>
-        <button class="center-btn" onclick="resetGame(true); closeModal('winner-modal');">
-            СЫГРАТЬ СНОВА <i class="fa-solid fa-fire"></i>
-        </button>
+<div id="w-overlay" class="center-overlay hidden">
+  <div class="center-card">
+    <div class="center-icon" style="background:linear-gradient(135deg,var(--amber),var(--orange));"><i class="fa-solid fa-crown"></i></div>
+    <h2 class="center-title">ФИНАЛ!</h2>
+    <p class="center-desc">Все 120 вопросов сыграны</p>
+    <p class="center-title" id="w-name" style="font-size:18px; margin-bottom:8px;"></p>
+    <div class="final-scores">
+      <div class="fbox kira"><div class="fbox-name">Кира</div><div class="fbox-val" id="w-0">0</div></div>
+      <div class="fbox vitya"><div class="fbox-name">Витя</div><div class="fbox-val" id="w-1">0</div></div>
     </div>
+    <button class="center-btn" onclick="resetGame(); closeModal('w-overlay');"><i class="fa-solid fa-fire" style="margin-right:8px;"></i>Сыграть снова</button>
+  </div>
 </div>
 
 <script>
-// ========== STATE ==========
-let players = [{ name: "Кира", score: 0 }, { name: "Витя", score: 0 }];
-let activePlayerIndex = 0;
-let currentQuestion = null;
-let activeCellElement = null;
-let activeCellKey = null;
-let isAudioMuted = false;
-let blockedPlayerIndex = null;
+// ============= STATE =============
+let players = [{ name: "Кира", score: 0, streak: 0 }, { name: "Витя", score: 0, streak: 0 }];
+let active = 0;
+let cur = null;
+let curCell = null;
+let curKey = null;
+let muted = false;
+let blocked = null;
+let played = new Set();
+let specials = {};
 
-const STORAGE_KEY = 'jeopardy_pixel_12x10_v1';
-const DENSITY_KEY = 'jeopardy_pixel_density';
-let playedQuestions = new Set();
-let specialCells = {};
+const STORAGE = 'jeopardy_premium_v1';
 
-const categories = [
-    { id: 'angarsk', name: 'Ангарск', color: '#FF8C42' },
-    { id: 'brawl', name: 'Brawl Stars', color: '#FF5C8A' },
-    { id: 'memes', name: 'Мемы', color: '#A855F7' },
-    { id: 'music', name: 'Музыка', color: '#4ECDC4' },
-    { id: 'youtube', name: 'YouTube RU', color: '#FF3D3D' },
-    { id: 'animals', name: 'Животные', color: '#22C55E' },
-    { id: 'food', name: 'Еда', color: '#FFD93D' },
-    { id: 'sport', name: 'Спорт', color: '#3B82F6' },
-    { id: 'nature', name: 'Природа', color: '#A8FF3D' },
-    { id: 'cartoons', name: 'Мультфильмы', color: '#FFB347' },
-    { id: 'school', name: 'Школа', color: '#C4B5FD' },
-    { id: 'space', name: 'Космос', color: '#818CF8' }
+// ============= CATEGORIES =============
+const cats = [
+  { id: 'angarsk', name: 'Ангарск', color: 'linear-gradient(135deg,#FB923C,#F59E0B)', icon: 'fa-location-dot' },
+  { id: 'brawl', name: 'Brawl Stars', color: 'linear-gradient(135deg,#FF5C9D,#EC4899)', icon: 'fa-skull-crossbones' },
+  { id: 'memes', name: 'Мемы', color: 'linear-gradient(135deg,#A78BFA,#8B5CF6)', icon: 'fa-face-laugh-squint' },
+  { id: 'music', name: 'Музыка', color: 'linear-gradient(135deg,#22D3EE,#06B6D4)', icon: 'fa-music' },
+  { id: 'movies', name: 'Кино', color: 'linear-gradient(135deg,#F87171,#EF4444)', icon: 'fa-film' },
+  { id: 'animals', name: 'Животные', color: 'linear-gradient(135deg,#34D399,#10B981)', icon: 'fa-paw' },
+  { id: 'food', name: 'Еда', color: 'linear-gradient(135deg,#FBBF24,#F59E0B)', icon: 'fa-burger' },
+  { id: 'sport', name: 'Спорт', color: 'linear-gradient(135deg,#60A5FA,#3B82F6)', icon: 'fa-futbol' },
+  { id: 'nature', name: 'Природа', color: 'linear-gradient(135deg,#4ADE80,#22C55E)', icon: 'fa-leaf' },
+  { id: 'books', name: 'Книги', color: 'linear-gradient(135deg,#C4B5FD,#A78BFA)', icon: 'fa-book' },
+  { id: 'school', name: 'Школа', color: 'linear-gradient(135deg,#818CF8,#6366F1)', icon: 'fa-graduation-cap' },
+  { id: 'holidays', name: 'Праздники', color: 'linear-gradient(135deg,#FB7185,#F43F5E)', icon: 'fa-gift' }
 ];
 
-const pointValues = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
+const pts = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
 
-function getDifficulty(points) {
-    if (points <= 200) return { label: '<i class="fa-solid fa-seedling"></i> РАЗМИНКА' };
-    if (points <= 400) return { label: '<i class="fa-solid fa-bolt"></i> ЛЕГКО' };
-    if (points <= 600) return { label: '<i class="fa-solid fa-bullseye"></i> СРЕДНЕ' };
-    if (points <= 800) return { label: '<i class="fa-solid fa-fire"></i> СЛОЖНО' };
-    if (points <= 900) return { label: '<i class="fa-solid fa-skull"></i> ОЧЕНЬ СЛОЖНО' };
-    return { label: '<i class="fa-solid fa-crown"></i> ХАРДКОР' };
+function diff(p) {
+  if (p <= 200) return { label: 'Разминка', icon: 'fa-seedling' };
+  if (p <= 400) return { label: 'Легко', icon: 'fa-bolt' };
+  if (p <= 600) return { label: 'Средне', icon: 'fa-bullseye' };
+  if (p <= 800) return { label: 'Сложно', icon: 'fa-fire' };
+  if (p <= 900) return { label: 'Очень сложно', icon: 'fa-skull' };
+  return { label: 'Хардкор', icon: 'fa-crown' };
 }
 
-function generateSpecialCells() {
-    const map = {};
-    const types = [
-        { type: 'double', count: 6 },
-        { type: 'trap', count: 6 },
-        { type: 'jackpot', count: 3 },
-        { type: 'block', count: 3 },
-        { type: 'bonus', count: 5 },
-        { type: 'penalty', count: 5 }
-    ];
-    const allKeys = [];
-    categories.forEach(c => pointValues.forEach(p => allKeys.push(`${c.id}-${p}`)));
-    for (let i = allKeys.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [allKeys[i], allKeys[j]] = [allKeys[j], allKeys[i]];
+// ============= SPECIAL CELLS =============
+function genSpecials() {
+  const map = {};
+  const types = [
+    { t: 'double', n: 6 },
+    { t: 'trap', n: 6 },
+    { t: 'jackpot', n: 3 },
+    { t: 'block', n: 3 },
+    { t: 'bonus', n: 5 },
+    { t: 'penalty', n: 5 }
+  ];
+  const keys = [];
+  cats.forEach(c => pts.forEach(p => keys.push(`${c.id}-${p}`)));
+  for (let i = keys.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [keys[i], keys[j]] = [keys[j], keys[i]];
+  }
+  let i = 0;
+  types.forEach(type => {
+    for (let k = 0; k < type.n && i < keys.length; k++, i++) {
+      map[keys[i]] = type.t;
     }
-    let idx = 0;
-    types.forEach(t => {
-        for (let i = 0; i < t.count && idx < allKeys.length; i++, idx++) {
-            map[allKeys[idx]] = { type: t.type };
-        }
-    });
-    return map;
+  });
+  return map;
 }
 
-function getSpecialInfo(key) {
-    const s = specialCells[key];
-    if (!s) return null;
-    if (s.type === 'double') return { icon: 'fa-gem', label: '×2', bg: '#4ECDC4' };
-    if (s.type === 'trap') return { icon: 'fa-triangle-exclamation', label: 'ЛОВУШКА', bg: '#FF3D3D', white: true };
-    if (s.type === 'jackpot') return { icon: 'fa-gift', label: '×5', bg: '#A855F7', white: true };
-    if (s.type === 'block') return { icon: 'fa-ban', label: 'БЛОК', bg: '#6B7280', white: true };
-    if (s.type === 'bonus') return { icon: 'fa-dice', label: 'БОНУС', bg: '#A8FF3D' };
-    if (s.type === 'penalty') return { icon: 'fa-burst', label: 'ШТРАФ', bg: '#FF8C42', white: true };
-    return null;
+function specInfo(type) {
+  if (type === 'double') return { icon: 'fa-gem', label: '×2', bg: 'linear-gradient(135deg,#22D3EE,#06B6D4)' };
+  if (type === 'trap') return { icon: 'fa-triangle-exclamation', label: 'ЛОВУШКА', bg: 'linear-gradient(135deg,#F87171,#EF4444)' };
+  if (type === 'jackpot') return { icon: 'fa-gift', label: '×5 ДЖЕКПОТ', bg: 'linear-gradient(135deg,#A78BFA,#8B5CF6)' };
+  if (type === 'block') return { icon: 'fa-ban', label: 'БЛОК', bg: 'linear-gradient(135deg,#6B7280,#4B5563)' };
+  if (type === 'bonus') return { icon: 'fa-dice', label: 'БОНУС', bg: 'linear-gradient(135deg,#34D399,#10B981)' };
+  if (type === 'penalty') return { icon: 'fa-burst', label: 'ШТРАФ', bg: 'linear-gradient(135deg,#FB923C,#F59E0B)' };
+  return null;
 }
 
-// ========== 120 ВОПРОСОВ ==========
-const questionsDatabase = {
-    'angarsk': {
-        100: { q: 'В каком году началось строительство Ангарска?', a: 'В 1945 году, сразу после Победы' },
-        200: { q: 'Междуречье каких двух рек расположен Ангарск?', a: 'Ангары и Китоя' },
-        300: { q: 'Какой комбинат стал градообразующим предприятием?', a: 'Комбинат №16 по производству жидкого моторного топлива' },
-        400: { q: 'В каком году Ангарск официально получил статус города?', a: '30 мая 1951 года' },
-        500: { q: 'Сколько жителей насчитывает Ангарск?', a: 'Около 247 тысяч человек' },
-        600: { q: 'Какой памятник самолёту установлен на въезде в город?', a: 'Самолёт МиГ-17' },
-        700: { q: 'Какое управление занималось строительством города и комбината?', a: 'Главпромстрой МВД СССР' },
-        800: { q: 'Сколько квадратных метров жилья было введено в 1951 году?', a: '158 тысяч кв. м' },
-        900: { q: 'Какой музей, посвящённый точному времени, есть в Ангарске?', a: 'Музей часов' },
-        1000: { q: 'Какое название носил посёлок до получения статуса города?', a: 'Ангарский' }
-    },
-    'brawl': {
-        100: { q: 'Какой бравлер стал 100-м по счёту в игре?', a: 'Сириус' },
-        200: { q: 'Какой бравлер вышел в апреле 2026 года под метал-саундтрек?', a: 'Дамиан' },
-        300: { q: 'Какой новый мифический бравлер-дамагер вышел в феврале 2026?', a: 'Наджия' },
-        400: { q: 'Какой бравлер стал первым, родившимся в Starr Park?', a: 'Нори' },
-        500: { q: 'Какой бравлер вышел в августе 2026 как астроном?', a: 'Космо' },
-        600: { q: 'Какой бравлер поддержки вышел вместе с Нори?', a: 'Венди' },
-        700: { q: 'Какой бравлер вышел в августе 2026 вместе с Космо?', a: 'Винс' },
-        800: { q: 'Какая группа записала саундтрек для нового бравлера Дамиана?', a: 'Electric Callboy' },
-        900: { q: 'Кто написал анимационный трейлер для бравлера Наджия?', a: 'Тайка Вайтити' },
-        1000: { q: 'Какой класс у бравлера Наджия?', a: 'Мифический дамагер с ядами' }
-    },
-    'memes': {
-        100: { q: 'Какой мем стал самым популярным в Рунете в 2026 году?', a: '«Сикс-севен» (6-7)' },
-        200: { q: 'Какой мем про зайца и льва стал вирусным в 2026?', a: '«Черемша»' },
-        300: { q: 'Какой мем связан с чрезмерно разговорчивыми людьми?', a: '«Воздухан»' },
-        400: { q: 'Какой мем ворвался в топ-3 Рунета в 2026 году?', a: '«Бурмалда»' },
-        500: { q: 'Кто такой «кот Куки» из мемов 2026 года?', a: 'Кот по прозвищу «Котость»' },
-        600: { q: 'Какой тренд 2026 года связан с движением против течения?', a: '«Нишевость»' },
-        700: { q: 'Какой мем высмеивает фразу топ-менеджера «Автоваза»?', a: '«Можно. А зачем?»' },
-        800: { q: 'Сколько упоминаний собрал мем «Сикс-севен» за 7 месяцев?', a: 'Более 1,26 миллиона' },
-        900: { q: 'Какой тренд 2026 года связан с 2016 годом?', a: '«Верните мой 2016-й»' },
-        1000: { q: 'Кто такой Данил Колбасенко в мемах 2026?', a: 'Мальчик с добрым голосом' }
-    },
-    'music': {
-        100: { q: 'Какая песня стала самой популярной о России в 2026 году?', a: '«Матушка» — Татьяна Куртукова' },
-        200: { q: 'Какая песня заняла 2 место среди песен о России?', a: '«Ты неси меня, река» — Любэ' },
-        300: { q: 'Какой трек стал хитом №1 в интернет-чарте 2026 года?', a: '«Банк» — Zivert и Icegergert' },
-        400: { q: 'Какая песня Любэ также попала в топ песен о России?', a: '«От Волги до Енисея»' },
-        500: { q: 'Кто исполнил «Эпилог» в 2026 году?', a: 'Дима Билан и ANNA ASTI' },
-        600: { q: 'Какая группа исполнила «Как упоительны в России вечера»?', a: 'Белый Орёл' },
-        700: { q: 'Какая песня Sabi & Mia Boyka попала в топ-5?', a: '«Базовый минимум»' },
-        800: { q: 'Какой трек Ваня Дмитриенко и Ани Пересильд стал хитом?', a: '«Силуэт»' },
-        900: { q: 'Какая песня Любэ посвящена Родине-матери?', a: '«За тебя, Родина-мать»' },
-        1000: { q: 'Какой сгенерированный ИИ артист попал в чарты 2026 года?', a: '«Это радио»' }
-    },
-    'youtube': {
-        100: { q: 'Какой детский канал №1 в России по подписчикам?', a: '«Маша и Медведь»' },
-        200: { q: 'Какой влог-канал занимает 2 место по подписчикам?', a: 'Like Nastya Vlog' },
-        300: { q: 'Какой канал занимает 3 место по подписчикам в России?', a: 'HiMan' },
-        400: { q: 'Кто ведёт канал про игры и занимает 5 место?', a: 'Marmok' },
-        500: { q: 'Какой канал занимает 4 место по подписчикам?', a: 'Kika Kim' },
-        600: { q: 'У какого российского канала 13 миллионов подписчиков?', a: 'Иван Гай' },
-        700: { q: 'Какой канал делает шоу «вДудь»?', a: 'Юрий Дудь' },
-        800: { q: 'Какой легендарный канал КВН имеет 3,8 млн подписчиков?', a: 'КВН' },
-        900: { q: 'Какой канал занимается научными обзорами с 2,8 млн подписчиков?', a: 'Enjoykin' },
-        1000: { q: 'Какой канал «Славный другар Обломов» имеет 2,9 млн подписчиков?', a: 'Славный другар Обломов' }
-    },
-    'animals': {
-        100: { q: 'Какое животное строит хатку?', a: 'Бобр' },
-        200: { q: 'Какое самое большое животное из всех, когда-либо живших на Земле?', a: 'Синий кит' },
-        300: { q: 'Какое животное может обходиться без воды 14 дней?', a: 'Верблюд' },
-        400: { q: 'У какого животного более 25 000 перьев?', a: 'У лебедя' },
-        500: { q: 'Какое млекопитающее может стоять на голове?', a: 'Слон (и человек)' },
-        600: { q: 'Какое животное является лучшим садовником?', a: 'Белка' },
-        700: { q: 'Зуб какого животного может весить до 9 кг?', a: 'Слона' },
-        800: { q: 'Какое животное самое высокое в мире?', a: 'Жираф' },
-        900: { q: 'Какое животное имеет зелёный оттенок шерсти?', a: 'Ленивец' },
-        1000: { q: 'Какая птица подбрасывает яйца в чужие гнёзда?', a: 'Кукушка' }
-    },
-    'food': {
-        100: { q: 'Самый ранний овощ-корнеплод?', a: 'Редис' },
-        200: { q: 'Какой овощ привезён в Европу из Перу?', a: 'Картофель' },
-        300: { q: 'Какой город подарил миру пиццу?', a: 'Неаполь' },
-        400: { q: 'Что в русской сказке Колобок — хлеб, пирог или пряник?', a: 'Пряник' },
-        500: { q: 'В какой стране запретили кофе в XVII веке?', a: 'В Турции' },
-        600: { q: 'Сколько гектаров пиццы съедают в США ежедневно?', a: 'Около 75 гектаров' },
-        700: { q: 'Более 40% какого ореха идёт на шоколад?', a: 'Миндаля' },
-        800: { q: 'Для удобства поедания чего придумали вилку с зубцами?', a: 'Макарон' },
-        900: { q: 'Англичане называют кофе с молоком как?', a: '«Белый кофе»' },
-        1000: { q: 'Какой продукт называли «волчьим персиком»?', a: 'Помидор' }
-    },
-    'sport': {
-        100: { q: 'Сколько колец на олимпийском флаге?', a: '5 колец' },
-        200: { q: 'Самый быстрый ракеточный вид спорта?', a: 'Бадминтон' },
-        300: { q: 'Кто самый быстрый человек в мире?', a: 'Усэйн Болт' },
-        400: { q: 'В каком году бокс узаконили как вид спорта?', a: 'В 1900 году' },
-        500: { q: 'Из чего сделана первая медаль современных Олимпийских игр?', a: 'Из серебра' },
-        600: { q: 'Какой порошок используют гимнасты?', a: 'Магнезия' },
-        700: { q: 'Сколько игроков в футбольной команде?', a: '11 игроков' },
-        800: { q: 'Как называется соревнование лыжников со стрельбой?', a: 'Биатлон' },
-        900: { q: 'Какой вид спорта называют «королевой спорта»?', a: 'Лёгкая атлетика' },
-        1000: { q: 'Какой город рекордсмен по Олимпийским играм?', a: 'Лондон' }
-    },
-    'nature': {
-        100: { q: 'Сколько цветов в радуге?', a: '7 цветов' },
-        200: { q: 'Какое самое глубокое озеро в мире?', a: 'Байкал' },
-        300: { q: 'Как называется самая высокая гора?', a: 'Эверест' },
-        400: { q: 'Какое дерево самое высокое в мире?', a: 'Секвойя' },
-        500: { q: 'Какой океан самый большой?', a: 'Тихий океан' },
-        600: { q: 'Что такое «радуга»?', a: 'Оптическое явление после дождя' },
-        700: { q: 'Какой материк самый большой?', a: 'Евразия' },
-        800: { q: 'Какое дерево символ России?', a: 'Берёза' },
-        900: { q: 'Какой самый крупный цветок в мире?', a: 'Раффлезия' },
-        1000: { q: 'Где появились первые арбузы?', a: 'В Африке (более 4000 лет назад)' }
-    },
-    'cartoons': {
-        100: { q: 'Как зовут друга Чебурашки?', a: 'Крокодил Гена' },
-        200: { q: 'Как зовут кота из Простоквашино?', a: 'Матроскин' },
-        300: { q: 'Как зовут розового друга Винни-Пуха?', a: 'Пятачок' },
-        400: { q: 'Как зовут девочку из «Маши и Медведя»?', a: 'Маша' },
-        500: { q: 'Какого цвета был шарик у Ослика Иа?', a: 'Зелёный' },
-        600: { q: 'Кто озвучивал Волка в «Ну, погоди!»?', a: 'Анатолий Папанов' },
-        700: { q: 'Кем работал крокодил Гена в зоопарке?', a: 'Крокодилом' },
-        800: { q: 'Сколько богатырей в мультфильме?', a: 'Три богатыря' },
-        900: { q: 'Как зовут деревянного мальчика из сказки?', a: 'Буратино' },
-        1000: { q: 'Что делили котёнок и щенок в «Котёнке по имени Гав»?', a: 'Сосиску' }
-    },
-    'school': {
-        100: { q: 'Сколько букв в русском алфавите?', a: '33 буквы' },
-        200: { q: 'Сколько дней в неделе?', a: '7 дней' },
-        300: { q: 'Сколько месяцев в году?', a: '12 месяцев' },
-        400: { q: 'Как называется перерыв между уроками?', a: 'Перемена' },
-        500: { q: 'Сколько минут в одном часе?', a: '60 минут' },
-        600: { q: 'Как называется книга с оценками?', a: 'Дневник' },
-        700: { q: 'Какая самая высокая оценка в школе?', a: 'Пятёрка (5)' },
-        800: { q: 'Что изучает математика?', a: 'Числа и фигуры' },
-        900: { q: 'Что означает словесный эквивалент оценки «пять»?', a: '«Отлично»' },
-        1000: { q: 'Сколько континентов на Земле?', a: '6 континентов' }
-    },
-    'space': {
-        100: { q: 'Сколько планет в Солнечной системе?', a: '8 планет' },
-        200: { q: 'Как называется спутник Земли?', a: 'Луна' },
-        300: { q: 'Кто первым полетел в космос?', a: 'Юрий Гагарин' },
-        400: { q: 'Как называется наша галактика?', a: 'Млечный Путь' },
-        500: { q: 'Сколько длился первый полёт человека в космос?', a: '1 час 48 минут (108 минут)' },
-        600: { q: 'Кто первая женщина-космонавт?', a: 'Валентина Терешкова' },
-        700: { q: 'Как называется космический корабль Гагарина?', a: '«Восток»' },
-        800: { q: 'Кто первым вышел в открытый космос?', a: 'Алексей Леонов' },
-        900: { q: 'Какая планета самая горячая в Солнечной системе?', a: 'Венера' },
-        1000: { q: 'Какая самая высокая гора в Солнечной системе?', a: 'Гора Олимп на Марсе (27 км)' }
-    }
+// ============= QUESTIONS (120 NEW) =============
+const db = {
+  angarsk: {
+    100: { q: 'Какой год считается годом основания Ангарска?', a: '1948' },
+    200: { q: 'Междуречье каких двух рек расположен Ангарск?', a: 'Ангары и Китоя' },
+    300: { q: 'Как называется главный проспект города?', a: 'Проспект Карла Маркса' },
+    400: { q: 'Какое предприятие является градообразующим?', a: 'АНХК (Ангарская нефтехимическая компания)' },
+    500: { q: 'Какой самолёт установлен на постаменте при въезде?', a: 'МиГ-17' },
+    600: { q: 'Какой известный музей есть в Ангарске?', a: 'Музей часов' },
+    700: { q: 'В каком году Ангарск получил статус города?', a: '30 мая 1951 года' },
+    800: { q: 'Какое водохранилище любят горожане летом?', a: 'Озеро «Квадраты»' },
+    900: { q: 'Как называется ангарский театр-студия?', a: '«Чудак»' },
+    1000: { q: 'Какая река омывает город с юго-востока?', a: 'Китой' }
+  },
+  brawl: {
+    100: { q: 'Какой бравлер доступен с самого старта?', a: 'Шелли' },
+    200: { q: 'Как называется главный сезонный пропуск в игре?', a: 'Brawl Pass' },
+    300: { q: 'Что тратится на прокачку бравлеров?', a: 'Монеты и очки силы' },
+    400: { q: 'Как называется режим с мячом и воротами?', a: 'Brawl Ball' },
+    500: { q: 'Какой бравлер становится невидимым в ульте?', a: 'Леон' },
+    600: { q: 'Сколько бравлеров на 2026 год?', a: 'Более 105' },
+    700: { q: 'Кто такой Спайк по редкости?', a: 'Легендарный бравлер-кактус' },
+    800: { q: 'На скольких кубках открывается Ранкед?', a: 'На 1000 кубков' },
+    900: { q: 'Какой бравлер выпускает ноты из гитары?', a: 'Поко' },
+    1000: { q: 'Какой бравлер бросает зажигательные бутылки?', a: 'Барли' }
+  },
+  memes: {
+    100: { q: 'Что означает слово «кринж»?', a: 'Неловко, стыдно смотреть' },
+    200: { q: 'Кто такой «сигма» в мемах?', a: 'Сильный независимый одиночка' },
+    300: { q: 'Что означает «жиза»?', a: 'Жизненно, прямо в точку' },
+    400: { q: 'Что означает слово «вайб»?', a: 'Атмосфера, настроение' },
+    500: { q: 'Что такое «рофл»?', a: 'Шутка, прикол' },
+    600: { q: 'Что такое «имба» в геймерском сленге?', a: 'Несправедливо сильное, overpowered' },
+    700: { q: 'Что означает слово «пон»?', a: 'Понял, осознал' },
+    800: { q: 'Кто такой «краш»?', a: 'Тот, кто очень нравится' },
+    900: { q: 'Что означает эмодзи 💀 в интернете?', a: 'Дикий ор, смерть от смеха' },
+    1000: { q: 'Что такое «чилл»?', a: 'Спокойный отдых, расслабон' }
+  },
+  music: {
+    100: { q: 'Кто поёт «Позови меня с собой»?', a: 'Алла Пугачёва' },
+    200: { q: 'Какая группа исполнила «Ты неси меня, река»?', a: 'Любэ' },
+    300: { q: 'Кто поёт «Между нами тает лёд»?', a: 'Грибы' },
+    400: { q: 'Кто автор «Владимирского централа»?', a: 'Михаил Круг' },
+    500: { q: 'Кто исполнил «Я русский»?', a: 'SHAMAN' },
+    600: { q: 'Какая группа поёт «Как упоительны в России вечера»?', a: 'Белый Орёл' },
+    700: { q: 'Кто лидер группы «Кино»?', a: 'Виктор Цой' },
+    800: { q: 'Кто такой Егор Летов?', a: 'Лидер «Гражданской обороны»' },
+    900: { q: 'Какая песня Любэ посвящена реке?', a: '«Ты неси меня, река»' },
+    1000: { q: 'Кто написал музыку «Подмосковных вечеров»?', a: 'Василий Соловьёв-Седой' }
+  },
+  movies: {
+    100: { q: 'Как зовут друга Чебурашки?', a: 'Крокодил Гена' },
+    200: { q: 'Как зовут кота из Простоквашино?', a: 'Матроскин' },
+    300: { q: 'Кто режиссёр «Иронии судьбы»?', a: 'Эльдар Рязанов' },
+    400: { q: 'Как зовут главного героя «Брата»?', a: 'Данила Багров' },
+    500: { q: 'Кто озвучил Волка в «Ну, погоди!»?', a: 'Анатолий Папанов' },
+    600: { q: 'Кто сыграл Штирлица?', a: 'Вячеслав Тихонов' },
+    700: { q: 'Кто режиссёр «Москва слезам не верит»?', a: 'Владимир Меньшов' },
+    800: { q: 'Сколько богатырей в мультфильме?', a: 'Три' },
+    900: { q: 'Кем работал крокодил Гена в зоопарке?', a: 'Крокодилом' },
+    1000: { q: 'Какого цвета был шарик у Ослика Иа?', a: 'Зелёный' }
+  },
+  animals: {
+    100: { q: 'Какое животное строит хатку?', a: 'Бобр' },
+    200: { q: 'Какое самое высокое животное?', a: 'Жираф' },
+    300: { q: 'Какое морское животное самое большое?', a: 'Синий кит' },
+    400: { q: 'Какая птица не умеет летать?', a: 'Пингвин (и страус)' },
+    500: { q: 'Какое животное называют царём зверей?', a: 'Лев' },
+    600: { q: 'Какая птица подбрасывает яйца в чужие гнёзда?', a: 'Кукушка' },
+    700: { q: 'Какое насекомое даёт мёд?', a: 'Пчела' },
+    800: { q: 'Какое животное носит детёныша в сумке?', a: 'Кенгуру' },
+    900: { q: 'Какое млекопитающее умеет летать?', a: 'Летучая мышь' },
+    1000: { q: 'Сколько сердец у осьминога?', a: 'Три' }
+  },
+  food: {
+    100: { q: 'Из чего варят борщ?', a: 'Свёкла, капуста, мясо, картофель' },
+    200: { q: 'Что такое сырники?', a: 'Творожные оладьи' },
+    300: { q: 'Из чего делают пельмени?', a: 'Тесто и фарш' },
+    400: { q: 'Что такое Оливье?', a: 'Салат с варёными овощами и майонезом' },
+    500: { q: 'Какая рыба — символ Нового года?', a: 'Селёдка' },
+    600: { q: 'Какая самая популярная крупа в России?', a: 'Гречка' },
+    700: { q: 'Что такое сгущёнка?', a: 'Сгущённое молоко с сахаром' },
+    800: { q: 'Из чего делают пломбир?', a: 'Молоко, сливки, сахар, яйца' },
+    900: { q: 'Какой напиток делают из берёзового сока?', a: 'Квас' },
+    1000: { q: 'Что такое «сельдь под шубой»?', a: 'Слоёный салат с селёдкой и овощами' }
+  },
+  sport: {
+    100: { q: 'Сколько игроков в футбольной команде?', a: '11' },
+    200: { q: 'В каком виде спорта есть шайба?', a: 'Хоккей' },
+    300: { q: 'Как часто проводятся Олимпийские игры?', a: 'Раз в 4 года' },
+    400: { q: 'Сколько игроков в баскетбольной команде?', a: '5' },
+    500: { q: 'Что такое биатлон?', a: 'Лыжи + стрельба' },
+    600: { q: 'Сколько колец на олимпийском флаге?', a: '5' },
+    700: { q: 'Какой вид спорта называют королевой?', a: 'Лёгкая атлетика' },
+    800: { q: 'В каком виде спорта есть пенальти?', a: 'Футбол' },
+    900: { q: 'Какой самый популярный вид спорта в мире?', a: 'Футбол' },
+    1000: { q: 'Как называется главный турнир по теннису на траве?', a: 'Уимблдон' }
+  },
+  nature: {
+    100: { q: 'Сколько цветов в радуге?', a: '7' },
+    200: { q: 'Самое глубокое озеро в мире?', a: 'Байкал' },
+    300: { q: 'Самая высокая гора?', a: 'Эверест' },
+    400: { q: 'Самое высокое дерево?', a: 'Секвойя' },
+    500: { q: 'Самый большой океан?', a: 'Тихий' },
+    600: { q: 'Самый большой материк?', a: 'Евразия' },
+    700: { q: 'Дерево — символ России?', a: 'Берёза' },
+    800: { q: 'Сколько материков на Земле?', a: '6' },
+    900: { q: 'Самый крупный цветок в мире?', a: 'Раффлезия' },
+    1000: { q: 'Где появились первые арбузы?', a: 'В Африке' }
+  },
+  books: {
+    100: { q: 'Кто написал «Колобка»?', a: 'Русская народная сказка' },
+    200: { q: 'Кто автор «Войны и мира»?', a: 'Лев Толстой' },
+    300: { q: 'Кто написал «Евгения Онегина»?', a: 'Александр Пушкин' },
+    400: { q: 'Что потеряла Золушка на балу?', a: 'Хрустальную туфельку' },
+    500: { q: 'Кто автор «Мастера и Маргариты»?', a: 'Михаил Булгаков' },
+    600: { q: 'Как звали деревянного мальчика?', a: 'Буратино' },
+    700: { q: 'Кто написал «Преступление и наказание»?', a: 'Фёдор Достоевский' },
+    800: { q: 'Кто съел Колобка?', a: 'Лиса' },
+    900: { q: 'Сколько богатырей на картине Васнецова?', a: 'Три' },
+    1000: { q: 'Кто автор «Гарри Поттера»?', a: 'Джоан Роулинг' }
+  },
+  school: {
+    100: { q: 'Сколько букв в русском алфавите?', a: '33' },
+    200: { q: 'Сколько дней в неделе?', a: '7' },
+    300: { q: 'Сколько месяцев в году?', a: '12' },
+    400: { q: 'Сколько минут в часе?', a: '60' },
+    500: { q: 'Самая высокая оценка в школе?', a: '5' },
+    600: { q: 'Что изучает математика?', a: 'Числа и фигуры' },
+    700: { q: 'Как называется перерыв между уроками?', a: 'Перемена' },
+    800: { q: 'Сколько будет 7 × 8?', a: '56' },
+    900: { q: 'Как называется книга с оценками?', a: 'Дневник' },
+    1000: { q: 'Сколько цветов в радуге?', a: '7' }
+  },
+  holidays: {
+    100: { q: 'Какого числа Новый год?', a: '1 января' },
+    200: { q: 'Какого числа Рождество в России?', a: '7 января' },
+    300: { q: 'Когда отмечают 8 Марта?', a: '8 марта' },
+    400: { q: 'Что пекут на Масленицу?', a: 'Блины' },
+    500: { q: 'Какого числа День Победы?', a: '9 мая' },
+    600: { q: 'Кто приносит подарки на Новый год в России?', a: 'Дед Мороз' },
+    700: { q: 'Внучка Деда Мороза?', a: 'Снегурочка' },
+    800: { q: 'Что красят на Пасху?', a: 'Яйца' },
+    900: { q: 'Какого числа День России?', a: '12 июня' },
+    1000: { q: 'Что сжигают в конце Масленицы?', a: 'Чучело зимы' }
+  }
 };
 
-// ========== AUDIO ==========
+// ============= AUDIO =============
 let audioCtx = null;
-function getAudioCtx() {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    return audioCtx;
+function ac() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
 }
-function toggleAudioMute() {
-    isAudioMuted = !isAudioMuted;
-    const icon = document.getElementById('mute-icon');
-    icon.className = isAudioMuted ? 'fa-solid fa-volume-xmark' : 'fa-solid fa-volume-high';
-}
-function playSound(type) {
-    if (isAudioMuted) return;
-    try {
-        const ctx = getAudioCtx();
-        const now = ctx.currentTime;
-        if (type === 'click') {
-            const o = ctx.createOscillator(), g = ctx.createGain();
-            o.connect(g); g.connect(ctx.destination);
-            o.frequency.setValueAtTime(500, now);
-            o.frequency.exponentialRampToValueAtTime(900, now + 0.04);
-            g.gain.setValueAtTime(0.05, now);
-            g.gain.linearRampToValueAtTime(0.01, now + 0.04);
-            o.start(now); o.stop(now + 0.04);
-        } else if (type === 'reveal') {
-            const o = ctx.createOscillator(), g = ctx.createGain();
-            o.connect(g); g.connect(ctx.destination);
-            o.type = 'triangle';
-            o.frequency.setValueAtTime(400, now);
-            o.frequency.exponentialRampToValueAtTime(700, now + 0.1);
-            g.gain.setValueAtTime(0.08, now);
-            g.gain.linearRampToValueAtTime(0.01, now + 0.1);
-            o.start(now); o.stop(now + 0.1);
-        } else if (type === 'correct') {
-            [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
-                const o = ctx.createOscillator(), g = ctx.createGain();
-                o.connect(g); g.connect(ctx.destination);
-                o.frequency.setValueAtTime(f, now + i * 0.05);
-                g.gain.setValueAtTime(0.07, now + i * 0.05);
-                g.gain.linearRampToValueAtTime(0.01, now + i * 0.05 + 0.12);
-                o.start(now + i * 0.05); o.stop(now + i * 0.05 + 0.12);
-            });
-        } else if (type === 'wrong') {
-            const o = ctx.createOscillator(), g = ctx.createGain();
-            o.connect(g); g.connect(ctx.destination);
-            o.type = 'sawtooth';
-            o.frequency.setValueAtTime(220, now);
-            o.frequency.linearRampToValueAtTime(80, now + 0.18);
-            g.gain.setValueAtTime(0.08, now);
-            g.gain.linearRampToValueAtTime(0.01, now + 0.18);
-            o.start(now); o.stop(now + 0.18);
-        } else if (type === 'win') {
-            [440, 554.37, 659.25, 880, 1046.50].forEach((f, i) => {
-                const o = ctx.createOscillator(), g = ctx.createGain();
-                o.connect(g); g.connect(ctx.destination);
-                o.type = 'triangle';
-                o.frequency.setValueAtTime(f, now + i * 0.07);
-                g.gain.setValueAtTime(0.1, now + i * 0.07);
-                g.gain.linearRampToValueAtTime(0.01, now + i * 0.07 + 0.2);
-                o.start(now + i * 0.07); o.stop(now + i * 0.07 + 0.2);
-            });
-        }
-    } catch(e) {}
-}
-
-// ========== DENSITY ==========
-function applyDensity(mode) {
-    document.body.setAttribute('data-density', mode);
-    const icon = document.getElementById('density-icon');
-    if (icon) icon.className = mode === 'comfortable' ? 'fa-solid fa-table-cells-large' : 'fa-solid fa-table-cells';
-    try { localStorage.setItem(DENSITY_KEY, mode); } catch(e) {}
-}
-function toggleDensity() {
-    const current = document.body.getAttribute('data-density') || 'comfortable';
-    applyDensity(current === 'comfortable' ? 'compact' : 'comfortable');
-    playSound('click');
-}
-
-// Показать кнопку плотности только на десктопе
-function updateDensityVisibility() {
-    const btn = document.getElementById('density-btn');
-    if (window.innerWidth >= 1024) btn.style.display = 'flex';
-    else btn.style.display = 'none';
-}
-window.addEventListener('resize', updateDensityVisibility);
-
-// ========== PERSISTENCE ==========
-function loadState() {
-    try {
-        const data = localStorage.getItem(STORAGE_KEY);
-        if (data) {
-            const parsed = JSON.parse(data);
-            if (parsed.playedQuestions) playedQuestions = new Set(parsed.playedQuestions);
-            if (parsed.players) players = parsed.players;
-            if (parsed.activePlayerIndex !== undefined) activePlayerIndex = parsed.activePlayerIndex;
-            if (parsed.blockedPlayerIndex !== undefined) blockedPlayerIndex = parsed.blockedPlayerIndex;
-            if (parsed.specialCells && Object.keys(parsed.specialCells).length > 0) {
-                specialCells = parsed.specialCells;
-            } else {
-                specialCells = generateSpecialCells();
-                saveState();
-            }
-        } else {
-            specialCells = generateSpecialCells();
-        }
-    } catch (e) { specialCells = generateSpecialCells(); }
-    try {
-        const d = localStorage.getItem(DENSITY_KEY);
-        applyDensity(d || 'comfortable');
-    } catch(e) { applyDensity('comfortable'); }
-}
-function saveState() {
-    try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify({
-            playedQuestions: Array.from(playedQuestions),
-            players: players,
-            activePlayerIndex: activePlayerIndex,
-            blockedPlayerIndex: blockedPlayerIndex,
-            specialCells: specialCells
-        }));
-    } catch (e) {}
-}
-
-// ========== GRID ==========
-function initGrid() {
-    const masterGrid = document.getElementById('master-grid');
-    masterGrid.innerHTML = '';
-    categories.forEach(cat => {
-        const colDiv = document.createElement('div');
-        colDiv.className = 'cat-col';
-        const headerDiv = document.createElement('div');
-        headerDiv.className = 'cat-header';
-        headerDiv.style.background = cat.color;
-        headerDiv.textContent = cat.name;
-        colDiv.appendChild(headerDiv);
-        const tiersDiv = document.createElement('div');
-        tiersDiv.className = 'tiers';
-        pointValues.forEach(points => {
-            const key = `${cat.id}-${points}`;
-            const isPlayed = playedQuestions.has(key);
-            const btn = document.createElement('button');
-            btn.className = `cell${isPlayed ? ' cell-done' : ''}`;
-            btn.dataset.key = key;
-            if (isPlayed) {
-                btn.innerHTML = '<i class="fa-solid fa-check"></i>';
-            } else {
-                btn.textContent = points;
-            }
-            btn.onclick = () => openQuestion(btn, key, cat.id, cat.name, points);
-            tiersDiv.appendChild(btn);
-        });
-        colDiv.appendChild(tiersDiv);
-        masterGrid.appendChild(colDiv);
-    });
-    updateTurnUI();
-}
-
-// ========== TURN ==========
-function updateTurnUI() {
-    players.forEach((p, idx) => {
-        const card = document.getElementById(`player-card-${idx}`);
-        const badge = document.getElementById(`turn-badge-${idx}`);
-        document.getElementById(`score-${idx}`).innerText = p.score;
-        if (idx === activePlayerIndex) {
-            card.className = `player-card ${idx === 0 ? 'active-kira' : 'active-vitya'}`;
-            badge.classList.remove('hidden');
-        } else {
-            card.className = 'player-card inactive';
-            badge.classList.add('hidden');
-        }
-    });
-    const statusLine = document.getElementById('turn-status-line');
-    let statusText = `Ход: ${players[activePlayerIndex].name}`;
-    if (blockedPlayerIndex !== null) statusText += ` • ${players[blockedPlayerIndex].name} пропускает`;
-    statusLine.innerHTML = statusText;
-    updateScoreButtonStates();
-}
-function updateScoreButtonStates() {
-    if (!currentQuestion) return;
-    for (let i = 0; i < 2; i++) {
-        const block = document.getElementById(`score-block-${i}`);
-        const tag = document.getElementById(`turn-tag-${i}`);
-        if (!block || !tag) continue;
-        if (i === activePlayerIndex) {
-            block.classList.remove('score-block-locked');
-            block.classList.add('score-block-active');
-            tag.classList.remove('hidden');
-        } else {
-            block.classList.add('score-block-locked');
-            block.classList.remove('score-block-active');
-            tag.classList.add('hidden');
-        }
+function sfx(type) {
+  if (muted) return;
+  try {
+    const ctx = ac(), now = ctx.currentTime;
+    if (type === 'click') {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.frequency.setValueAtTime(600, now);
+      o.frequency.exponentialRampToValueAtTime(900, now + 0.04);
+      g.gain.setValueAtTime(0.05, now);
+      g.gain.linearRampToValueAtTime(0.001, now + 0.05);
+      o.start(now); o.stop(now + 0.05);
+    } else if (type === 'correct') {
+      [523, 659, 784, 1047].forEach((f, i) => {
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.type = 'sine';
+        o.frequency.setValueAtTime(f, now + i * 0.06);
+        g.gain.setValueAtTime(0.08, now + i * 0.06);
+        g.gain.linearRampToValueAtTime(0.001, now + i * 0.06 + 0.15);
+        o.start(now + i * 0.06); o.stop(now + i * 0.06 + 0.15);
+      });
+    } else if (type === 'wrong') {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.type = 'sawtooth';
+      o.frequency.setValueAtTime(220, now);
+      o.frequency.linearRampToValueAtTime(80, now + 0.2);
+      g.gain.setValueAtTime(0.08, now);
+      g.gain.linearRampToValueAtTime(0.001, now + 0.2);
+      o.start(now); o.stop(now + 0.2);
+    } else if (type === 'win') {
+      [392, 523, 659, 784, 1047].forEach((f, i) => {
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.type = 'triangle';
+        o.frequency.setValueAtTime(f, now + i * 0.08);
+        g.gain.setValueAtTime(0.09, now + i * 0.08);
+        g.gain.linearRampToValueAtTime(0.001, now + i * 0.08 + 0.25);
+        o.start(now + i * 0.08); o.stop(now + i * 0.08 + 0.25);
+      });
     }
+  } catch(e) {}
+}
+function toggleAudio() {
+  muted = !muted;
+  document.getElementById('audio-icon').className = muted ? 'fa-solid fa-volume-xmark' : 'fa-solid fa-volume-high';
 }
 
-// ========== QUESTION MODAL ==========
-function openQuestion(btnEl, key, catId, catName, points) {
-    if (playedQuestions.has(key) || btnEl.classList.contains('cell-done')) return;
-    playSound('click');
-    activeCellElement = btnEl;
-    activeCellKey = key;
-    const diffInfo = getDifficulty(points);
-    const special = getSpecialInfo(key);
+// ============= PERSISTENCE =============
+function save() {
+  try {
+    localStorage.setItem(STORAGE, JSON.stringify({
+      players, active, played: [...played], specials, blocked
+    }));
+  } catch(e) {}
+}
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE);
+    if (!raw) { specials = genSpecials(); return; }
+    const d = JSON.parse(raw);
+    if (d.players) players = d.players.map(p => ({...p, streak: p.streak || 0}));
+    if (typeof d.active === 'number') active = d.active;
+    if (d.played) played = new Set(d.played);
+    if (d.specials && Object.keys(d.specials).length) specials = d.specials;
+    else specials = genSpecials();
+    if (d.blocked !== undefined) blocked = d.blocked;
+  } catch(e) { specials = genSpecials(); }
+}
 
-    if (special && (specialCells[key].type === 'bonus' || specialCells[key].type === 'penalty')) {
-        const isBonus = specialCells[key].type === 'bonus';
-        const delta = isBonus ? points : -points;
-        players[activePlayerIndex].score += delta;
-        if (isBonus) playSound('correct'); else playSound('wrong');
-        showInstantModal(isBonus, delta);
-        playedQuestions.add(key);
-        if (activeCellElement) {
-            activeCellElement.classList.add('cell-done');
-            activeCellElement.innerHTML = '<i class="fa-solid fa-check"></i>';
-        }
-        saveState();
-        updateTurnUI();
-        return;
-    }
+// ============= RENDER =============
+function render() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  cats.forEach(cat => {
+    const col = document.createElement('div');
+    col.className = 'cat-col';
 
-    currentQuestion = {
-        key: key, catId: catId, category: catName,
-        points: parseInt(points),
-        data: questionsDatabase[catId][points],
-        special: special ? specialCells[key].type : null
-    };
-    document.getElementById('modal-category').innerText = catName;
-    document.getElementById('modal-category').style.background = categories.find(c => c.id === catId).color;
-    document.getElementById('modal-points').innerText = `${points} PTS`;
-    document.getElementById('modal-difficulty-hint').innerHTML = diffInfo.label;
-    document.getElementById('modal-player-turn').innerText = players[activePlayerIndex].name;
-    document.getElementById('modal-question-text').innerText = currentQuestion.data.q;
-    document.getElementById('modal-answer-text').innerText = currentQuestion.data.a;
+    const doneCount = pts.filter(p => played.has(`${cat.id}-${p}`)).length;
+    const isDone = doneCount === pts.length;
 
-    const specialBadge = document.getElementById('modal-special');
-    if (special) {
-        specialBadge.classList.remove('hidden');
-        specialBadge.style.background = special.bg;
-        specialBadge.style.color = special.white ? '#FFFFFF' : '#0A0A0A';
-        specialBadge.innerHTML = `<i class="fa-solid ${special.icon}"></i> ${special.label}`;
-    } else specialBadge.classList.add('hidden');
+    const header = document.createElement('div');
+    header.className = 'cat-header' + (isDone ? ' done' : '');
+    header.style.background = cat.color;
+    header.innerHTML = `<i class="fa-solid ${cat.icon}"></i><span>${cat.name}</span><span class="done-badge"><i class="fa-solid fa-check"></i></span>`;
+    col.appendChild(header);
 
-    const warnBox = document.getElementById('modal-special-warning');
-    if (currentQuestion.special === 'double') {
-        warnBox.style.background = 'var(--cyan)'; warnBox.style.color = '';
-        warnBox.innerHTML = `<div class="warn-title"><i class="fa-solid fa-gem"></i> ×2 УДВОЕНИЕ</div><div class="warn-text">Верно → <strong>+${points * 2}</strong><br>Ошибка → <strong>-${points}</strong></div>`;
-        warnBox.classList.remove('hidden');
-    } else if (currentQuestion.special === 'trap') {
-        warnBox.style.background = 'var(--red)'; warnBox.style.color = '#FFFFFF';
-        warnBox.innerHTML = `<div class="warn-title"><i class="fa-solid fa-triangle-exclamation"></i> ЛОВУШКА</div><div class="warn-text">Верно → <strong>+${points}</strong><br>Ошибка → <strong>-${points * 2}</strong></div>`;
-        warnBox.classList.remove('hidden');
-    } else if (currentQuestion.special === 'jackpot') {
-        warnBox.style.background = 'var(--purple)'; warnBox.style.color = '#FFFFFF';
-        warnBox.innerHTML = `<div class="warn-title"><i class="fa-solid fa-gift"></i> ДЖЕКПОТ ×5</div><div class="warn-text">Верно → <strong>+${points * 5}</strong>!!!<br>Ошибка → <strong>-${points}</strong></div>`;
-        warnBox.classList.remove('hidden');
-    } else if (currentQuestion.special === 'block') {
-        warnBox.style.background = '#6B7280'; warnBox.style.color = '#FFFFFF';
-        warnBox.innerHTML = `<div class="warn-title"><i class="fa-solid fa-ban"></i> БЛОКИРОВКА</div><div class="warn-text">Соперник пропустит следующий ход!</div>`;
-        warnBox.classList.remove('hidden');
+    const tiers = document.createElement('div');
+    tiers.className = 'tiers';
+    pts.forEach(p => {
+      const key = `${cat.id}-${p}`;
+      const isPlayed = played.has(key);
+      const cell = document.createElement('button');
+      cell.className = 'cell' + (isPlayed ? ' done' : '');
+      if (isPlayed) {
+        cell.innerHTML = '<i class="fa-solid fa-check"></i>';
+      } else {
+        cell.textContent = p;
+      }
+      cell.onclick = () => openQ(cell, key, cat, p);
+      tiers.appendChild(cell);
+    });
+    col.appendChild(tiers);
+    grid.appendChild(col);
+  });
+  updateHUD();
+}
+
+function updateHUD() {
+  document.getElementById('score-0').textContent = players[0].score;
+  document.getElementById('score-1').textContent = players[1].score;
+
+  const p0 = document.getElementById('p-card-0');
+  const p1 = document.getElementById('p-card-1');
+  const s0 = document.getElementById('p-status-0');
+  const s1 = document.getElementById('p-status-1');
+
+  if (active === 0) {
+    p0.className = 'player glass active active-kira';
+    p1.className = 'player glass inactive';
+    s0.innerHTML = '<span class="dot"></span><span>ходит сейчас</span>';
+    s1.innerHTML = '<span>ждёт хода</span>';
+    s0.className = 'p-status active-kira';
+    s1.className = 'p-status';
+  } else {
+    p0.className = 'player glass inactive';
+    p1.className = 'player glass active active-vitya';
+    s0.innerHTML = '<span>ждёт хода</span>';
+    s1.innerHTML = '<span class="dot"></span><span>ходит сейчас</span>';
+    s0.className = 'p-status';
+    s1.className = 'p-status active-vitya';
+  }
+
+  const total = cats.length * pts.length;
+  const done = played.size;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('progress-label').textContent = `${done} / ${total}`;
+}
+
+function pulseScore(idx) {
+  const el = document.getElementById(`score-${idx}`);
+  el.classList.remove('pulse');
+  void el.offsetWidth;
+  el.classList.add('pulse');
+}
+
+// ============= OPEN QUESTION =============
+function openQ(cell, key, cat, points) {
+  if (played.has(key)) return;
+  sfx('click');
+  curCell = cell;
+  curKey = key;
+
+  const special = specials[key];
+  const info = special ? specInfo(special) : null;
+
+  // INSTANT CELLS
+  if (special === 'bonus' || special === 'penalty') {
+    const isBonus = special === 'bonus';
+    const delta = isBonus ? points : -points;
+    players[active].score += delta;
+    pulseScore(active);
+    if (isBonus) sfx('correct'); else sfx('wrong');
+    showInstant(isBonus, delta);
+    played.add(key);
+    cell.classList.add('done');
+    cell.innerHTML = '<i class="fa-solid fa-check"></i>';
+    save();
+    render();
+    return;
+  }
+
+  cur = { key, cat, points, data: db[cat.id][points], special };
+
+  document.getElementById('m-cat').textContent = cat.name;
+  document.getElementById('m-cat').style.background = cat.color;
+  document.getElementById('m-points').textContent = points + ' pts';
+  const d = diff(points);
+  document.getElementById('m-diff').innerHTML = `<i class="fa-solid ${d.icon}"></i> ${d.label}`;
+  document.getElementById('m-turn').textContent = players[active].name;
+  document.getElementById('m-question').textContent = cur.data.q;
+  document.getElementById('m-answer').textContent = cur.data.a;
+
+  const sb = document.getElementById('m-special');
+  if (info) {
+    sb.classList.remove('hidden');
+    sb.style.background = info.bg;
+    sb.innerHTML = `<i class="fa-solid ${info.icon}"></i> ${info.label}`;
+  } else sb.classList.add('hidden');
+
+  const warn = document.getElementById('m-warn');
+  if (special === 'double') {
+    warn.className = 'warn-box';
+    warn.style.background = 'linear-gradient(135deg,rgba(34,211,238,0.15),rgba(34,211,238,0.05))';
+    warn.style.borderColor = 'rgba(34,211,238,0.4)';
+    warn.innerHTML = `<div class="warn-title" style="color:var(--cyan)"><i class="fa-solid fa-gem"></i>×2 УДВОЕНИЕ</div><div class="warn-text">Верно → <strong>+${points*2}</strong><br>Ошибка → <strong>-${points}</strong></div>`;
+  } else if (special === 'trap') {
+    warn.className = 'warn-box';
+    warn.style.background = 'linear-gradient(135deg,rgba(248,113,113,0.15),rgba(248,113,113,0.05))';
+    warn.style.borderColor = 'rgba(248,113,113,0.4)';
+    warn.innerHTML = `<div class="warn-title" style="color:var(--red)"><i class="fa-solid fa-triangle-exclamation"></i>ЛОВУШКА</div><div class="warn-text">Верно → <strong>+${points}</strong><br>Ошибка → <strong>-${points*2}</strong></div>`;
+  } else if (special === 'jackpot') {
+    warn.className = 'warn-box';
+    warn.style.background = 'linear-gradient(135deg,rgba(167,139,250,0.2),rgba(167,139,250,0.05))';
+    warn.style.borderColor = 'rgba(167,139,250,0.5)';
+    warn.innerHTML = `<div class="warn-title" style="color:var(--violet)"><i class="fa-solid fa-gift"></i>ДЖЕКПОТ ×5</div><div class="warn-text">Верно → <strong>+${points*5}</strong>!!!<br>Ошибка → <strong>-${points}</strong></div>`;
+  } else if (special === 'block') {
+    warn.className = 'warn-box';
+    warn.style.background = 'linear-gradient(135deg,rgba(107,114,128,0.25),rgba(107,114,128,0.1))';
+    warn.style.borderColor = 'rgba(107,114,128,0.5)';
+    warn.innerHTML = `<div class="warn-title" style="color:#9CA3AF"><i class="fa-solid fa-ban"></i>БЛОКИРОВКА</div><div class="warn-text">Соперник пропустит следующий ход</div>`;
+  } else {
+    warn.className = 'warn-box hidden';
+  }
+
+  updateScoreLabels();
+  document.getElementById('m-answer-box').classList.add('hidden');
+  document.getElementById('reveal-wrap').classList.remove('hidden');
+  document.getElementById('q-overlay').classList.remove('hidden');
+  updateSBlocks();
+}
+
+function updateScoreLabels() {
+  const p = cur.points, s = cur.special;
+  let plus = p, minus = p;
+  if (s === 'double') { plus = p * 2; minus = p; }
+  else if (s === 'trap') { plus = p; minus = p * 2; }
+  else if (s === 'jackpot') { plus = p * 5; minus = p; }
+  document.getElementById('kp').textContent = '+' + plus;
+  document.getElementById('km').textContent = '-' + minus;
+  document.getElementById('vp').textContent = '+' + plus;
+  document.getElementById('vm').textContent = '-' + minus;
+}
+
+function updateSBlocks() {
+  for (let i = 0; i < 2; i++) {
+    const b = document.getElementById('sb-' + i);
+    const t = document.getElementById('tag-' + i);
+    if (i === active) {
+      b.classList.remove('locked');
+      b.classList.add('active');
+      t.classList.remove('hidden');
     } else {
-        warnBox.classList.add('hidden'); warnBox.style.color = '';
+      b.classList.add('locked');
+      b.classList.remove('active');
+      t.classList.add('hidden');
     }
-
-    updateScoreButtonLabels();
-    document.getElementById('modal-answer-box').classList.add('hidden');
-    document.getElementById('action-reveal-container').classList.remove('hidden');
-    document.getElementById('question-modal').classList.remove('hidden');
-    updateScoreButtonStates();
+  }
 }
 
-function updateScoreButtonLabels() {
-    const p = currentQuestion.points;
-    const s = currentQuestion.special;
-    let plusVal = p, minusVal = p;
-    if (s === 'double') { plusVal = p * 2; minusVal = p; }
-    else if (s === 'trap') { plusVal = p; minusVal = p * 2; }
-    else if (s === 'jackpot') { plusVal = p * 5; minusVal = p; }
-    document.getElementById('btn-kira-plus').innerText = `+${plusVal}`;
-    document.getElementById('btn-kira-minus').innerText = `-${minusVal}`;
-    document.getElementById('btn-vitya-plus').innerText = `+${plusVal}`;
-    document.getElementById('btn-vitya-minus').innerText = `-${minusVal}`;
-}
 function revealAnswer() {
-    playSound('reveal');
-    document.getElementById('modal-answer-box').classList.remove('hidden');
-    document.getElementById('action-reveal-container').classList.add('hidden');
+  sfx('click');
+  document.getElementById('m-answer-box').classList.remove('hidden');
+  document.getElementById('reveal-wrap').classList.add('hidden');
 }
 
-// ========== INSTANT MODAL ==========
-function showInstantModal(isBonus, delta) {
-    const card = document.getElementById('instant-card');
-    const icon = document.getElementById('instant-icon');
-    const title = document.getElementById('instant-title');
-    const desc = document.getElementById('instant-desc');
-    if (isBonus) {
-        card.style.background = 'var(--lime)';
-        icon.innerHTML = '<i class="fa-solid fa-dice"></i>';
-        icon.style.background = 'var(--white)';
-        title.innerText = 'БОНУС!';
-        desc.innerText = `${players[activePlayerIndex].name} получает +${delta} очков!`;
-    } else {
-        card.style.background = 'var(--orange)';
-        icon.innerHTML = '<i class="fa-solid fa-burst"></i>';
-        icon.style.background = 'var(--white)';
-        title.innerText = 'ШТРАФ!';
-        desc.innerText = `${players[activePlayerIndex].name} теряет ${Math.abs(delta)} очков!`;
+// ============= SCORING =============
+function score(idx, correct) {
+  if (!cur) return;
+  if (idx !== active) { sfx('wrong'); return; }
+  const p = cur.points, s = cur.special;
+
+  if (s === 'block') {
+    blocked = active === 0 ? 1 : 0;
+    sfx('correct');
+    finishTurn(false);
+    return;
+  }
+
+  let delta;
+  if (s === 'double') delta = correct ? p * 2 : -p;
+  else if (s === 'trap') delta = correct ? p : -p * 2;
+  else if (s === 'jackpot') delta = correct ? p * 5 : -p;
+  else delta = correct ? p : -p;
+
+  // STREAK BONUS
+  if (correct) {
+    players[idx].streak = (players[idx].streak || 0) + 1;
+    if (players[idx].streak >= 3) {
+      delta = Math.round(delta * 1.5);
     }
-    document.getElementById('instant-modal').classList.remove('hidden');
+  } else {
+    players[idx].streak = 0;
+  }
+
+  if (!correct && Math.abs(delta) >= 400) {
+    if (!confirm(`Списать ${Math.abs(delta)} очков у ${players[idx].name}?`)) return;
+  }
+
+  if (correct) sfx('correct'); else sfx('wrong');
+  players[idx].score += delta;
+  pulseScore(idx);
+
+  finishTurn(!correct);
 }
-function closeInstantModal() {
-    document.getElementById('instant-modal').classList.add('hidden');
-    let next = activePlayerIndex === 0 ? 1 : 0;
-    if (blockedPlayerIndex !== null && next === blockedPlayerIndex) {
-        blockedPlayerIndex = null;
-        next = next === 0 ? 1 : 0;
+
+function finishTurn(switchTurn) {
+  if (curKey) played.add(curKey);
+  if (curCell) {
+    curCell.classList.add('done');
+    curCell.innerHTML = '<i class="fa-solid fa-check"></i>';
+  }
+
+  if (switchTurn) {
+    let next = active === 0 ? 1 : 0;
+    if (blocked !== null && next === blocked) {
+      blocked = null;
+      next = next === 0 ? 1 : 0;
     }
-    activePlayerIndex = next;
-    saveState();
-    updateTurnUI();
-    checkGameCompletion();
+    active = next;
+  }
+
+  save();
+  render();
+  closeQ(true);
 }
 
-// ========== SCORING ==========
-function scorePlayer(playerIdx, isCorrect) {
-    if (!currentQuestion) return;
-    if (playerIdx !== activePlayerIndex) { playSound('wrong'); return; }
-    const p = currentQuestion.points;
-    const s = currentQuestion.special;
-
-    if (s === 'block') {
-        blockedPlayerIndex = activePlayerIndex === 0 ? 1 : 0;
-        playSound('correct');
-        finishTurn(false);
-        return;
+function closeQ(skip) {
+  if (curKey && !skip) {
+    played.add(curKey);
+    if (curCell) {
+      curCell.classList.add('done');
+      curCell.innerHTML = '<i class="fa-solid fa-check"></i>';
     }
-
-    let delta = 0;
-    if (s === 'double') delta = isCorrect ? p * 2 : -p;
-    else if (s === 'trap') delta = isCorrect ? p : -p * 2;
-    else if (s === 'jackpot') delta = isCorrect ? p * 5 : -p;
-    else delta = isCorrect ? p : -p;
-
-    if (!isCorrect && Math.abs(delta) >= 400) {
-        if (!confirm(`Списать ${Math.abs(delta)} очков у ${players[playerIdx].name}?`)) return;
+    let next = active === 0 ? 1 : 0;
+    if (blocked !== null && next === blocked) {
+      blocked = null;
+      next = next === 0 ? 1 : 0;
     }
-    if (isCorrect) playSound('correct'); else playSound('wrong');
-    players[playerIdx].score += delta;
-    finishTurn(!isCorrect);
+    active = next;
+    save();
+    render();
+  }
+  document.getElementById('q-overlay').classList.add('hidden');
+  cur = null; curCell = null; curKey = null;
+  checkDone();
 }
 
-function finishTurn(switchPlayer) {
-    if (activeCellKey) playedQuestions.add(activeCellKey);
-    if (activeCellElement) {
-        activeCellElement.classList.add('cell-done');
-        activeCellElement.innerHTML = '<i class="fa-solid fa-check"></i>';
+// ============= INSTANT =============
+function showInstant(isBonus, delta) {
+  const icon = document.getElementById('i-icon');
+  const title = document.getElementById('i-title');
+  const desc = document.getElementById('i-desc');
+  if (isBonus) {
+    icon.style.background = 'linear-gradient(135deg,var(--emerald),#10B981)';
+    icon.innerHTML = '<i class="fa-solid fa-dice"></i>';
+    title.textContent = 'Бонус!';
+    desc.textContent = `${players[active].name} получает +${delta} очков!`;
+  } else {
+    icon.style.background = 'linear-gradient(135deg,var(--orange),#F59E0B)';
+    icon.innerHTML = '<i class="fa-solid fa-burst"></i>';
+    title.textContent = 'Штраф!';
+    desc.textContent = `${players[active].name} теряет ${Math.abs(delta)} очков!`;
+  }
+  document.getElementById('i-overlay').classList.remove('hidden');
+}
+
+function closeInstant() {
+  document.getElementById('i-overlay').classList.add('hidden');
+  let next = active === 0 ? 1 : 0;
+  if (blocked !== null && next === blocked) {
+    blocked = null;
+    next = next === 0 ? 1 : 0;
+  }
+  active = next;
+  save();
+  render();
+  checkDone();
+}
+
+// ============= RANDOM CELL =============
+function openRandom() {
+  const remaining = [];
+  cats.forEach(c => pts.forEach(p => {
+    const k = `${c.id}-${p}`;
+    if (!played.has(k)) remaining.push({ cat: c, p, key: k });
+  }));
+  if (!remaining.length) return;
+  const pick = remaining[Math.floor(Math.random() * remaining.length)];
+  const cell = document.querySelector(`[data-key="${pick.key}"]`);
+  // Find the cell element in grid
+  let target = null;
+  document.querySelectorAll('.cat-col').forEach(col => {
+    if (col.querySelector('.cat-header').textContent.includes(pick.cat.name)) {
+      target = col.querySelectorAll('.cell')[pts.indexOf(pick.p)];
     }
-    if (switchPlayer) {
-        let next = activePlayerIndex === 0 ? 1 : 0;
-        if (blockedPlayerIndex !== null && next === blockedPlayerIndex) {
-            blockedPlayerIndex = null;
-            next = next === 0 ? 1 : 0;
-        }
-        activePlayerIndex = next;
-    }
-    saveState();
-    updateTurnUI();
-    closeQuestionModal(true);
+  });
+  if (target) target.click();
 }
 
-function closeQuestionModal(skipDisable = false) {
-    if (activeCellKey && !skipDisable) {
-        playedQuestions.add(activeCellKey);
-        if (activeCellElement) {
-            activeCellElement.classList.add('cell-done');
-            activeCellElement.innerHTML = '<i class="fa-solid fa-check"></i>';
-        }
-        let next = activePlayerIndex === 0 ? 1 : 0;
-        if (blockedPlayerIndex !== null && next === blockedPlayerIndex) {
-            blockedPlayerIndex = null;
-            next = next === 0 ? 1 : 0;
-        }
-        activePlayerIndex = next;
-        saveState();
-        updateTurnUI();
-    }
-    document.getElementById('question-modal').classList.add('hidden');
-    document.getElementById('modal-special-warning').classList.add('hidden');
-    document.getElementById('modal-special').classList.add('hidden');
-    activeCellElement = null;
-    activeCellKey = null;
-    currentQuestion = null;
-    checkGameCompletion();
-}
-function closeModal(modalId) { document.getElementById(modalId).classList.add('hidden'); }
-function checkGameCompletion() {
-    const total = categories.length * pointValues.length;
-    if (playedQuestions.size >= total) setTimeout(() => showWinnerModal(), 400);
+// ============= WIN =============
+function checkDone() {
+  const total = cats.length * pts.length;
+  if (played.size >= total) {
+    setTimeout(() => showWinner(), 500);
+  }
 }
 
-function showWinnerModal() {
-    playSound('win');
-    let winnerText = "", winnerScoreText = "";
-    if (players[0].score > players[1].score) { winnerText = "КИРА ПОБЕДИЛА!"; winnerScoreText = `С результатом ${players[0].score} очков`; }
-    else if (players[1].score > players[0].score) { winnerText = "ВИТЯ ПОБЕДИЛ!"; winnerScoreText = `С результатом ${players[1].score} очков`; }
-    else { winnerText = "НИЧЬЯ!"; winnerScoreText = `Оба набрали по ${players[0].score} очков`; }
-    document.getElementById('winner-name').innerText = winnerText;
-    document.getElementById('winner-score').innerText = winnerScoreText;
-    document.getElementById('final-score-0').innerText = players[0].score;
-    document.getElementById('final-score-1').innerText = players[1].score;
-    document.getElementById('winner-modal').classList.remove('hidden');
-    if (window.confetti) {
-        const duration = 3500, end = Date.now() + duration;
-        (function frame() {
-            confetti({ particleCount: 8, angle: 60, spread: 60, origin: { x: 0 }, colors: ['#FF5C8A', '#FFD93D', '#4ECDC4', '#A8FF3D', '#FF8C42'] });
-            confetti({ particleCount: 8, angle: 120, spread: 60, origin: { x: 1 }, colors: ['#FF5C8A', '#FFD93D', '#4ECDC4', '#A8FF3D', '#FF8C42'] });
-            if (Date.now() < end) requestAnimationFrame(frame);
-        })();
-    }
+function showWinner() {
+  sfx('win');
+  let name = '', desc = '';
+  if (players[0].score > players[1].score) { name = 'Кира побеждает!'; desc = `${players[0].score} против ${players[1].score}`; }
+  else if (players[1].score > players[0].score) { name = 'Витя побеждает!'; desc = `${players[1].score} против ${players[0].score}`; }
+  else { name = 'Ничья!'; desc = `Оба по ${players[0].score}`; }
+  document.getElementById('w-name').textContent = name;
+  document.getElementById('w-1').textContent = players[1].score;
+  document.getElementById('w-0').textContent = players[0].score;
+  document.getElementById('w-overlay').classList.remove('hidden');
+
+  if (window.confetti) {
+    const end = Date.now() + 3500;
+    (function frame() {
+      confetti({ particleCount: 8, angle: 60, spread: 60, origin: { x: 0 }, colors: ['#A78BFA','#FF5C9D','#22D3EE','#FBBF24'] });
+      confetti({ particleCount: 8, angle: 120, spread: 60, origin: { x: 1 }, colors: ['#A78BFA','#FF5C9D','#22D3EE','#FBBF24'] });
+      if (Date.now() < end) requestAnimationFrame(frame);
+    })();
+  }
 }
 
-function resetGame(confirmReset = false) {
-    if (confirmReset && !confirm("Сбросить игру? Позиции спецячеек перемешаются!")) return;
-    playSound('click');
-    players[0].score = 0;
-    players[1].score = 0;
-    activePlayerIndex = 0;
-    blockedPlayerIndex = null;
-    playedQuestions.clear();
-    specialCells = generateSpecialCells();
-    localStorage.removeItem(STORAGE_KEY);
-    saveState();
-    initGrid();
+function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+// ============= RESET =============
+function resetGame() {
+  if (played.size > 0 && !confirm('Сбросить игру? Все очки и ячейки обнулятся!')) return;
+  sfx('click');
+  players = [{ name: 'Кира', score: 0, streak: 0 }, { name: 'Витя', score: 0, streak: 0 }];
+  active = 0;
+  blocked = null;
+  played.clear();
+  specials = genSpecials();
+  localStorage.removeItem(STORAGE);
+  save();
+  render();
 }
 
-window.onload = function() {
-    loadState();
-    initGrid();
-    updateDensityVisibility();
-};
+// ============= INIT =============
+window.addEventListener('DOMContentLoaded', () => {
+  load();
+  render();
+});
 </script>
 </body>
 </html>
