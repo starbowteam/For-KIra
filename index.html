@@ -253,10 +253,6 @@
     color: #e0567e;
     font-weight: 700;
   }
-  .result-a .mark {
-    font-size: 13px;
-    margin-left: 6px;
-  }
 
   .screenshot-note {
     text-align: center;
@@ -306,7 +302,6 @@
     <p class="sub">Ответь на всё честно 💙</p>
     <div class="progress" id="progress">Отвечено: 0 / 5</div>
 
-    <!-- Q1 -->
     <div class="question">
       <div class="q-title">1. Дата нашего знакомства?</div>
       <div class="option" data-q="1" data-val="02.06.23" onclick="pick(this)">
@@ -323,7 +318,6 @@
       </div>
     </div>
 
-    <!-- Q2 -->
     <div class="question">
       <div class="q-title">2. Когда мы в первый раз побыли у тебя на даче?</div>
       <div class="option" data-q="2" data-val="08.05.25" onclick="pick(this)">
@@ -340,19 +334,16 @@
       </div>
     </div>
 
-    <!-- Q3 -->
     <div class="question">
       <div class="q-title">3. Каким бы ты хотела день со мной?</div>
       <textarea id="text3" placeholder="Напиши своими словами..." oninput="updateProgress()"></textarea>
     </div>
 
-    <!-- Q4 -->
     <div class="question">
       <div class="q-title">4. Какую дружбу ты бы хотела со мной?</div>
       <textarea id="text4" placeholder="Расскажи..." oninput="updateProgress()"></textarea>
     </div>
 
-    <!-- Q5 -->
     <div class="question">
       <div class="q-title">5. Пожелания: какими бы ты хотела отношения со мной?</div>
       <textarea id="text5" placeholder="Твои пожелания..." oninput="updateProgress()"></textarea>
@@ -443,7 +434,6 @@
     }
     err.textContent = '';
 
-    // Показать результаты
     document.getElementById('screen-test').classList.add('hidden');
     document.getElementById('screen-result').classList.remove('hidden');
     window.scrollTo(0, 0);
@@ -451,7 +441,6 @@
     const results = document.getElementById('results');
     results.innerHTML = '';
 
-    // Q1
     const q1ok = answers[1] === CORRECT[1];
     results.innerHTML += `
       <div class="result-block">
@@ -461,7 +450,6 @@
         </div>
       </div>`;
 
-    // Q2
     const q2ok = answers[2] === CORRECT[2];
     results.innerHTML += `
       <div class="result-block">
@@ -471,7 +459,6 @@
         </div>
       </div>`;
 
-    // Q3-5
     results.innerHTML += `
       <div class="result-block">
         <div class="result-q">3. Каким бы ты хотела день со мной?</div>
@@ -488,7 +475,7 @@
   }
 
   function finishAll() {
-    window.location.href = 'https://link.brawlstars.com/invite/gameroom/ru?tag=X7L6Y7RK';
+    window.location.href = 'https://link.brawlstars.com/invite/gameroom/ru?tag=XCBS8BMP';
   }
 
   function escapeHtml(s) {
@@ -500,7 +487,6 @@
       .replace(/'/g, '&#39;');
   }
 
-  // пузырьки
   for (let i = 0; i < 14; i++) {
     const b = document.createElement('div');
     b.className = 'bubble';
