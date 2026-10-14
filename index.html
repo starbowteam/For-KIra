@@ -3,208 +3,508 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Кирусе от Вити 💙</title>
+<title>Тест для Кируси 💙</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
     min-height: 100vh;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     font-family: 'Segoe UI', 'Comic Sans MS', sans-serif;
-    background: linear-gradient(160deg, #d6ecff 0%, #a8d4ff 40%, #7cb8f5 100%);
-    overflow: hidden;
-    position: relative;
+    background: linear-gradient(160deg, #d6ecff 0%, #a8d4ff 45%, #7cb8f5 100%);
+    overflow-x: hidden;
     padding: 20px;
+    position: relative;
   }
 
   .bubble {
-    position: absolute;
+    position: fixed;
     border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), rgba(255,255,255,0.1));
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), rgba(255,255,255,0.05));
     animation: float 12s infinite ease-in-out;
     pointer-events: none;
+    z-index: 0;
   }
   @keyframes float {
-    0%,100% { transform: translateY(0) translateX(0); opacity: .6;}
+    0%,100% { transform: translateY(0) translateX(0); opacity: .5;}
     50% { transform: translateY(-40px) translateX(20px); opacity: 1;}
   }
 
-  .title {
-    font-size: clamp(24px, 6vw, 42px);
+  .card {
+    position: relative;
+    z-index: 2;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 28px;
+    padding: 34px 28px;
+    max-width: 520px;
+    width: 100%;
+    box-shadow: 0 20px 50px rgba(30,92,153,0.35), inset 0 0 0 2px rgba(255,255,255,0.7);
+    animation: pop .5s cubic-bezier(.3,1.6,.5,1);
+  }
+  @keyframes pop {
+    0% { transform: scale(.85); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  h1 {
     color: #1e5c99;
-    text-shadow: 2px 2px 0 #ffffff, 4px 4px 12px rgba(30,92,153,0.3);
-    margin-bottom: 8px;
+    font-size: clamp(22px, 5vw, 30px);
     text-align: center;
+    margin-bottom: 6px;
+    text-shadow: 1px 1px 0 #fff;
+  }
+  .sub {
+    text-align: center;
+    color: #4a92d6;
+    font-size: clamp(13px, 3.6vw, 15px);
+    margin-bottom: 24px;
+  }
+
+  .question {
+    margin-bottom: 22px;
+    animation: slideIn .4s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .q-title {
+    color: #1e5c99;
+    font-size: clamp(15px, 4vw, 18px);
+    font-weight: 700;
+    margin-bottom: 12px;
+    line-height: 1.35;
+  }
+
+  .option {
+    display: flex;
+    align-items: center;
+    background: #eaf6ff;
+    border: 2px solid #c3e1ff;
+    border-radius: 14px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all .22s;
+    color: #235a8f;
+    font-size: clamp(14px, 3.8vw, 16px);
+    user-select: none;
+  }
+  .option:hover {
+    background: #d6ecff;
+    border-color: #7cb8f5;
+    transform: translateX(4px);
+  }
+  .option.selected {
+    background: linear-gradient(135deg, #7cb8f5, #4a92d6);
+    border-color: #2f6fb0;
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(47,111,176,0.4);
+  }
+  .option .dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #7cb8f5;
+    margin-right: 12px;
+    flex-shrink: 0;
+    position: relative;
+    background: #fff;
+    transition: all .22s;
+  }
+  .option.selected .dot {
+    border-color: #fff;
+    background: #fff;
+  }
+  .option.selected .dot::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    background: #2f6fb0;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 90px;
+    border-radius: 14px;
+    border: 2px solid #c3e1ff;
+    background: #f4faff;
+    padding: 12px 14px;
+    font-family: inherit;
+    font-size: clamp(14px, 3.8vw, 15px);
+    color: #1e5c99;
+    resize: vertical;
+    outline: none;
+    transition: all .22s;
+  }
+  textarea:focus {
+    border-color: #4a92d6;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(124,184,245,0.25);
+  }
+  textarea::placeholder { color: #8fb9dd; }
+
+  .code-input {
+    width: 100%;
+    text-align: center;
+    font-size: 32px;
+    letter-spacing: 12px;
+    padding: 16px;
+    border-radius: 18px;
+    border: 3px solid #c3e1ff;
+    background: #f4faff;
+    color: #1e5c99;
+    font-weight: 700;
+    outline: none;
+    transition: all .25s;
+    font-family: inherit;
+  }
+  .code-input:focus {
+    border-color: #4a92d6;
+    box-shadow: 0 0 0 5px rgba(124,184,245,0.3);
+  }
+  .code-input.error {
+    border-color: #ff7a9c;
+    animation: shake .4s;
+  }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+  }
+
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-top: 18px;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(135deg, #7cb8f5, #2f6fb0);
+    color: #fff;
+    font-size: clamp(15px, 4vw, 17px);
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all .25s;
+    box-shadow: 0 8px 22px rgba(47,111,176,0.4);
+    letter-spacing: .5px;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(47,111,176,0.55);
+    filter: brightness(1.08);
+  }
+  .btn:active { transform: translateY(0); }
+
+  .btn.secondary {
+    background: linear-gradient(135deg, #a8d4ff, #6aa9dd);
+    box-shadow: 0 8px 22px rgba(106,169,221,0.4);
+  }
+
+  .hidden { display: none !important; }
+
+  .hint-error {
+    color: #e0567e;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 14px;
+    min-height: 20px;
+    font-weight: 600;
+  }
+
+  .progress {
+    text-align: center;
+    color: #4a92d6;
+    font-size: 13px;
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+
+  .result-block {
+    background: #eaf6ff;
+    border-left: 5px solid #4a92d6;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+  }
+  .result-q {
+    color: #2f6fb0;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  .result-a {
+    color: #1e5c99;
+    font-size: 15px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+  }
+  .result-a.correct {
+    color: #2f9150;
+    font-weight: 700;
+  }
+  .result-a.wrong {
+    color: #e0567e;
+    font-weight: 700;
+  }
+  .result-a .mark {
+    font-size: 13px;
+    margin-left: 6px;
+  }
+
+  .screenshot-note {
+    text-align: center;
+    background: linear-gradient(135deg, #fff7b0, #ffe27a);
+    color: #7a5c00;
+    padding: 14px;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: clamp(13px, 3.6vw, 15px);
+    margin-bottom: 18px;
+    box-shadow: 0 6px 18px rgba(255,215,60,0.4);
+    animation: pulseNote 1.6s ease-in-out infinite;
+  }
+  @keyframes pulseNote {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+  }
+
+  .emoji-big {
+    text-align: center;
+    font-size: 46px;
+    margin-bottom: 8px;
     animation: gentle 3s ease-in-out infinite;
   }
-  .subtitle {
-    font-size: clamp(14px, 4vw, 20px);
-    color: #2b76bf;
-    margin-bottom: 30px;
-    text-align: center;
-    opacity: .9;
-  }
   @keyframes gentle {
-    0%,100% { transform: scale(1); }
-    50% { transform: scale(1.04); }
-  }
-
-  .bouquet-wrap {
-    cursor: pointer;
-    transition: transform .35s cubic-bezier(.3,1.6,.5,1), filter .35s;
-    filter: drop-shadow(0 12px 25px rgba(30,92,153,0.35));
-    animation: sway 4s ease-in-out infinite;
-    transform-origin: bottom center;
-  }
-  .bouquet-wrap:hover {
-    transform: scale(1.1) rotate(-3deg);
-    filter: drop-shadow(0 18px 35px rgba(30,92,153,0.55)) brightness(1.08);
-  }
-  .bouquet-wrap:active { transform: scale(1.02); }
-
-  @keyframes sway {
-    0%,100% { transform: rotate(-2deg); }
-    50% { transform: rotate(2deg); }
-  }
-
-  .hint {
-    margin-top: 28px;
-    font-size: clamp(13px, 3.5vw, 17px);
-    color: #ffffff;
-    background: rgba(43,118,191,0.85);
-    padding: 10px 22px;
-    border-radius: 50px;
-    box-shadow: 0 6px 18px rgba(30,92,153,0.35);
-    animation: pulse 2s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    0%,100% { transform: scale(1); }
-    50% { transform: scale(1.06); }
-  }
-
-  .heart {
-    position: absolute;
-    font-size: 22px;
-    animation: rise 6s linear infinite;
-    pointer-events: none;
-    opacity: .8;
-  }
-  @keyframes rise {
-    0% { transform: translateY(0) scale(1); opacity: 0; }
-    10% { opacity: .9; }
-    100% { transform: translateY(-110vh) scale(1.5); opacity: 0; }
+    0%,100% { transform: scale(1) rotate(-3deg); }
+    50% { transform: scale(1.08) rotate(3deg); }
   }
 </style>
 </head>
 <body>
 
-  <h1 class="title">Кирусе 💙</h1>
-  <p class="subtitle">от Вити, с любовью...</p>
+  <!-- ЭКРАН 1: ВВОД КОДА -->
+  <div class="card" id="screen-code">
+    <div class="emoji-big">🔐💙</div>
+    <h1>Привет, Кируся</h1>
+    <p class="sub">Введи секретный код, чтобы начать 💌</p>
+    <input type="tel" class="code-input" id="codeInput" maxlength="5" placeholder="•••••" inputmode="numeric">
+    <button class="btn" onclick="checkCode()">Войти →</button>
+    <div class="hint-error" id="codeError"></div>
+  </div>
 
-  <a href="https://serviceactivation.googleinr.com/subscription/new/jo03k0j1w3" target="_blank" rel="noopener" style="text-decoration:none;">
-    <div class="bouquet-wrap">
-      <svg width="220" height="260" viewBox="0 0 220 260" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="petal" cx="50%" cy="40%" r="70%">
-            <stop offset="0%" stop-color="#ffffff"/>
-            <stop offset="45%" stop-color="#a9d6ff"/>
-            <stop offset="100%" stop-color="#4a92d6"/>
-          </radialGradient>
-          <radialGradient id="petal2" cx="50%" cy="40%" r="70%">
-            <stop offset="0%" stop-color="#ffffff"/>
-            <stop offset="45%" stop-color="#7fc0f5"/>
-            <stop offset="100%" stop-color="#2f6fb0"/>
-          </radialGradient>
-          <radialGradient id="center" cx="50%" cy="40%" r="60%">
-            <stop offset="0%" stop-color="#fff7b0"/>
-            <stop offset="100%" stop-color="#ffd93b"/>
-          </radialGradient>
-          <linearGradient id="leaf" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#7fd18a"/>
-            <stop offset="100%" stop-color="#2f9150"/>
-          </linearGradient>
-          <linearGradient id="wrap" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#eaf6ff"/>
-            <stop offset="100%" stop-color="#8ec5f0"/>
-          </linearGradient>
-        </defs>
+  <!-- ЭКРАН 2: ТЕСТ -->
+  <div class="card hidden" id="screen-test">
+    <div class="emoji-big">💐</div>
+    <h1>Тест от Вити</h1>
+    <p class="sub">Ответь на всё честно 💙</p>
+    <div class="progress" id="progress">Отвечено: 0 / 5</div>
 
-        <path d="M110 250 L110 120" stroke="#2f9150" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <path d="M110 250 Q 80 190 60 150" stroke="#2f9150" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <path d="M110 250 Q 140 190 160 150" stroke="#2f9150" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <path d="M110 250 Q 95 200 80 170" stroke="#2f9150" stroke-width="4" fill="none" stroke-linecap="round"/>
-        <path d="M110 250 Q 130 200 150 175" stroke="#2f9150" stroke-width="4" fill="none" stroke-linecap="round"/>
-
-        <ellipse cx="70" cy="200" rx="18" ry="9" fill="url(#leaf)" transform="rotate(-30 70 200)"/>
-        <ellipse cx="152" cy="205" rx="18" ry="9" fill="url(#leaf)" transform="rotate(30 152 205)"/>
-        <ellipse cx="95" cy="215" rx="15" ry="7" fill="url(#leaf)" transform="rotate(-15 95 215)"/>
-        <ellipse cx="128" cy="218" rx="15" ry="7" fill="url(#leaf)" transform="rotate(15 128 218)"/>
-
-        <g>
-          <circle cx="55" cy="140" r="12" fill="url(#petal)" />
-          <circle cx="45" cy="128" r="12" fill="url(#petal)" />
-          <circle cx="65" cy="128" r="12" fill="url(#petal)" />
-          <circle cx="45" cy="152" r="12" fill="url(#petal)" />
-          <circle cx="65" cy="152" r="12" fill="url(#petal)" />
-          <circle cx="55" cy="140" r="8" fill="url(#center)"/>
-        </g>
-
-        <g>
-          <circle cx="165" cy="142" r="12" fill="url(#petal2)" />
-          <circle cx="155" cy="130" r="12" fill="url(#petal2)" />
-          <circle cx="175" cy="130" r="12" fill="url(#petal2)" />
-          <circle cx="155" cy="154" r="12" fill="url(#petal2)" />
-          <circle cx="175" cy="154" r="12" fill="url(#petal2)" />
-          <circle cx="165" cy="142" r="8" fill="url(#center)"/>
-        </g>
-
-        <g>
-          <circle cx="110" cy="105" r="14" fill="url(#petal)" />
-          <circle cx="98" cy="92" r="14" fill="url(#petal)" />
-          <circle cx="122" cy="92" r="14" fill="url(#petal)" />
-          <circle cx="98" cy="118" r="14" fill="url(#petal)" />
-          <circle cx="122" cy="118" r="14" fill="url(#petal)" />
-          <circle cx="110" cy="105" r="9" fill="url(#center)"/>
-        </g>
-
-        <g>
-          <circle cx="80" cy="165" r="8" fill="url(#petal2)"/>
-          <circle cx="74" cy="158" r="8" fill="url(#petal2)"/>
-          <circle cx="86" cy="158" r="8" fill="url(#petal2)"/>
-          <circle cx="74" cy="172" r="8" fill="url(#petal2)"/>
-          <circle cx="86" cy="172" r="8" fill="url(#petal2)"/>
-          <circle cx="80" cy="165" r="5" fill="url(#center)"/>
-        </g>
-        <g>
-          <circle cx="145" cy="168" r="8" fill="url(#petal)"/>
-          <circle cx="139" cy="161" r="8" fill="url(#petal)"/>
-          <circle cx="151" cy="161" r="8" fill="url(#petal)"/>
-          <circle cx="139" cy="175" r="8" fill="url(#petal)"/>
-          <circle cx="151" cy="175" r="8" fill="url(#petal)"/>
-          <circle cx="145" cy="168" r="5" fill="url(#center)"/>
-        </g>
-
-        <path d="M60 175 Q110 210 160 175 L175 250 Q110 275 45 250 Z"
-              fill="url(#wrap)" opacity="0.9" stroke="#6aa9dd" stroke-width="2"/>
-        <path d="M110 190 L110 255" stroke="#6aa9dd" stroke-width="1.5" opacity="0.6"/>
-        <path d="M60 175 Q110 210 160 175" stroke="#6aa9dd" stroke-width="2" fill="none" opacity="0.7"/>
-        <ellipse cx="95" cy="215" rx="12" ry="8" fill="#4a92d6" transform="rotate(-20 95 215)"/>
-        <ellipse cx="125" cy="215" rx="12" ry="8" fill="#4a92d6" transform="rotate(20 125 215)"/>
-        <circle cx="110" cy="215" r="6" fill="#2f6fb0"/>
-      </svg>
+    <!-- Q1 -->
+    <div class="question">
+      <div class="q-title">1. Дата нашего знакомства?</div>
+      <div class="option" data-q="1" data-val="02.06.23" onclick="pick(this)">
+        <div class="dot"></div> 02.06.23
+      </div>
+      <div class="option" data-q="1" data-val="09.07.23" onclick="pick(this)">
+        <div class="dot"></div> 09.07.23
+      </div>
+      <div class="option" data-q="1" data-val="18.07.23" onclick="pick(this)">
+        <div class="dot"></div> 18.07.23
+      </div>
+      <div class="option" data-q="1" data-val="20.08.23" onclick="pick(this)">
+        <div class="dot"></div> 20.08.23
+      </div>
     </div>
-  </a>
 
-  <div class="hint">нажми на букетик 💐</div>
+    <!-- Q2 -->
+    <div class="question">
+      <div class="q-title">2. Когда мы в первый раз побыли у тебя на даче?</div>
+      <div class="option" data-q="2" data-val="08.05.25" onclick="pick(this)">
+        <div class="dot"></div> 08.05.25
+      </div>
+      <div class="option" data-q="2" data-val="07.04.26" onclick="pick(this)">
+        <div class="dot"></div> 07.04.26
+      </div>
+      <div class="option" data-q="2" data-val="09.09.24" onclick="pick(this)">
+        <div class="dot"></div> 09.09.24
+      </div>
+      <div class="option" data-q="2" data-val="06.09.25" onclick="pick(this)">
+        <div class="dot"></div> 06.09.25
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="question">
+      <div class="q-title">3. Каким бы ты хотела день со мной?</div>
+      <textarea id="text3" placeholder="Напиши своими словами..." oninput="updateProgress()"></textarea>
+    </div>
+
+    <!-- Q4 -->
+    <div class="question">
+      <div class="q-title">4. Какую дружбу ты бы хотела со мной?</div>
+      <textarea id="text4" placeholder="Расскажи..." oninput="updateProgress()"></textarea>
+    </div>
+
+    <!-- Q5 -->
+    <div class="question">
+      <div class="q-title">5. Пожелания: какими бы ты хотела отношения со мной?</div>
+      <textarea id="text5" placeholder="Твои пожелания..." oninput="updateProgress()"></textarea>
+    </div>
+
+    <button class="btn" onclick="finishTest()">✅ Задания выполнены</button>
+    <div class="hint-error" id="testError"></div>
+  </div>
+
+  <!-- ЭКРАН 3: РЕЗУЛЬТАТЫ -->
+  <div class="card hidden" id="screen-result">
+    <div class="emoji-big">📸💙</div>
+    <h1>Твои ответы</h1>
+    <p class="sub">Витя всё увидит 💌</p>
+
+    <div class="screenshot-note">
+      ⚠️ Сделай скриншот этой страницы и отправь Вите!
+    </div>
+
+    <div id="results"></div>
+
+    <button class="btn" onclick="finishAll()">🎮 Окончить</button>
+  </div>
 
 <script>
+  const CORRECT = {
+    1: '18.07.23',
+    2: '08.05.25'
+  };
+
+  const CODE = '64712';
+  const answers = { 1: null, 2: null, 3: '', 4: '', 5: '' };
+  const MAX_LEN = 5;
+
+  const codeInput = document.getElementById('codeInput');
+  codeInput.addEventListener('input', () => {
+    codeInput.value = codeInput.value.replace(/\D/g, '').slice(0, MAX_LEN);
+  });
+  codeInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkCode();
+  });
+
+  function checkCode() {
+    const val = codeInput.value.trim();
+    const err = document.getElementById('codeError');
+    if (val === CODE) {
+      document.getElementById('screen-code').classList.add('hidden');
+      document.getElementById('screen-test').classList.remove('hidden');
+      window.scrollTo(0, 0);
+    } else {
+      codeInput.classList.add('error');
+      err.textContent = 'Неверный код, попробуй ещё 💙';
+      setTimeout(() => codeInput.classList.remove('error'), 450);
+    }
+  }
+
+  function pick(el) {
+    const q = el.dataset.q;
+    const val = el.dataset.val;
+    document.querySelectorAll(`.option[data-q="${q}"]`).forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    answers[q] = val;
+    updateProgress();
+  }
+
+  function updateProgress() {
+    answers[3] = document.getElementById('text3').value.trim();
+    answers[4] = document.getElementById('text4').value.trim();
+    answers[5] = document.getElementById('text5').value.trim();
+
+    let count = 0;
+    if (answers[1]) count++;
+    if (answers[2]) count++;
+    if (answers[3]) count++;
+    if (answers[4]) count++;
+    if (answers[5]) count++;
+
+    document.getElementById('progress').textContent = `Отвечено: ${count} / 5`;
+  }
+
+  function finishTest() {
+    updateProgress();
+    const err = document.getElementById('testError');
+
+    if (!answers[1] || !answers[2] || !answers[3] || !answers[4] || !answers[5]) {
+      err.textContent = 'Ответь на все вопросы, пожалуйста 💙';
+      return;
+    }
+    err.textContent = '';
+
+    // Показать результаты
+    document.getElementById('screen-test').classList.add('hidden');
+    document.getElementById('screen-result').classList.remove('hidden');
+    window.scrollTo(0, 0);
+
+    const results = document.getElementById('results');
+    results.innerHTML = '';
+
+    // Q1
+    const q1ok = answers[1] === CORRECT[1];
+    results.innerHTML += `
+      <div class="result-block">
+        <div class="result-q">1. Дата нашего знакомства?</div>
+        <div class="result-a ${q1ok ? 'correct' : 'wrong'}">
+          ${answers[1]} ${q1ok ? '✅' : '❌ (правильно: ' + CORRECT[1] + ')'}
+        </div>
+      </div>`;
+
+    // Q2
+    const q2ok = answers[2] === CORRECT[2];
+    results.innerHTML += `
+      <div class="result-block">
+        <div class="result-q">2. Когда мы в первый раз побыли у тебя на даче?</div>
+        <div class="result-a ${q2ok ? 'correct' : 'wrong'}">
+          ${answers[2]} ${q2ok ? '✅' : '❌ (правильно: ' + CORRECT[2] + ')'}
+        </div>
+      </div>`;
+
+    // Q3-5
+    results.innerHTML += `
+      <div class="result-block">
+        <div class="result-q">3. Каким бы ты хотела день со мной?</div>
+        <div class="result-a">${escapeHtml(answers[3])}</div>
+      </div>
+      <div class="result-block">
+        <div class="result-q">4. Какую дружбу ты бы хотела со мной?</div>
+        <div class="result-a">${escapeHtml(answers[4])}</div>
+      </div>
+      <div class="result-block">
+        <div class="result-q">5. Пожелания: какими бы ты хотела отношения со мной?</div>
+        <div class="result-a">${escapeHtml(answers[5])}</div>
+      </div>`;
+  }
+
+  function finishAll() {
+    window.location.href = 'https://link.brawlstars.com/invite/gameroom/ru?tag=X7L6Y7RK';
+  }
+
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  // пузырьки
   for (let i = 0; i < 14; i++) {
     const b = document.createElement('div');
     b.className = 'bubble';
-    const s = 10 + Math.random() * 40;
+    const s = 12 + Math.random() * 45;
     b.style.width = s + 'px';
     b.style.height = s + 'px';
     b.style.left = Math.random() * 100 + '%';
@@ -213,19 +513,6 @@
     b.style.animationDelay = (-Math.random() * 8) + 's';
     document.body.appendChild(b);
   }
-
-  const hearts = ['💙','💙','🤍','💙','💐'];
-  setInterval(() => {
-    const h = document.createElement('div');
-    h.className = 'heart';
-    h.textContent = hearts[Math.floor(Math.random() * hearts.length)];
-    h.style.left = Math.random() * 100 + '%';
-    h.style.bottom = '-30px';
-    h.style.fontSize = (16 + Math.random() * 20) + 'px';
-    h.style.animationDuration = (5 + Math.random() * 4) + 's';
-    document.body.appendChild(h);
-    setTimeout(() => h.remove(), 9000);
-  }, 700);
 </script>
 
 </body>
