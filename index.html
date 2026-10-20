@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#a8d4ff">
-<title>Сюрприз для Кируси 💙</title>
+<title>Куда сегодня идёшь? 🦷</title>
 <style>
   * {
     margin: 0;
@@ -72,20 +72,20 @@
     text-align: center;
     margin-bottom: 6px;
     text-shadow: 1px 1px 0 #fff;
-    line-height: 1.2;
+    line-height: 1.25;
   }
   .sub {
     text-align: center;
     color: #4a92d6;
     font-size: clamp(12px, 3.4vw, 14px);
-    margin-bottom: 16px;
+    margin-bottom: 18px;
     line-height: 1.45;
   }
 
   .emoji-big {
     text-align: center;
-    font-size: 42px;
-    margin-bottom: 6px;
+    font-size: 46px;
+    margin-bottom: 8px;
     line-height: 1;
     animation: gentle 3s ease-in-out infinite;
   }
@@ -115,43 +115,103 @@
     transform: translateY(1px) scale(.99);
     box-shadow: 0 4px 12px rgba(47,111,176,0.4);
   }
-  .btn:disabled {
-    opacity: .6;
-    cursor: default;
-  }
+  .btn:disabled { opacity: .6; cursor: default; }
 
   .hidden { display: none !important; }
 
-  /* КОД */
-  .code-input {
+  /* ЭКРАН 1 - ВЫБОР КУДА ИДЁШЬ */
+  .choices {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    margin: 24px 0 10px;
+    flex-wrap: wrap;
+  }
+  .choice {
+    width: 82px;
+    height: 82px;
+    border-radius: 22px;
+    background: #eaf6ff;
+    border: 3px solid #c3e1ff;
+    font-size: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform .2s, border-color .2s, background .2s, box-shadow .2s;
+    touch-action: manipulation;
+    position: relative;
+    user-select: none;
+    padding: 0;
+    line-height: 1;
+    animation: bob 3s ease-in-out infinite;
+  }
+  .choice:nth-child(2) { animation-delay: .4s; }
+  .choice:nth-child(3) { animation-delay: .8s; }
+
+  @keyframes bob {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  .choice:active {
+    transform: scale(.93);
+  }
+
+  .choice.crossed {
+    background: #f0f4f8;
+    border-color: #ccd8e3;
+    opacity: .45;
+    pointer-events: none;
+    animation: none;
+    filter: grayscale(1);
+  }
+  .choice.crossed::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 12%;
+    right: 12%;
+    height: 4px;
+    background: #e0567e;
+    border-radius: 4px;
+    transform: translateY(-50%) rotate(-20deg);
+    box-shadow: 0 0 8px rgba(224,86,126,0.4);
+  }
+  .choice.crossed::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 12%;
+    right: 12%;
+    height: 4px;
+    background: #e0567e;
+    border-radius: 4px;
+    transform: translateY(-50%) rotate(20deg);
+    z-index: 1;
+  }
+
+  /* ВОПРОСЫ */
+  textarea {
     width: 100%;
-    text-align: center;
-    font-size: 30px;
-    letter-spacing: 14px;
-    padding: 14px;
-    padding-left: calc(14px + 14px);
+    min-height: 100px;
     border-radius: 16px;
     border: 3px solid #c3e1ff;
     background: #f4faff;
-    color: #1e5c99;
-    font-weight: 700;
-    outline: none;
-    transition: border-color .25s, box-shadow .25s;
+    padding: 14px;
     font-family: inherit;
+    font-size: clamp(14px, 3.8vw, 16px);
+    color: #1e5c99;
+    resize: vertical;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s, background .2s;
   }
-  .code-input:focus {
+  textarea:focus {
     border-color: #4a92d6;
-    box-shadow: 0 0 0 4px rgba(124,184,245,0.3);
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(124,184,245,0.25);
   }
-  .code-input.error {
-    border-color: #ff7a9c;
-    animation: shake .4s;
-  }
-  @keyframes shake {
-    0%,100% { transform: translateX(0); }
-    25% { transform: translateX(-8px); }
-    75% { transform: translateX(8px); }
-  }
+  textarea::placeholder { color: #8fb9dd; }
 
   .hint-error {
     color: #e0567e;
@@ -162,298 +222,224 @@
     font-weight: 600;
   }
 
-  /* МЯУ-ДОКУ */
-  .palette {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-  .cat-btn {
-    width: 54px;
-    height: 54px;
-    border-radius: 50%;
-    background: #eaf6ff;
-    border: 3px solid #c3e1ff;
-    font-size: 26px;
-    cursor: pointer;
-    transition: transform .2s, border-color .2s, background .2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    touch-action: manipulation;
-    padding: 0;
-  }
-  .cat-btn:active {
-    transform: scale(1.05);
-  }
-  .cat-btn.active {
-    background: linear-gradient(135deg, #7cb8f5, #4a92d6);
-    border-color: #2f6fb0;
-    transform: scale(1.1);
-    box-shadow: 0 6px 16px rgba(47,111,176,0.4);
-  }
-
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
-    width: 100%;
-    max-width: 280px;
-    margin: 0 auto 10px;
-    padding: 8px;
-    background: #c3e1ff;
-    border-radius: 14px;
-  }
-  .cell {
-    aspect-ratio: 1;
-    background: #f4faff;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: clamp(26px, 8vw, 36px);
-    cursor: pointer;
-    transition: background .2s, transform .15s, border-color .2s;
-    user-select: none;
-    border: 3px solid transparent;
-    touch-action: manipulation;
-  }
-  .cell.empty:active {
-    transform: scale(.95);
-  }
-  .cell.fixed {
-    background: #d6ecff;
-    cursor: default;
-    border-color: #a8d4ff;
-  }
-  .cell.filled {
-    background: linear-gradient(135deg, #eaf6ff, #d6ecff);
-    border-color: #7cb8f5;
-  }
-  .cell.wrong {
-    animation: shake .4s;
-    border-color: #ff7a9c;
-  }
-
-  /* RIDER */
-  .track {
-    position: relative;
-    height: 120px;
-    background: linear-gradient(180deg, #d6ecff 0%, #a8d4ff 100%);
-    border-radius: 14px;
-    margin-bottom: 12px;
-    overflow: hidden;
-    border: 3px solid #c3e1ff;
-  }
-  .track::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 32%;
-    background: linear-gradient(180deg, #a8d4ff, #7cb8f5);
-  }
-  .horse {
-    position: absolute;
-    bottom: 25%;
-    left: 8%;
-    font-size: 46px;
-    transition: left .3s cubic-bezier(.3,1.6,.5,1);
-    z-index: 2;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
-    line-height: 1;
-  }
-  .horse.jumping {
-    animation: jump .35s ease;
-  }
-  @keyframes jump {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-28px); }
-  }
-  .progress-bar {
-    width: 100%;
-    height: 20px;
-    background: #eaf6ff;
-    border-radius: 50px;
-    overflow: hidden;
-    border: 2px solid #c3e1ff;
-    margin-bottom: 10px;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #a8d4ff, #4a92d6);
-    width: 0%;
-    transition: width .3s;
-    border-radius: 50px;
-  }
-  .distance {
-    text-align: center;
-    color: #2f6fb0;
-    font-weight: 700;
-    margin-bottom: 8px;
-    font-size: 15px;
-  }
-
-  /* ПРЕДЛОЖЕНИЕ */
-  .proposal-box {
-    position: relative;
-    padding: 10px 0 20px;
-    min-height: 130px;
+  /* ШКАЛА БОЛИ */
+  .pain-scale {
     display: flex;
     flex-direction: column;
-    gap: 16px;
     align-items: center;
+    margin: 20px 0 8px;
   }
-  .yes-btn {
-    display: block;
-    width: 100%;
-    padding: 18px;
-    border: none;
-    border-radius: 50px;
-    background: linear-gradient(135deg, #7cd88a, #2f9150);
-    color: #fff;
-    font-size: clamp(16px, 4.5vw, 19px);
+  .pain-value {
+    font-size: 64px;
     font-weight: 800;
-    font-family: inherit;
-    cursor: pointer;
-    transition: transform .2s, box-shadow .2s;
-    box-shadow: 0 8px 22px rgba(47,145,80,0.4);
-    touch-action: manipulation;
-    animation: yesPulse 1.8s ease-in-out infinite;
+    color: #e0567e;
+    line-height: 1;
+    margin-bottom: 6px;
+    text-shadow: 0 4px 12px rgba(224,86,126,0.3);
+    transition: transform .2s;
   }
-  @keyframes yesPulse {
+  .pain-value.bump {
+    animation: bump .3s ease;
+  }
+  @keyframes bump {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+  }
+  .pain-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #4a92d6;
+    margin-bottom: 16px;
+  }
+  .pain-emoji-row {
+    font-size: 42px;
+    margin-bottom: 6px;
+    line-height: 1;
+    transition: transform .25s;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 18px;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #a8d4ff, #7cd88a 40%, #ffd93b 70%, #e0567e);
+    outline: none;
+    cursor: pointer;
+    touch-action: manipulation;
+    margin: 8px 0 16px;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #fff;
+    border: 4px solid #4a92d6;
+    box-shadow: 0 4px 12px rgba(47,111,176,0.4);
+    cursor: pointer;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #fff;
+    border: 4px solid #4a92d6;
+    box-shadow: 0 4px 12px rgba(47,111,176,0.4);
+    cursor: pointer;
+  }
+
+  .pain-marks {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 12px;
+    color: #4a92d6;
+    font-weight: 600;
+    padding: 0 4px;
+  }
+
+  /* РЕЗУЛЬТАТ */
+  .result-block {
+    background: #eaf6ff;
+    border-left: 5px solid #4a92d6;
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .result-q {
+    color: #2f6fb0;
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+  .result-a {
+    color: #1e5c99;
+    font-size: 15px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+  }
+  .result-a.pain {
+    font-size: 22px;
+    font-weight: 800;
+    color: #e0567e;
+  }
+
+  .screenshot-note {
+    text-align: center;
+    background: linear-gradient(135deg, #fff7b0, #ffe27a);
+    color: #7a5c00;
+    padding: 14px;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: clamp(13px, 3.6vw, 15px);
+    margin-bottom: 14px;
+    box-shadow: 0 6px 18px rgba(255,215,60,0.4);
+    animation: pulseNote 1.6s ease-in-out infinite;
+    line-height: 1.4;
+  }
+  @keyframes pulseNote {
     0%,100% { transform: scale(1); }
     50% { transform: scale(1.03); }
   }
-  .yes-btn:active {
-    transform: scale(.97);
-  }
-  .no-btn {
-    padding: 12px 28px;
-    border: 2px solid #c3e1ff;
-    border-radius: 50px;
-    background: #f4faff;
-    color: #4a92d6;
-    font-size: 15px;
-    font-weight: 700;
-    font-family: inherit;
-    cursor: pointer;
-    transition: transform .25s cubic-bezier(.3,1.6,.5,1), opacity .25s;
-    touch-action: manipulation;
-    position: relative;
-  }
 
-  /* ФИНАЛ */
-  .win-screen { text-align: center; padding: 10px 0; }
   .win-emoji {
     font-size: 72px;
-    animation: gentle 1.5s ease-in-out infinite;
+    text-align: center;
     line-height: 1;
-  }
-  @keyframes fall {
-    to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    animation: gentle 1.5s ease-in-out infinite;
   }
 
-  /* для тач-устройств - убираем hover эффекты */
   @media (hover: none) {
     .btn:hover { transform: none; }
-    .cat-btn:hover { transform: none; }
   }
 
-  /* Адаптация под очень маленькие экраны */
   @media (max-height: 640px) {
     .card { padding: 14px 12px; border-radius: 20px; }
     h1 { font-size: 20px; margin-bottom: 4px; }
     .sub { margin-bottom: 12px; font-size: 12px; }
     .emoji-big { font-size: 34px; margin-bottom: 4px; }
-    .btn { padding: 12px; margin-top: 10px; }
-    .grid { max-width: 240px; padding: 6px; gap: 5px; }
-    .cell { font-size: clamp(22px, 7vw, 30px); }
-    .cat-btn { width: 46px; height: 46px; font-size: 22px; }
-    .track { height: 100px; }
-    .horse { font-size: 40px; }
-    .code-input { font-size: 26px; letter-spacing: 10px; padding: 12px; }
-    .yes-btn { padding: 14px; }
+    .choice { width: 68px; height: 68px; font-size: 34px; border-radius: 18px; }
+    .choices { gap: 10px; margin: 16px 0 6px; }
+    textarea { min-height: 80px; padding: 10px; }
+    .pain-value { font-size: 52px; }
+    .pain-emoji-row { font-size: 34px; }
+    .win-emoji { font-size: 56px; }
   }
 </style>
 </head>
 <body>
 
-<!-- 1. ВВОД КОДА -->
-<div class="card" id="screen-code">
-  <div class="emoji-big">🎁💙</div>
-  <h1>Привет, Кируся</h1>
-  <p class="sub">Введи код, чтобы открыть сюрприз 💌</p>
-  <input type="tel" class="code-input" id="codeInput" maxlength="4" placeholder="••••" inputmode="numeric" autocomplete="off">
-  <button class="btn" onclick="checkCode()">Открыть ✨</button>
-  <div class="hint-error" id="codeError"></div>
-</div>
+<!-- 1. КУДА ИДЁШЬ? -->
+<div class="card" id="screen-where">
+  <div class="emoji-big">🤔</div>
+  <h1>Куда сегодня идёшь?</h1>
+  <p class="sub">Выбери правильный ответ 💙</p>
 
-<!-- 2. ИНТРО -->
-<div class="card hidden" id="screen-intro">
-  <div class="emoji-big">🎮💙</div>
-  <h1>Три мини-игры</h1>
-  <p class="sub">Пройди все — и увидишь сюрприз в конце 💌</p>
-  <button class="btn" onclick="startMeowdoku()">Играть →</button>
-</div>
-
-<!-- 3. МЯУ-ДОКУ -->
-<div class="card hidden" id="screen-meowdoku">
-  <div class="emoji-big">🐱</div>
-  <h1>Мяу-доку</h1>
-  <p class="sub">В каждой строке и столбце — по одному котику. Выбери котика внизу и нажми на клетку 🐾</p>
-
-  <div class="palette" id="palette">
-    <button class="cat-btn active" data-cat="🐱">🐱</button>
-    <button class="cat-btn" data-cat="😺">😺</button>
-    <button class="cat-btn" data-cat="😻">😻</button>
+  <div class="choices">
+    <button class="choice" id="train" onclick="crossOut(this)">🚆</button>
+    <button class="choice" id="burger" onclick="crossOut(this)">🍔</button>
+    <button class="choice" id="tooth" onclick="goTooth()">🦷</button>
   </div>
 
-  <div class="grid" id="meowGrid"></div>
-
-  <div class="hint-error" id="meowError"></div>
-  <button class="btn" onclick="checkMeowdoku()">Проверить 💙</button>
+  <div class="hint-error" id="whereError"></div>
 </div>
 
-<!-- 4. RIDER -->
-<div class="card hidden" id="screen-rider">
-  <div class="emoji-big">🦄</div>
-  <h1>Скачки</h1>
-  <p class="sub">Нажимай на кнопку, чтобы доскакать до финиша!</p>
-
-  <div class="track">
-    <div class="horse" id="horse">🦄</div>
-  </div>
-
-  <div class="distance" id="distance">0 / 15 метров</div>
-  <div class="progress-bar">
-    <div class="progress-fill" id="rideProgress"></div>
-  </div>
-
-  <button class="btn" onclick="ride()" id="rideBtn">🏇 Скакать!</button>
+<!-- 2. МОРОЖЕНОЕ -->
+<div class="card hidden" id="screen-icecream">
+  <div class="emoji-big">🍦</div>
+  <h1>Какое мороженое хочешь?</h1>
+  <p class="sub">Расскажи, а потом угостим 💙</p>
+  <textarea id="icecreamText" placeholder="Например: шоколадное с клубникой..."></textarea>
+  <button class="btn" onclick="nextFromIcecream()">Дальше →</button>
+  <div class="hint-error" id="iceError"></div>
 </div>
 
-<!-- 5. ПРЕДЛОЖЕНИЕ -->
-<div class="card hidden" id="screen-proposal">
-  <div class="emoji-big">🍿💙</div>
-  <h1>Вопрос...</h1>
-  <p class="sub">Пойдём смотреть «Слово Пацана»?</p>
-
-  <div class="proposal-box" id="proposalBox">
-    <button class="yes-btn" onclick="sayYes()">Да, конечно! 🥰</button>
-    <button class="no-btn" id="noBtn" onclick="dodgeNo(event)">Нет 😳</button>
-  </div>
+<!-- 3. СИЛЬНО ЛИ БУДЕТ БОЛЕТЬ? -->
+<div class="card hidden" id="screen-ache">
+  <div class="emoji-big">😬</div>
+  <h1>Сильно зубик болеть будет?</h1>
+  <p class="sub">Честно-честно 💙</p>
+  <textarea id="acheText" placeholder="Как думаешь?"></textarea>
+  <button class="btn" onclick="nextFromAche()">Дальше →</button>
+  <div class="hint-error" id="acheError"></div>
 </div>
 
-<!-- 6. ФИНАЛ -->
+<!-- 4. ШКАЛА БОЛИ -->
+<div class="card hidden" id="screen-pain">
+  <div class="emoji-big">📊</div>
+  <h1>Оцени свою боль</h1>
+  <p class="sub">От 1 до 10, где 10 — очень больно 💙</p>
+
+  <div class="pain-scale">
+    <div class="pain-emoji-row" id="painEmoji">🙂</div>
+    <div class="pain-value" id="painValue">5</div>
+    <div class="pain-label" id="painLabel">средне</div>
+    <input type="range" id="painRange" min="1" max="10" value="5" step="1">
+    <div class="pain-marks">
+      <span>1 😌</span>
+      <span>10 😭</span>
+    </div>
+  </div>
+
+  <button class="btn" onclick="finishPain()">Готово →</button>
+</div>
+
+<!-- 5. ФИНАЛ -->
 <div class="card hidden" id="screen-final">
-  <div class="win-screen">
-    <div class="win-emoji">💙</div>
-    <h1>Ура!!!</h1>
-    <p class="sub">Витя уже бежит за попкорном 🍿<br>До встречи, Кируся 💕</p>
+  <div class="win-emoji">🦷💙</div>
+  <h1>Ты справишься!</h1>
+  <p class="sub">Витя рядом, а зубик — не страшный 🦷</p>
+
+  <div class="screenshot-note">
+    📸 Сделай скриншот ответов<br>и отправь Вите!
   </div>
+
+  <div id="results"></div>
+
+  <button class="btn" onclick="sendToVitya()">💌 Отправить Вите</button>
 </div>
 
 <script>
@@ -471,27 +457,6 @@
     document.body.appendChild(b);
   }
 
-  // ===== КОД =====
-  const CODE = '1257';
-  const codeInput = document.getElementById('codeInput');
-
-  codeInput.addEventListener('input', () => {
-    codeInput.value = codeInput.value.replace(/\D/g, '').slice(0, 4);
-  });
-  codeInput.addEventListener('keydown', e => {
-    if (e.key === 'Enter') checkCode();
-  });
-
-  function checkCode() {
-    if (codeInput.value.trim() === CODE) {
-      showScreen('screen-intro');
-    } else {
-      codeInput.classList.add('error');
-      document.getElementById('codeError').textContent = 'Неверный код, попробуй ещё 💙';
-      setTimeout(() => codeInput.classList.remove('error'), 450);
-    }
-  }
-
   function showScreen(id) {
     document.querySelectorAll('.card').forEach(c => {
       c.classList.add('hidden');
@@ -500,176 +465,114 @@
     document.getElementById(id).classList.remove('hidden');
   }
 
-  // ===== МЯУ-ДОКУ =====
-  const SOLUTION = [
-    ['🐱', '😺', '😻'],
-    ['😺', '😻', '🐱'],
-    ['😻', '🐱', '😺']
-  ];
-  const GIVENS = {
-    '0,0': '🐱',
-    '0,1': '😺',
-    '1,1': '😻',
-    '2,2': '😺'
-  };
-  let meowGrid = [];
-  let selectedCat = '🐱';
-
-  function startMeowdoku() {
-    showScreen('screen-meowdoku');
-    initMeowdoku();
+  // ===== ЭКРАН "КУДА ИДЁШЬ" =====
+  function crossOut(el) {
+    el.classList.add('crossed');
+    el.style.animation = 'shake .4s';
+    setTimeout(() => el.style.animation = '', 450);
+    document.getElementById('whereError').textContent = 'Не туда! Подумай ещё 🤭';
   }
 
-  function initMeowdoku() {
-    meowGrid = SOLUTION.map((row, i) =>
-      row.map((_, j) => GIVENS[`${i},${j}`] || '')
-    );
-    document.querySelectorAll('.cat-btn').forEach((b, i) =>
-      b.classList.toggle('active', i === 0)
-    );
-    selectedCat = '🐱';
-    renderMeowGrid();
+  function goTooth() {
+    document.getElementById('whereError').textContent = '';
+    showScreen('screen-icecream');
   }
 
-  function renderMeowGrid() {
-    const grid = document.getElementById('meowGrid');
-    grid.innerHTML = '';
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        const cell = document.createElement('div');
-        cell.className = 'cell';
-        const isGiven = GIVENS[`${i},${j}`];
-        if (isGiven) {
-          cell.classList.add('fixed');
-          cell.textContent = isGiven;
-        } else if (meowGrid[i][j]) {
-          cell.classList.add('filled');
-          cell.textContent = meowGrid[i][j];
-          cell.onclick = () => {
-            meowGrid[i][j] = '';
-            renderMeowGrid();
-          };
-        } else {
-          cell.classList.add('empty');
-          cell.onclick = () => {
-            meowGrid[i][j] = selectedCat;
-            renderMeowGrid();
-          };
-        }
-        grid.appendChild(cell);
-      }
+  // ===== МОРОЖЕНОЕ =====
+  function nextFromIcecream() {
+    const val = document.getElementById('icecreamText').value.trim();
+    if (!val) {
+      document.getElementById('iceError').textContent = 'Напиши хоть что-нибудь 💙';
+      return;
     }
+    document.getElementById('iceError').textContent = '';
+    showScreen('screen-ache');
   }
 
-  document.querySelectorAll('.cat-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      selectedCat = btn.dataset.cat;
-    });
+  // ===== БОЛЬ БУДЕТ? =====
+  function nextFromAche() {
+    const val = document.getElementById('acheText').value.trim();
+    if (!val) {
+      document.getElementById('acheError').textContent = 'Напиши хоть что-нибудь 💙';
+      return;
+    }
+    document.getElementById('acheError').textContent = '';
+    showScreen('screen-pain');
+    updatePain(5);
+  }
+
+  // ===== ШКАЛА БОЛИ =====
+  const painEmojis = ['😌','🙂','😊','😐','😕','😟','😣','😖','😫','😭'];
+  const painLabels = ['совсем не больно','почти не больно','легко','нормально','средне','уже неприятно','больновато','сильно','очень больно','ужас как больно'];
+
+  const painRange = document.getElementById('painRange');
+  painRange.addEventListener('input', e => {
+    updatePain(parseInt(e.target.value));
   });
 
-  function checkMeowdoku() {
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        if (meowGrid[i][j] !== SOLUTION[i][j]) {
-          const cells = document.querySelectorAll('.cell');
-          cells[i * 3 + j].classList.add('wrong');
-          document.getElementById('meowError').textContent = 'Есть ошибка, попробуй ещё 🐾';
-          setTimeout(() => cells[i * 3 + j].classList.remove('wrong'), 500);
-          return;
-        }
-      }
-    }
-    document.getElementById('meowError').textContent = '';
-    showScreen('screen-rider');
-    resetRider();
+  function updatePain(val) {
+    document.getElementById('painValue').textContent = val;
+    document.getElementById('painEmoji').textContent = painEmojis[val - 1];
+    document.getElementById('painLabel').textContent = painLabels[val - 1];
+
+    // цвет числа от зелёного к красному
+    const colors = ['#2f9150','#4a92d6','#4a92d6','#7cb8f5','#ffd93b','#ffa63b','#ff8c42','#e0567e','#d63b6a','#b81e4f'];
+    document.getElementById('painValue').style.color = colors[val - 1];
+
+    const pv = document.getElementById('painValue');
+    pv.classList.add('bump');
+    setTimeout(() => pv.classList.remove('bump'), 320);
   }
 
-  // ===== RIDER =====
-  let rideMeters = 0;
-  const RIDE_GOAL = 15;
+  function finishPain() {
+    const painVal = parseInt(document.getElementById('painRange').value);
+    const icecream = document.getElementById('icecreamText').value.trim();
+    const ache = document.getElementById('acheText').value.trim();
 
-  function resetRider() {
-    rideMeters = 0;
-    const horse = document.getElementById('horse');
-    horse.style.left = '8%';
-    horse.textContent = '🦄';
-    document.getElementById('distance').textContent = `0 / ${RIDE_GOAL} метров`;
-    document.getElementById('rideProgress').style.width = '0%';
-    const btn = document.getElementById('rideBtn');
-    btn.disabled = false;
-    btn.textContent = '🏇 Скакать!';
-  }
+    // результаты
+    const results = document.getElementById('results');
+    results.innerHTML = `
+      <div class="result-block">
+        <div class="result-q">🍦 Какое мороженое хочешь?</div>
+        <div class="result-a">${escapeHtml(icecream)}</div>
+      </div>
+      <div class="result-block">
+        <div class="result-q">😬 Сильно зубик болеть будет?</div>
+        <div class="result-a">${escapeHtml(ache)}</div>
+      </div>
+      <div class="result-block">
+        <div class="result-q">📊 Оценка боли</div>
+        <div class="result-a pain">${painVal} / 10 ${painEmojis[painVal - 1]}</div>
+      </div>
+    `;
 
-  function ride() {
-    if (rideMeters >= RIDE_GOAL) return;
-    rideMeters++;
-    const pct = (rideMeters / RIDE_GOAL) * 100;
-    document.getElementById('rideProgress').style.width = pct + '%';
-    document.getElementById('distance').textContent = `${rideMeters} / ${RIDE_GOAL} метров`;
-
-    const horse = document.getElementById('horse');
-    horse.style.left = `calc(${8 + pct * 0.72}% - 20px)`;
-    horse.classList.add('jumping');
-    setTimeout(() => horse.classList.remove('jumping'), 350);
-
-    if (rideMeters >= RIDE_GOAL) {
-      horse.textContent = '🏆';
-      const btn = document.getElementById('rideBtn');
-      btn.textContent = '🎉 Доехали!';
-      btn.disabled = true;
-      setTimeout(() => showScreen('screen-proposal'), 900);
-    }
-  }
-
-  // ===== ПРЕДЛОЖЕНИЕ =====
-  function sayYes() {
     showScreen('screen-final');
-    for (let i = 0; i < 25; i++) {
-      setTimeout(() => {
-        const h = document.createElement('div');
-        h.textContent = ['💙','💕','🤍','💐','✨','🍿'][Math.floor(Math.random() * 6)];
-        h.style.cssText = `
-          position: fixed;
-          font-size: ${18 + Math.random() * 22}px;
-          left: ${Math.random() * 90}%;
-          top: -50px;
-          z-index: 100;
-          pointer-events: none;
-          animation: fall 3s forwards;
-        `;
-        document.body.appendChild(h);
-        setTimeout(() => h.remove(), 3200);
-      }, i * 90);
-    }
   }
 
-  let noDodges = 0;
-  function dodgeNo(e) {
-    e.preventDefault();
-    const btn = document.getElementById('noBtn');
-    const box = document.getElementById('proposalBox');
-    const boxRect = box.getBoundingClientRect();
-
-    // двигаем внутри контейнера
-    const maxX = Math.min(60, boxRect.width / 2 - 40);
-    const maxY = 20;
-    const x = (Math.random() - 0.5) * maxX * 2;
-    const y = (Math.random() - 0.5) * maxY * 2;
-
-    btn.style.transform = `translate(${x}px, ${y}px)`;
-    noDodges++;
-
-    // постепенно уменьшаем кнопку
-    if (noDodges > 2) {
-      btn.style.fontSize = Math.max(10, 15 - noDodges * 0.8) + 'px';
-      btn.style.padding = Math.max(6, 12 - noDodges) + 'px ' + Math.max(14, 28 - noDodges * 2) + 'px';
-    }
-    if (noDodges > 6) {
-      btn.style.opacity = '0.3';
-    }
+  function sendToVitya() {
+    // можно заменить на любую ссылку, если надо
+    alert('Скриншотни страницу и отправь Вите 💙');
   }
+
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  // доп. анимация "shake" для зачёркнутых
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25% { transform: translateX(-8px) rotate(-3deg); }
+      75% { transform: translateX(8px) rotate(3deg); }
+    }
+  `;
+  document.head.appendChild(style);
 </script>
 
 </body>
