@@ -4,336 +4,379 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>СВОЯК • Шоу-викторина</title>
-<script src="https://cdn.tailwindcss.com"></script>
+<title>СВОЯК 3D</title>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --sat: env(safe-area-inset-top, 0px);
-  --sab: env(safe-area-inset-bottom, 0px);
-  --bg: #0a0a0f;
-  --bg2: #12121a;
-  --glass: rgba(255,255,255,0.04);
-  --glass-hi: rgba(255,255,255,0.08);
-  --border: rgba(255,255,255,0.08);
-  --border-hi: rgba(255,255,255,0.16);
-  --text: #f0f0f5;
-  --dim: #8a8a9e;
-  --faint: #5a5a6e;
-  --pink: #ff2d7a;
-  --cyan: #00d4ff;
-  --gold: #ffcc00;
-  --red: #ff3b3b;
-  --green: #00e676;
-  --purple: #b44aff;
+  --sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);
+  --bg:#050508;--panel:#161620;--panel-lt:#20202e;--panel-hi:#2a2a3c;
+  --edge:#35354a;--edge-dk:#0d0d15;--edge-dk2:#050508;
+  --text:#f0f0fa;--dim:#8888a0;--faint:#55556e;
+  --pink:#ff2d7a;--cyan:#00d4ff;--gold:#ffcc00;--red:#ff3b3b;
+  --green:#00e676;--purple:#b44aff;--orange:#ff7a2f;
 }
-*{ -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-html,body{ margin:0; padding:0; overscroll-behavior:none; }
+*{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;box-sizing:border-box;}
+html,body{margin:0;padding:0;overscroll-behavior:none;}
 body{
-  background: var(--bg);
+  background:var(--bg);
   background-image:
-    radial-gradient(ellipse 70% 50% at 15% 0%, rgba(255,45,122,0.12), transparent 55%),
-    radial-gradient(ellipse 60% 50% at 85% 100%, rgba(0,212,255,0.10), transparent 55%),
-    radial-gradient(ellipse 50% 40% at 50% 50%, rgba(180,74,255,0.06), transparent 70%);
-  background-attachment: fixed;
-  color: var(--text);
-  font-family: 'Inter', system-ui, sans-serif;
-  height: 100vh; height: 100dvh; height: -webkit-fill-available;
-  overflow: hidden;
-  padding: max(8px, var(--sat)) max(8px, var(--sab)) max(8px, var(--sab)) max(8px, var(--sat));
-  -webkit-font-smoothing: antialiased;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  font-weight: 500;
+    radial-gradient(ellipse 90% 55% at 50% -10%,rgba(180,74,255,0.20),transparent 55%),
+    radial-gradient(ellipse 70% 45% at 90% 100%,rgba(255,45,122,0.14),transparent 55%),
+    radial-gradient(ellipse 80% 35% at 10% 90%,rgba(0,212,255,0.10),transparent 60%);
+  background-attachment:fixed;
+  color:var(--text);font-family:'Inter',system-ui,sans-serif;
+  height:100vh;height:100dvh;height:-webkit-fill-available;
+  overflow:hidden;
+  padding:max(6px,var(--sat)) max(6px,var(--sab)) max(6px,var(--sab)) max(6px,var(--sat));
+  -webkit-font-smoothing:antialiased;
+  display:flex;flex-direction:column;gap:6px;
 }
 
-.glass{
-  background: var(--glass);
-  backdrop-filter: blur(20px) saturate(1.4);
-  -webkit-backdrop-filter: blur(20px) saturate(1.4);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  box-shadow: 0 1px 0 rgba(255,255,255,0.04) inset, 0 10px 30px -12px rgba(0,0,0,0.7);
+/* ============ 3D SURFACES ============ */
+.surf{
+  background:linear-gradient(180deg,var(--panel-lt) 0%,var(--panel) 100%);
+  border:1px solid var(--edge);
+  border-radius:12px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.07),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 2px 0 var(--edge-dk),
+    0 4px 0 var(--edge-dk2),
+    0 8px 16px -6px rgba(0,0,0,0.9);
 }
 
-header{ flex-shrink:0; display:flex; align-items:center; justify-content:space-between; padding: 8px 14px; gap: 10px; }
-.brand{ display:flex; align-items:center; gap:10px; min-width:0; }
+/* ============ HEADER ============ */
+.header{padding:6px 10px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.brand{display:flex;align-items:center;gap:8px;min-width:0;}
 .logo{
-  width:38px; height:38px; border-radius:10px;
-  background: linear-gradient(135deg, var(--pink), var(--purple));
-  display:flex; align-items:center; justify-content:center;
-  color:#fff; font-size:16px; flex-shrink:0;
-  box-shadow: 0 6px 18px -6px rgba(255,45,122,0.7);
+  width:32px;height:32px;border-radius:9px;
+  background:linear-gradient(160deg,#ff4d9e,#b44aff);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:14px;flex-shrink:0;
+  box-shadow:inset 0 2px 0 rgba(255,255,255,0.4),inset 0 -3px 0 rgba(0,0,0,0.35),
+    0 3px 0 #6a1a4a,0 6px 12px -4px rgba(255,45,122,0.6);
+  transform:rotate(-4deg);
 }
-.title{ font-family:'Bebas Neue', sans-serif; font-size:16px; color:var(--text); line-height:1; letter-spacing:0.03em; }
-.sub{ font-size:8.5px; color:var(--faint); font-weight:700; letter-spacing:0.14em; text-transform:uppercase; margin-top:2px; }
-.hact{ display:flex; gap:6px; align-items:center; flex-shrink:0; }
+.brand-t{min-width:0;}
+.title{font-family:'Bebas Neue',sans-serif;font-size:16px;line-height:1;letter-spacing:0.05em;}
+.sub{font-size:7px;color:var(--faint);font-weight:800;letter-spacing:0.18em;text-transform:uppercase;margin-top:2px;}
+.hact{display:flex;gap:4px;flex-shrink:0;}
 .ibtn{
-  width:36px; height:36px; border-radius:10px;
-  background: var(--glass); border:1px solid var(--border);
-  color: var(--dim); display:flex; align-items:center; justify-content:center;
-  cursor:pointer; font-size:13px;
-  transition: all 0.15s cubic-bezier(0.34,1.4,0.64,1);
+  width:30px;height:30px;border-radius:8px;
+  background:linear-gradient(180deg,var(--panel-lt),var(--panel));
+  border:1px solid var(--edge);color:var(--dim);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:11px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.09),0 2px 0 var(--edge-dk),0 3px 6px -1px rgba(0,0,0,0.5);
+  transition:transform 0.08s,box-shadow 0.08s,color 0.12s;
 }
-.ibtn:hover{ background:var(--glass-hi); color:var(--text); border-color:var(--border-hi); transform:translateY(-1px); }
-.ibtn:active{ transform:translateY(0) scale(0.92); }
-.ibtn.pink{ color:var(--pink); border-color:rgba(255,45,122,0.35); }
-.ibtn.pink:hover{ background:rgba(255,45,122,0.12); box-shadow:0 0 18px -2px rgba(255,45,122,0.5); }
-.ibtn.gold{ color:var(--gold); border-color:rgba(255,204,0,0.35); }
+.ibtn:hover{color:var(--text);transform:translateY(-1px);}
+.ibtn:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,255,255,0.05),0 0 0 var(--edge-dk);}
+.ibtn.gold{color:var(--gold);}
+.ibtn.pink{color:var(--pink);}
 
-.players{ flex-shrink:0; display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+/* ============ PLAYERS ============ */
+.players{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
 .player{
-  padding: 8px 12px; border-radius:12px;
-  display:flex; align-items:center; justify-content:space-between; gap:8px;
-  transition: all 0.35s cubic-bezier(0.34,1.4,0.64,1);
-  position:relative; overflow:hidden;
+  padding:7px 9px;border-radius:11px;
+  display:flex;align-items:center;gap:7px;
+  transition:all 0.3s cubic-bezier(0.34,1.4,0.64,1);
 }
-.player.active-kira{ border-color:rgba(255,45,122,0.5); box-shadow:0 0 0 1px rgba(255,45,122,0.2), 0 8px 24px -10px rgba(255,45,122,0.6); }
-.player.active-vitya{ border-color:rgba(0,212,255,0.5); box-shadow:0 0 0 1px rgba(0,212,255,0.2), 0 8px 24px -10px rgba(0,212,255,0.6); }
-.player.dim{ opacity:0.42; }
-.av{ width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:14px; color:#fff; flex-shrink:0; }
-.av.k{ background:linear-gradient(135deg,#ff2d7a,#c026d3); box-shadow:0 4px 12px -4px rgba(255,45,122,0.7); }
-.av.v{ background:linear-gradient(135deg,#00d4ff,#0891b2); box-shadow:0 4px 12px -4px rgba(0,212,255,0.7); }
-.pinf{ min-width:0; flex:1; }
-.pnm{ font-family:'Bebas Neue', sans-serif; font-size:14px; color:var(--text); line-height:1; cursor:pointer; display:inline-flex; align-items:center; gap:4px; padding:2px 4px; margin-left:-4px; border-radius:6px; transition:background 0.2s; letter-spacing:0.02em; }
-.pnm:hover{ background:rgba(255,255,255,0.06); }
-.pnm .ed{ font-size:8px; color:var(--faint); opacity:0.7; }
-.pm{ font-size:8px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; margin-top:2px; display:flex; align-items:center; gap:4px; color:var(--faint); }
-.pm .dot{ width:5px; height:5px; border-radius:50%; background:currentColor; box-shadow:0 0 6px currentColor; animation:pl 1.4s ease-in-out infinite; }
-@keyframes pl{ 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:0.4; transform:scale(0.6); } }
-.pm.kact{ color:var(--pink); }
-.pm.vact{ color:var(--cyan); }
-.psc{ text-align:right; flex-shrink:0; }
-.psv{ font-family:'Bebas Neue', sans-serif; font-size:24px; line-height:1; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); }
-.psv.k{ color:var(--pink); text-shadow:0 0 18px rgba(255,45,122,0.5); }
-.psv.v{ color:var(--cyan); text-shadow:0 0 18px rgba(0,212,255,0.5); }
-.psv.pp{ animation:sp 0.45s cubic-bezier(0.34,1.56,0.64,1); }
-@keyframes sp{ 0%{ transform:scale(1); } 50%{ transform:scale(1.28); } 100%{ transform:scale(1); } }
-.psl{ font-size:7px; color:var(--faint); font-weight:800; letter-spacing:0.14em; text-transform:uppercase; margin-top:2px; }
+.player.on.k{
+  border-color:rgba(255,45,122,0.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 2px 0 var(--edge-dk),0 4px 0 var(--edge-dk2),
+    0 0 0 1px rgba(255,45,122,0.25),0 10px 22px -8px rgba(255,45,122,0.5);
+}
+.player.on.v{
+  border-color:rgba(0,212,255,0.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 2px 0 var(--edge-dk),0 4px 0 var(--edge-dk2),
+    0 0 0 1px rgba(0,212,255,0.25),0 10px 22px -8px rgba(0,212,255,0.5);
+}
+.player.off{opacity:0.42;}
+.av{
+  width:30px;height:30px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:#fff;flex-shrink:0;
+  box-shadow:inset 0 2px 0 rgba(255,255,255,0.35),inset 0 -2px 0 rgba(0,0,0,0.3),0 2px 0 rgba(0,0,0,0.35);
+}
+.av.k{background:linear-gradient(160deg,#ff2d7a,#c026d3);}
+.av.v{background:linear-gradient(160deg,#00d4ff,#0891b2);}
+.pinf{min-width:0;flex:1;}
+.pnm{font-family:'Bebas Neue',sans-serif;font-size:13px;line-height:1;letter-spacing:0.03em;cursor:pointer;display:inline-flex;align-items:center;gap:2px;}
+.pnm .ed{font-size:6px;color:var(--faint);}
+.pm{font-size:7px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;margin-top:2px;color:var(--faint);display:flex;align-items:center;gap:3px;}
+.pm.on.k{color:var(--pink);}
+.pm.on.v{color:var(--cyan);}
+.pm .dot{width:3px;height:3px;border-radius:50%;background:currentColor;box-shadow:0 0 5px currentColor;animation:pl 1.4s infinite;}
+@keyframes pl{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.psv{font-family:'Bebas Neue',sans-serif;font-size:20px;line-height:1;text-align:right;}
+.psv.k{color:var(--pink);text-shadow:0 0 12px rgba(255,45,122,0.5);}
+.psv.v{color:var(--cyan);text-shadow:0 0 12px rgba(0,212,255,0.5);}
+.psv.pop{animation:spop 0.4s;}
+@keyframes spop{50%{transform:scale(1.3);}}
+.psl{font-size:6px;color:var(--faint);font-weight:800;letter-spacing:0.14em;text-transform:uppercase;text-align:right;margin-top:1px;}
 
-.prog{ flex-shrink:0; padding: 6px 14px; display:flex; align-items:center; gap:10px; }
-.pi{ font-size:9px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:var(--dim); flex-shrink:0; display:flex; align-items:center; gap:5px; }
-.pi i{ color:var(--pink); }
-.pt{ flex:1; height:5px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden; }
-.pf{ height:100%; background:linear-gradient(90deg,var(--pink),var(--purple),var(--cyan)); border-radius:3px; transition:width 0.55s cubic-bezier(0.4,0,0.2,1); box-shadow:0 0 10px rgba(255,45,122,0.6); }
-.pp{ font-family:'Bebas Neue', sans-serif; font-size:14px; color:var(--pink); min-width:36px; text-align:right; }
+/* ============ PROGRESS ============ */
+.prog{padding:5px 11px;display:flex;align-items:center;gap:8px;}
+.pi{font-size:8px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim);flex-shrink:0;display:flex;align-items:center;gap:3px;}
+.pi i{color:var(--pink);font-size:8px;}
+.pt{flex:1;height:4px;background:rgba(0,0,0,0.5);border-radius:2px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,0.6);}
+.pf{height:100%;background:linear-gradient(90deg,var(--pink),var(--purple),var(--cyan));border-radius:2px;transition:width 0.5s;box-shadow:0 0 8px rgba(255,45,122,0.7);}
+.pp{font-family:'Bebas Neue',sans-serif;font-size:12px;color:var(--pink);min-width:30px;text-align:right;}
 
-main{ flex:1; min-height:0; display:flex; flex-direction:column; overflow:hidden; }
-.gridbox{ flex:1; min-height:0; padding:8px; display:flex; overflow:hidden; border-radius:12px; }
-#grid{ flex:1; min-height:0; display:flex; flex-direction:column; gap:4px; overflow:hidden; }
-.row{ flex:1; min-height:0; display:grid; grid-template-columns:110px repeat(10,1fr); gap:4px; }
-@media (min-width:1200px){ .row{ grid-template-columns:150px repeat(10,1fr); gap:5px; } }
+/* ============ GRID ============ */
+main{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden;}
+.gridbox{flex:1;min-height:0;padding:5px;display:flex;overflow:hidden;border-radius:11px;}
+#grid{flex:1;min-height:0;display:flex;flex-direction:column;gap:3px;overflow-y:auto;overflow-x:hidden;}
+.row{display:flex;flex-direction:column;gap:2px;flex-shrink:0;}
 .cath{
-  border-radius:6px; padding:2px 6px;
-  font-family:'Bebas Neue', sans-serif; font-weight:400;
-  font-size:11px; color:#fff;
-  display:flex; align-items:center; justify-content:center;
-  text-align:center; line-height:1.1; letter-spacing:0.02em;
-  text-transform:uppercase; overflow:hidden;
-  box-shadow:0 3px 10px -3px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.15);
-  transition: all 0.3s ease;
+  border-radius:5px;padding:2px 6px;
+  font-family:'Bebas Neue',sans-serif;font-size:10px;
+  color:#fff;text-align:center;letter-spacing:0.06em;text-transform:uppercase;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.28),inset 0 -2px 0 rgba(0,0,0,0.28),0 2px 0 rgba(0,0,0,0.4);
 }
-@media (min-width:1200px){ .cath{ font-size:13px; } }
-.cath.dn{ filter:grayscale(0.5); opacity:0.5; }
+@media(min-width:420px){.cath{font-size:11px;padding:3px 6px;}}
+.cells{display:grid;grid-template-columns:repeat(10,1fr);gap:2px;}
 .cell{
-  border-radius:6px; background: var(--glass); border:1px solid var(--border);
-  color:var(--text); font-family:'Bebas Neue', sans-serif; font-weight:400;
-  font-size:13px; display:flex; align-items:center; justify-content:center;
-  cursor:pointer; transition: all 0.12s cubic-bezier(0.34,1.4,0.64,1);
-  position:relative; overflow:hidden; min-height:0; letter-spacing:0.02em;
+  aspect-ratio:1;min-height:28px;
+  border-radius:5px;
+  background:linear-gradient(180deg,var(--panel-lt),var(--panel));
+  border:1px solid var(--edge);
+  color:var(--text);
+  font-family:'Bebas Neue',sans-serif;font-size:11px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 2px 0 var(--edge-dk),0 3px 0 var(--edge-dk2),0 4px 8px -2px rgba(0,0,0,0.5);
+  transition:transform 0.08s,box-shadow 0.08s,border-color 0.12s,color 0.12s;
+  user-select:none;
 }
-@media (min-width:1200px){ .cell{ font-size:16px; } }
-.cell:hover:not(.dn){ background:var(--glass-hi); border-color:rgba(255,45,122,0.5); color:var(--pink); transform:translateY(-2px) scale(1.03); box-shadow:0 6px 18px -6px rgba(255,45,122,0.6); }
-.cell:active:not(.dn){ transform:translateY(0) scale(0.94); }
-.cell.dn{ background:rgba(0,230,118,0.06); border-color:rgba(0,230,118,0.15); color:rgba(0,230,118,0.35); cursor:not-allowed; }
-.cell.dn i{ font-size:12px; }
+@media(min-width:420px){.cell{font-size:13px;min-height:32px;}}
+.cell:hover:not(.dn){
+  transform:translateY(-2px);
+  border-color:rgba(255,45,122,0.5);color:var(--pink);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.12),0 4px 0 var(--edge-dk),0 6px 0 var(--edge-dk2),0 8px 14px -3px rgba(255,45,122,0.4);
+}
+.cell:active:not(.dn){
+  transform:translateY(2px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.05),0 0 0 var(--edge-dk),0 1px 2px rgba(0,0,0,0.3);
+}
+.cell.dn{
+  background:rgba(0,230,118,0.06);border-color:rgba(0,230,118,0.15);
+  color:rgba(0,230,118,0.4);cursor:not-allowed;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.02);transform:translateY(2px);
+}
+.cell.dn i{font-size:9px;}
 
-footer{ flex-shrink:0; padding: 6px 12px; display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; }
-.leg{ display:flex; gap:10px; flex-wrap:wrap; font-size:8px; color:var(--faint); font-weight:700; }
-.leg .li{ display:inline-flex; align-items:center; gap:3px; }
-.leg .li i{ font-size:10px; }
+/* ============ FOOTER ============ */
+footer{padding:5px 9px;display:flex;align-items:center;justify-content:space-between;gap:5px;flex-wrap:wrap;}
+.leg{display:flex;gap:6px;flex-wrap:wrap;font-size:7px;color:var(--faint);font-weight:700;}
+.leg .li{display:inline-flex;align-items:center;gap:2px;}
+.leg .li i{font-size:8px;}
 
-#toasts{ position:fixed; top:calc(12px + var(--sat)); right:calc(12px + var(--sab)); z-index:200; display:flex; flex-direction:column; gap:6px; pointer-events:none; max-width:260px; }
+/* ============ TOASTS ============ */
+#toasts{position:fixed;top:calc(8px + var(--sat));right:8px;z-index:200;display:flex;flex-direction:column;gap:4px;pointer-events:none;max-width:240px;}
 .toast{
-  background: linear-gradient(180deg, #1a1a24, #12121a); border:1px solid var(--border-hi);
-  border-radius:10px; padding:8px 12px; display:flex; align-items:center; gap:8px;
-  box-shadow:0 14px 34px -10px rgba(0,0,0,0.8);
-  animation: tin 0.4s cubic-bezier(0.34,1.56,0.64,1);
-  font-size:11px; font-weight:700; color:var(--text);
+  background:linear-gradient(180deg,var(--panel-lt),var(--panel));
+  border:1px solid var(--edge);border-radius:8px;padding:7px 10px;
+  display:flex;align-items:center;gap:6px;
+  box-shadow:0 2px 0 var(--edge-dk),0 4px 0 var(--edge-dk2),0 10px 24px -8px rgba(0,0,0,0.85);
+  animation:tin 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  font-size:10px;font-weight:700;
 }
-.toast i{ font-size:14px; flex-shrink:0; }
-.toast.gold{ border-color:rgba(255,204,0,0.5); } .toast.gold i{ color:var(--gold); }
-.toast.pink{ border-color:rgba(255,45,122,0.5); } .toast.pink i{ color:var(--pink); }
-.toast.grn{ border-color:rgba(0,230,118,0.5); } .toast.grn i{ color:var(--green); }
-.toast.blu{ border-color:rgba(0,212,255,0.5); } .toast.blu i{ color:var(--cyan); }
-@keyframes tin{ from{ transform:translateX(120%); opacity:0; } to{ transform:translateX(0); opacity:1; } }
-@keyframes tout{ to{ transform:translateX(120%); opacity:0; } }
+.toast i{font-size:12px;flex-shrink:0;}
+.toast.gold{border-color:rgba(255,204,0,0.5);}.toast.gold i{color:var(--gold);}
+.toast.pink{border-color:rgba(255,45,122,0.5);}.toast.pink i{color:var(--pink);}
+.toast.grn{border-color:rgba(0,230,118,0.5);}.toast.grn i{color:var(--green);}
+.toast.blu{border-color:rgba(0,212,255,0.5);}.toast.blu i{color:var(--cyan);}
+.toast.purple{border-color:rgba(180,74,255,0.5);}.toast.purple i{color:var(--purple);}
+@keyframes tin{from{transform:translateX(120%);opacity:0;}to{transform:translateX(0);opacity:1;}}
+@keyframes tout{to{transform:translateX(120%);opacity:0;}}
 
-.ov{ position:fixed; inset:0; background:rgba(10,10,15,0.85); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); z-index:50; display:flex; align-items:flex-end; justify-content:center; animation:fi 0.2s ease; }
-@keyframes fi{ from{ opacity:0; } to{ opacity:1; } }
+/* ============ OVERLAYS ============ */
+.ov{position:fixed;inset:0;background:rgba(5,5,8,0.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);z-index:50;display:flex;align-items:flex-end;justify-content:center;animation:fi 0.2s;}
+@keyframes fi{from{opacity:0;}to{opacity:1;}}
 .sheet{
-  background: linear-gradient(180deg, #1a1a24 0%, #12121a 100%);
-  border:1px solid var(--border); border-bottom:none;
-  border-radius:20px 20px 0 0; width:100%; max-width:640px;
-  padding:18px 20px 20px; display:flex; flex-direction:column; gap:12px;
-  max-height:92vh; overflow-y:auto;
-  box-shadow:0 -20px 60px -20px rgba(0,0,0,0.9);
+  background:linear-gradient(180deg,var(--panel-lt) 0%,var(--panel) 100%);
+  border:1px solid var(--edge);border-bottom:none;
+  border-radius:20px 20px 0 0;width:100%;max-width:560px;
+  padding:12px 12px 18px;display:flex;flex-direction:column;gap:8px;
+  max-height:94vh;overflow-y:auto;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 -20px 60px -20px rgba(0,0,0,0.95);
   animation:su 0.35s cubic-bezier(0.16,1,0.3,1);
 }
-@keyframes su{ from{ transform:translateY(40px); opacity:0; } to{ transform:translateY(0); opacity:1; } }
-.hd{ width:44px; height:4px; background:var(--border-hi); border-radius:2px; margin:0 auto -4px; }
-.shead{ display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
-.bgs{ display:flex; gap:6px; flex-wrap:wrap; }
-.bdg{ display:inline-flex; align-items:center; gap:5px; padding:4px 9px; border-radius:6px; font-weight:800; font-size:9px; letter-spacing:0.06em; text-transform:uppercase; border:1px solid var(--border); background:var(--glass); color:var(--text); }
-.bdg.cat{ color:#fff; border-color:transparent; font-family:'Bebas Neue', sans-serif; font-size:11px; }
-.bdg.pts{ background:linear-gradient(135deg,var(--gold),#f59e0b); color:#0a0a0f; border-color:transparent; font-family:'Bebas Neue', sans-serif; font-size:11px; }
-.bdg.sp{ color:#fff; border-color:transparent; font-family:'Bebas Neue', sans-serif; font-size:11px; }
-.tl{ font-size:10px; color:var(--faint); font-weight:800; text-transform:uppercase; letter-spacing:0.06em; }
-.tl strong{ color:var(--text); font-weight:900; }
+@keyframes su{from{transform:translateY(40px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.hnd{width:40px;height:3px;background:var(--edge);border-radius:2px;margin:0 auto -2px;}
+.shead{display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;}
+.bgs{display:flex;gap:3px;flex-wrap:wrap;}
+.bdg{display:inline-flex;align-items:center;gap:3px;padding:3px 7px;border-radius:5px;font-weight:800;font-size:8px;letter-spacing:0.06em;text-transform:uppercase;border:1px solid var(--edge);background:rgba(255,255,255,0.03);box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);}
+.bdg.cat{color:#fff;border-color:transparent;font-family:'Bebas Neue',sans-serif;font-size:10px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.25),inset 0 -2px 0 rgba(0,0,0,0.25),0 2px 0 rgba(0,0,0,0.35);}
+.bdg.pts{background:linear-gradient(180deg,#ffd633,#d97706);color:#0a0a0f;border-color:transparent;font-family:'Bebas Neue',sans-serif;font-size:10px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.4),inset 0 -2px 0 rgba(0,0,0,0.25),0 2px 0 rgba(0,0,0,0.35);}
+.bdg.sp{color:#fff;border-color:transparent;font-family:'Bebas Neue',sans-serif;font-size:10px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.25),inset 0 -2px 0 rgba(0,0,0,0.25),0 2px 0 rgba(0,0,0,0.35);}
+.tl{font-size:8px;color:var(--faint);font-weight:800;text-transform:uppercase;letter-spacing:0.06em;}
+.tl strong{color:var(--text);font-weight:900;}
 
-.sbody{ padding:8px 0; text-align:center; }
-.df{ display:inline-flex; align-items:center; gap:5px; font-size:9px; color:var(--faint); font-weight:800; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px; }
-.df i{ color:var(--pink); }
-.qt{ font-family:'Inter', sans-serif; font-weight:800; font-size:18px; line-height:1.32; color:var(--text); margin:4px 0 6px; letter-spacing:-0.01em; }
-@media (min-width:560px){ .qt{ font-size:22px; } }
-.ans{ background:linear-gradient(135deg,rgba(0,230,118,0.14),rgba(0,230,118,0.03)); border:1px solid rgba(0,230,118,0.32); border-radius:10px; padding:12px; text-align:left; margin-top:10px; animation:pi 0.35s cubic-bezier(0.34,1.56,0.64,1); }
-@keyframes pi{ from{ transform:scale(0.9); opacity:0; } to{ transform:scale(1); opacity:1; } }
-.alab{ font-size:9px; color:var(--green); font-weight:900; text-transform:uppercase; letter-spacing:0.12em; margin-bottom:5px; display:flex; align-items:center; gap:5px; }
-.atx{ font-family:'Inter', sans-serif; font-weight:700; font-size:13px; color:var(--text); line-height:1.4; }
-
-.wrn{ border-radius:10px; padding:10px; margin-top:10px; border:1px solid transparent; text-align:center; }
-.wt{ font-size:10px; font-weight:900; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; display:flex; align-items:center; justify-content:center; gap:6px; }
-.wx{ font-size:12px; font-weight:700; line-height:1.4; color:var(--text); }
-
-.rvl{ width:100%; padding:13px; border-radius:10px; border:none; background:linear-gradient(135deg,var(--pink),var(--purple)); color:#fff; font-family:'Bebas Neue', sans-serif; font-weight:400; font-size:16px; letter-spacing:0.04em; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 10px 26px -8px rgba(255,45,122,0.6); transition: all 0.18s cubic-bezier(0.34,1.4,0.64,1); }
-.rvl:hover{ transform:translateY(-2px); box-shadow:0 14px 34px -8px rgba(255,45,122,0.85); }
-.rvl:active{ transform:translateY(0) scale(0.98); }
-
-.sbls{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-.sbl{ background:var(--glass); border:1px solid var(--border); border-radius:10px; padding:10px; display:flex; flex-direction:column; gap:8px; transition: all 0.3s ease; }
-.sbl.k.act{ background:linear-gradient(135deg,rgba(255,45,122,0.16),rgba(255,45,122,0.03)); border-color:rgba(255,45,122,0.42); box-shadow:0 0 0 2px rgba(255,45,122,0.12); }
-.sbl.v.act{ background:linear-gradient(135deg,rgba(0,212,255,0.16),rgba(0,212,255,0.03)); border-color:rgba(0,212,255,0.42); box-shadow:0 0 0 2px rgba(0,212,255,0.12); }
-.sbl.lk{ opacity:0.3; pointer-events:none; }
-.sbt{ display:flex; align-items:center; justify-content:center; gap:5px; font-size:10px; font-weight:900; letter-spacing:0.05em; text-transform:uppercase; }
-.sbt.k{ color:var(--pink); }
-.sbt.v{ color:var(--cyan); }
-.sbt .tag{ padding:1px 6px; border-radius:4px; font-size:7px; background:currentColor; color:var(--bg); letter-spacing:0.08em; }
-.sbb{ display:flex; gap:6px; }
-.sbtn{ flex:1; padding:9px 6px; border-radius:7px; border:none; font-family:'Bebas Neue', sans-serif; font-weight:400; font-size:14px; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px; transition: all 0.12s ease; letter-spacing:0.02em; }
-.sbtn.pl{ background:linear-gradient(135deg,var(--green),#059669); box-shadow:0 6px 16px -5px rgba(0,230,118,0.5); }
-.sbtn.mn{ background:linear-gradient(135deg,var(--red),#dc2626); box-shadow:0 6px 16px -5px rgba(255,59,59,0.5); }
-.sbtn:hover{ transform:translateY(-1px); }
-.sbtn:active{ transform:translateY(0) scale(0.95); }
-
-.skp{ display:flex; align-items:center; justify-content:center; gap:6px; padding:9px; width:100%; background:none; border:none; color:var(--faint); font-weight:800; font-size:10px; text-transform:uppercase; letter-spacing:0.08em; cursor:pointer; transition:color 0.2s; }
-.skp:hover{ color:var(--dim); }
-
-.cov{ position:fixed; inset:0; background:rgba(10,10,15,0.9); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); z-index:60; display:flex; align-items:center; justify-content:center; padding:16px; animation:fi 0.2s ease; }
-.cc{ background: linear-gradient(180deg, #1a1a24 0%, #12121a 100%); border:1px solid var(--border-hi); border-radius:20px; padding:24px 20px; max-width:400px; width:100%; text-align:center; box-shadow:0 40px 90px -20px rgba(0,0,0,0.9); animation:pi 0.4s cubic-bezier(0.34,1.56,0.64,1); }
-.ci{ width:80px; height:80px; border-radius:18px; display:flex; align-items:center; justify-content:center; font-size:34px; margin:0 auto 16px; color:#fff; }
-.ct{ font-family:'Bebas Neue', sans-serif; font-weight:400; font-size:28px; color:var(--text); margin-bottom:8px; letter-spacing:0.02em; }
-.cd{ font-size:13px; color:var(--dim); font-weight:600; margin-bottom:20px; line-height:1.5; }
-.cbtn{ width:100%; padding:13px; border-radius:10px; border:none; font-family:'Bebas Neue', sans-serif; font-weight:400; font-size:16px; letter-spacing:0.04em; cursor:pointer; background:linear-gradient(135deg,var(--pink),var(--purple)); color:#fff; box-shadow:0 10px 26px -8px rgba(255,45,122,0.6); transition: all 0.18s cubic-bezier(0.34,1.4,0.64,1); display:flex; align-items:center; justify-content:center; gap:8px; }
-.cbtn:hover{ transform:translateY(-2px); box-shadow:0 14px 34px -8px rgba(255,45,122,0.85); }
-.fin{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px; }
-.fb{ padding:14px; border-radius:10px; border:1px solid var(--border); }
-.fb.k{ background:linear-gradient(135deg,rgba(255,45,122,0.15),rgba(255,45,122,0.04)); border-color:rgba(255,45,122,0.35); }
-.fb.v{ background:linear-gradient(135deg,rgba(0,212,255,0.15),rgba(0,212,255,0.04)); border-color:rgba(0,212,255,0.35); }
-.fbt{ font-size:9px; font-weight:900; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px; }
-.fb.k .fbt{ color:var(--pink); }
-.fb.v .fbt{ color:var(--cyan); }
-.fbv{ font-family:'Bebas Neue', sans-serif; font-weight:400; font-size:32px; line-height:1; color:var(--text); }
-
-.hd1{ display:none !important; }
-.shk{ animation:shk 0.5s cubic-bezier(0.36,0.07,0.19,0.97); }
-@keyframes shk{ 10%,90%{ transform:translate3d(-2px,0,0); } 20%,80%{ transform:translate3d(4px,0,0); } 30%,50%,70%{ transform:translate3d(-6px,0,0); } 40%,60%{ transform:translate3d(6px,0,0); } }
-
-.hb{ position:relative; }
-.hb .bdg2{ position:absolute; top:-3px; right:-3px; background:var(--pink); color:#fff; font-size:8px; font-weight:900; padding:1px 5px; border-radius:6px; min-width:14px; text-align:center; box-shadow:0 2px 6px rgba(255,45,122,0.6); }
-.hl{ display:flex; flex-direction:column; gap:5px; max-height:280px; overflow-y:auto; padding:2px 0; margin-top:12px; }
-.hi{ display:flex; align-items:center; gap:9px; padding:8px 10px; background:var(--glass); border:1px solid var(--border); border-radius:8px; font-size:11px; font-weight:600; }
-.hi .ic2{ width:24px; height:24px; border-radius:7px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; flex-shrink:0; }
-.hi .inf2{ flex:1; min-width:0; }
-.hi .nm2{ font-weight:800; color:var(--text); }
-.hi .dt2{ font-size:9px; color:var(--faint); margin-top:1px; }
-.hi .vl2{ font-family:'Bebas Neue', sans-serif; font-weight:400; font-size:15px; flex-shrink:0; }
-.hi .vl2.pos{ color:var(--green); }
-.hi .vl2.neg{ color:var(--red); }
-.hempty{ text-align:center; padding:20px; color:var(--faint); font-size:12px; }
-
-#tarot-ov{
-  position:fixed; inset:0;
-  background: radial-gradient(ellipse at center, #2a1055 0%, #0f0522 60%, #050208 100%);
-  z-index:300; overflow:hidden;
-  display:flex; align-items:center; justify-content:center;
-  animation: fi 0.5s ease;
+/* 3D Question Card */
+.sbody{padding:5px 0;text-align:center;perspective:900px;}
+.df{display:inline-flex;align-items:center;gap:4px;font-size:8px;color:var(--faint);font-weight:800;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;}
+.df i{color:var(--pink);}
+.qt-card{
+  background:linear-gradient(160deg,#2c2c42 0%,#1a1a26 100%);
+  border:1px solid var(--edge);border-radius:14px;
+  padding:14px 12px;margin:4px 0;
+  box-shadow:inset 0 2px 0 rgba(255,255,255,0.09),inset 0 -3px 0 rgba(0,0,0,0.28),
+    0 3px 0 var(--edge-dk),0 6px 0 var(--edge-dk2),0 14px 26px -8px rgba(0,0,0,0.75);
+  transform:rotateX(4deg);
+  animation:qin 0.55s cubic-bezier(0.34,1.56,0.64,1);
 }
-.tbg-glow{ position:absolute; width:700px; height:700px; border-radius:50%; background:radial-gradient(circle, rgba(180,74,255,0.22), transparent 60%); animation: gp 4s ease-in-out infinite; pointer-events:none; }
-@keyframes gp{ 0%,100%{ transform:scale(1); opacity:0.6; } 50%{ transform:scale(1.2); opacity:1; } }
-.tstars{ position:absolute; inset:0; pointer-events:none; background-image:
-  radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.7), transparent),
-  radial-gradient(1px 1px at 80% 20%, rgba(255,255,255,0.6), transparent),
-  radial-gradient(1px 1px at 60% 70%, rgba(255,255,255,0.8), transparent),
-  radial-gradient(1px 1px at 30% 80%, rgba(255,255,255,0.5), transparent),
-  radial-gradient(1px 1px at 90% 60%, rgba(255,255,255,0.6), transparent),
-  radial-gradient(1px 1px at 10% 55%, rgba(255,255,255,0.6), transparent),
-  radial-gradient(1px 1px at 45% 15%, rgba(255,255,255,0.5), transparent),
-  radial-gradient(1px 1px at 75% 90%, rgba(255,255,255,0.7), transparent);
-  animation: tw 3s ease-in-out infinite;
+@keyframes qin{from{transform:rotateX(30deg) scale(0.85) translateY(30px);opacity:0;}to{transform:rotateX(4deg) scale(1) translateY(0);opacity:1;}}
+.qt{font-family:'Inter',sans-serif;font-weight:800;font-size:15px;line-height:1.35;color:var(--text);}
+@media(min-width:500px){.qt{font-size:18px;}}
+
+.ans{background:linear-gradient(160deg,rgba(0,230,118,0.22),rgba(0,230,118,0.06));border:1px solid rgba(0,230,118,0.45);border-radius:10px;padding:10px;text-align:left;margin-top:8px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.1),0 2px 0 rgba(0,80,40,0.5),0 4px 10px -3px rgba(0,230,118,0.3);animation:pi 0.4s cubic-bezier(0.34,1.56,0.64,1);}
+@keyframes pi{from{transform:scale(0.9);opacity:0;}to{transform:scale(1);opacity:1;}}
+.alab{font-size:8px;color:var(--green);font-weight:900;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:4px;display:flex;align-items:center;gap:4px;}
+.atx{font-family:'Inter',sans-serif;font-weight:700;font-size:12px;color:var(--text);line-height:1.4;}
+
+.rvl{
+  width:100%;padding:11px;border-radius:10px;border:none;
+  background:linear-gradient(180deg,#ff4d9e,#c026d3);color:#fff;
+  font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:0.05em;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.35),inset 0 -3px 0 rgba(0,0,0,0.3),0 3px 0 #6a1a4a,0 6px 14px -4px rgba(255,45,122,0.6);
+  transition:transform 0.08s,box-shadow 0.08s;
 }
-@keyframes tw{ 0%,100%{ opacity:0.5; } 50%{ opacity:1; } }
-.tcards{ position:absolute; inset:0; pointer-events:none; overflow:hidden; }
-.tcard{
-  position:absolute; width:78px; height:130px; border-radius:9px;
-  border:2px solid rgba(255,204,0,0.55);
-  background:linear-gradient(135deg, #2a0f52 0%, #4a1f8a 50%, #2a0f52 100%);
-  box-shadow:0 0 26px rgba(255,204,0,0.4), inset 0 0 26px rgba(180,74,255,0.25);
-  display:flex; align-items:center; justify-content:center;
-  font-size:30px; color:var(--gold);
-  will-change:transform; animation: fc 6s linear infinite;
+.rvl:active{transform:translateY(3px);box-shadow:inset 0 1px 0 rgba(255,255,255,0.15),0 0 0 #6a1a4a,0 2px 4px rgba(0,0,0,0.3);}
+
+/* 3D Score blocks */
+.sbls{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.sbl{
+  background:linear-gradient(180deg,var(--panel-hi),var(--panel));
+  border:1px solid var(--edge);border-radius:10px;padding:8px;
+  display:flex;flex-direction:column;gap:6px;transition:all 0.3s;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.06),0 2px 0 var(--edge-dk),0 4px 8px -2px rgba(0,0,0,0.5);
 }
-.tcard::after{ content:''; position:absolute; inset:5px; border-radius:5px; border:1px solid rgba(255,204,0,0.3); pointer-events:none; }
-@keyframes fc{
-  0%{ transform:translate(-250px,150%) rotate(-30deg) scale(0.7); opacity:0; }
-  15%{ opacity:1; }
-  85%{ opacity:1; }
-  100%{ transform:translate(calc(100vw + 250px), -150%) rotate(30deg) scale(0.7); opacity:0; }
+.sbl.k.act{background:linear-gradient(180deg,rgba(255,45,122,0.22),rgba(255,45,122,0.06));border-color:rgba(255,45,122,0.5);box-shadow:inset 0 1px 0 rgba(255,255,255,0.1),0 0 0 2px rgba(255,45,122,0.15),0 2px 0 var(--edge-dk);}
+.sbl.v.act{background:linear-gradient(180deg,rgba(0,212,255,0.22),rgba(0,212,255,0.06));border-color:rgba(0,212,255,0.5);box-shadow:inset 0 1px 0 rgba(255,255,255,0.1),0 0 0 2px rgba(0,212,255,0.15),0 2px 0 var(--edge-dk);}
+.sbl.lk{opacity:0.28;pointer-events:none;}
+.sbt{display:flex;align-items:center;justify-content:center;gap:3px;font-size:9px;font-weight:900;letter-spacing:0.05em;text-transform:uppercase;}
+.sbt.k{color:var(--pink);}
+.sbt.v{color:var(--cyan);}
+.sbt .tag{padding:1px 5px;border-radius:3px;font-size:6.5px;background:currentColor;color:var(--bg);letter-spacing:0.08em;}
+.sbb{display:flex;gap:4px;}
+.sbtn{
+  flex:1;padding:8px 5px;border-radius:7px;border:none;
+  font-family:'Bebas Neue',sans-serif;font-size:13px;color:#fff;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:3px;
+  transition:transform 0.08s,box-shadow 0.08s;
 }
-.tc1{ top:8%; animation-duration:7s; animation-delay:0s; }
-.tc2{ top:62%; animation-duration:8s; animation-delay:1.5s; }
-.tc3{ top:35%; animation-duration:6s; animation-delay:3s; }
-.tc4{ top:80%; animation-duration:7.5s; animation-delay:0.8s; }
-.tc5{ top:18%; animation-duration:9s; animation-delay:2.2s; }
-.tc6{ top:48%; animation-duration:6.5s; animation-delay:4s; }
-.tcont{ position:relative; z-index:10; text-align:center; padding:22px; max-width:480px; animation: cin 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.3s both; }
-@keyframes cin{ 0%{ transform:scale(0.7) translateY(30px); opacity:0; } 100%{ transform:scale(1) translateY(0); opacity:1; } }
-.teye{ font-size:56px; color:var(--gold); margin-bottom:14px; text-shadow:0 0 30px rgba(255,204,0,0.7), 0 0 60px rgba(180,74,255,0.5); animation: ef 3s ease-in-out infinite; }
-@keyframes ef{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-8px); } }
-.tt{ font-family:'Bebas Neue', sans-serif; font-weight:400; font-size:44px; letter-spacing:0.02em; line-height:1; background:linear-gradient(135deg, #ffe282 0%, #ffcc00 40%, #b44aff 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:8px; filter:drop-shadow(0 0 20px rgba(255,204,0,0.5)); }
-@media (max-width:520px){ .tt{ font-size:32px; } }
-.tsub{ font-size:11px; color:rgba(255,204,0,0.9); font-weight:800; letter-spacing:0.3em; text-transform:uppercase; margin-bottom:18px; }
-.tdesc{ font-size:14px; color:rgba(240,240,245,0.85); font-weight:600; line-height:1.6; margin-bottom:24px; font-family:'Inter', sans-serif; font-style:italic; }
-.tdiv{ width:70px; height:1px; background:linear-gradient(90deg, transparent, #ffcc00, transparent); margin:0 auto 20px; }
-.tbtns{ display:flex; flex-direction:column; gap:8px; }
-.tcta{ padding:14px 20px; border-radius:10px; background:linear-gradient(135deg,#ffcc00,#f59e0b); color:#0f0522; font-family:'Bebas Neue', sans-serif; font-weight:400; font-size:18px; letter-spacing:0.04em; border:none; cursor:pointer; box-shadow:0 12px 30px -8px rgba(255,204,0,0.7); transition: all 0.2s cubic-bezier(0.34,1.4,0.64,1); display:flex; align-items:center; justify-content:center; gap:8px; animation: cp 2.5s ease-in-out infinite; }
-.tcta:hover{ transform:translateY(-2px); box-shadow:0 16px 40px -8px rgba(255,204,0,0.9); }
-@keyframes cp{ 0%,100%{ box-shadow:0 12px 30px -8px rgba(255,204,0,0.7); } 50%{ box-shadow:0 12px 40px -6px rgba(255,204,0,1), 0 0 50px rgba(180,74,255,0.5); } }
-.tcls{ padding:10px 18px; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,204,0,0.3); color:rgba(255,204,0,0.9); font-weight:800; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; transition: all 0.2s; }
-.tcls:hover{ background:rgba(255,204,0,0.1); color:#ffcc00; }
-.ttag{ font-size:10px; color:rgba(255,204,0,0.75); font-weight:700; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:6px; }
+.sbtn.pl{background:linear-gradient(180deg,#22e58a,#059669);box-shadow:inset 0 1px 0 rgba(255,255,255,0.35),inset 0 -3px 0 rgba(0,0,0,0.25),0 2px 0 #034a2a,0 4px 10px -3px rgba(0,230,118,0.5);}
+.sbtn.mn{background:linear-gradient(180deg,#ff5566,#dc2626);box-shadow:inset 0 1px 0 rgba(255,255,255,0.35),inset 0 -3px 0 rgba(0,0,0,0.25),0 2px 0 #7a0d0d,0 4px 10px -3px rgba(255,59,59,0.5);}
+.sbtn:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,255,255,0.1),0 0 0 transparent;}
+
+.skp{display:flex;align-items:center;justify-content:center;gap:5px;padding:7px;width:100%;background:none;border:none;color:var(--faint);font-weight:800;font-size:9px;text-transform:uppercase;letter-spacing:0.08em;cursor:pointer;}
+.skp:hover{color:var(--dim);}
+
+/* ============ CENTER MODALS ============ */
+.cov{position:fixed;inset:0;background:rgba(5,5,8,0.9);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);z-index:60;display:flex;align-items:center;justify-content:center;padding:16px;animation:fi 0.2s;}
+.cc{
+  background:linear-gradient(180deg,var(--panel-lt),var(--panel));
+  border:1px solid var(--edge);border-radius:18px;
+  padding:20px 16px;max-width:380px;width:100%;text-align:center;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 2px 0 var(--edge-dk),0 4px 0 var(--edge-dk2),0 30px 60px -20px rgba(0,0,0,0.95);
+  animation:pi 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+.ci{width:70px;height:70px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 14px;color:#fff;box-shadow:inset 0 2px 0 rgba(255,255,255,0.35),inset 0 -3px 0 rgba(0,0,0,0.25),0 4px 0 rgba(0,0,0,0.3),0 12px 24px -6px rgba(0,0,0,0.5);}
+.ct{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--text);margin-bottom:6px;letter-spacing:0.02em;}
+.cd{font-size:12px;color:var(--dim);font-weight:600;margin-bottom:16px;line-height:1.5;}
+.cbtn{
+  width:100%;padding:11px;border-radius:10px;border:none;
+  font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:0.04em;
+  cursor:pointer;background:linear-gradient(180deg,#ff4d9e,#c026d3);color:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.35),inset 0 -3px 0 rgba(0,0,0,0.3),0 3px 0 #6a1a4a,0 8px 20px -6px rgba(255,45,122,0.6);
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  transition:transform 0.08s,box-shadow 0.08s;
+}
+.cbtn:active{transform:translateY(3px);box-shadow:inset 0 1px 0 rgba(255,255,255,0.15),0 0 0 #6a1a4a;}
+.fin{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.fb{padding:12px;border-radius:10px;border:1px solid var(--edge);box-shadow:inset 0 1px 0 rgba(255,255,255,0.05),0 2px 0 var(--edge-dk);}
+.fb.k{background:linear-gradient(180deg,rgba(255,45,122,0.18),rgba(255,45,122,0.05));border-color:rgba(255,45,122,0.35);}
+.fb.v{background:linear-gradient(180deg,rgba(0,212,255,0.18),rgba(0,212,255,0.05));border-color:rgba(0,212,255,0.35);}
+.fbt{font-size:8px;font-weight:900;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:4px;}
+.fb.k .fbt{color:var(--pink);}
+.fb.v .fbt{color:var(--cyan);}
+.fbv{font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:1;color:var(--text);}
+
+.hd1{display:none !important;}
+.shk{animation:shk 0.5s cubic-bezier(0.36,0.07,0.19,0.97);}
+@keyframes shk{10%,90%{transform:translate3d(-2px,0,0);}20%,80%{transform:translate3d(4px,0,0);}30%,50%,70%{transform:translate3d(-6px,0,0);}40%,60%{transform:translate3d(6px,0,0);}}
+
+/* Bet buttons for auction */
+.bet-btns{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:10px;}
+.bet-btn{
+  padding:11px;border-radius:10px;border:1px solid var(--edge);
+  background:linear-gradient(180deg,var(--panel-hi),var(--panel));
+  color:var(--text);font-family:'Bebas Neue',sans-serif;font-size:15px;
+  cursor:pointer;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 2px 0 var(--edge-dk),0 4px 8px -2px rgba(0,0,0,0.5);
+  transition:transform 0.08s;
+}
+.bet-btn:active{transform:translateY(2px);}
+.bet-btn.gold{background:linear-gradient(180deg,#ffd633,#d97706);color:#0a0a0f;}
+
+/* History */
+.hb{position:relative;}
+.hb .bdg2{position:absolute;top:-2px;right:-2px;background:var(--pink);color:#fff;font-size:7px;font-weight:900;padding:1px 4px;border-radius:5px;min-width:12px;text-align:center;}
+.hl{display:flex;flex-direction:column;gap:4px;max-height:260px;overflow-y:auto;padding:2px 0;margin-top:10px;}
+.hi{display:flex;align-items:center;gap:7px;padding:7px 9px;background:var(--panel-hi);border:1px solid var(--edge);border-radius:8px;font-size:10px;font-weight:600;box-shadow:inset 0 1px 0 rgba(255,255,255,0.04);}
+.hi .ic2{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:9px;flex-shrink:0;box-shadow:inset 0 1px 0 rgba(255,255,255,0.3);}
+.hi .inf2{flex:1;min-width:0;}
+.hi .nm2{font-weight:800;color:var(--text);}
+.hi .dt2{font-size:8px;color:var(--faint);margin-top:1px;}
+.hi .vl2{font-family:'Bebas Neue',sans-serif;font-size:14px;flex-shrink:0;}
+.hi .vl2.pos{color:var(--green);}
+.hi .vl2.neg{color:var(--red);}
+.hempty{text-align:center;padding:18px;color:var(--faint);font-size:11px;}
+
+/* Tarot */
+#tarot-ov{position:fixed;inset:0;background:radial-gradient(ellipse at center,#2a1055 0%,#0f0522 60%,#050208 100%);z-index:300;overflow:hidden;display:flex;align-items:center;justify-content:center;animation:fi 0.5s ease;}
+.tbg-glow{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(180,74,255,0.22),transparent 60%);animation:gp 4s ease-in-out infinite;pointer-events:none;}
+@keyframes gp{0%,100%{transform:scale(1);opacity:0.6;}50%{transform:scale(1.2);opacity:1;}}
+.tstars{position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(1px 1px at 20% 30%,rgba(255,255,255,0.7),transparent),radial-gradient(1px 1px at 80% 20%,rgba(255,255,255,0.6),transparent),radial-gradient(1px 1px at 60% 70%,rgba(255,255,255,0.8),transparent),radial-gradient(1px 1px at 30% 80%,rgba(255,255,255,0.5),transparent),radial-gradient(1px 1px at 90% 60%,rgba(255,255,255,0.6),transparent);animation:tw 3s ease-in-out infinite;}
+@keyframes tw{0%,100%{opacity:0.5;}50%{opacity:1;}}
+.tcards{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.tcard{position:absolute;width:70px;height:116px;border-radius:8px;border:2px solid rgba(255,204,0,0.55);background:linear-gradient(135deg,#2a0f52 0%,#4a1f8a 50%,#2a0f52 100%);box-shadow:0 0 22px rgba(255,204,0,0.4),inset 0 0 22px rgba(180,74,255,0.25);display:flex;align-items:center;justify-content:center;font-size:26px;color:var(--gold);will-change:transform;animation:fc 6s linear infinite;}
+@keyframes fc{0%{transform:translate(-250px,150%) rotate(-30deg) scale(0.7);opacity:0;}15%{opacity:1;}85%{opacity:1;}100%{transform:translate(calc(100vw + 250px),-150%) rotate(30deg) scale(0.7);opacity:0;}}
+.tc1{top:8%;animation-duration:7s;animation-delay:0s;}
+.tc2{top:62%;animation-duration:8s;animation-delay:1.5s;}
+.tc3{top:35%;animation-duration:6s;animation-delay:3s;}
+.tc4{top:80%;animation-duration:7.5s;animation-delay:0.8s;}
+.tc5{top:18%;animation-duration:9s;animation-delay:2.2s;}
+.tc6{top:48%;animation-duration:6.5s;animation-delay:4s;}
+.tcont{position:relative;z-index:10;text-align:center;padding:18px;max-width:420px;animation:cin 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.3s both;}
+@keyframes cin{0%{transform:scale(0.7) translateY(30px);opacity:0;}100%{transform:scale(1) translateY(0);opacity:1;}}
+.teye{font-size:48px;color:var(--gold);margin-bottom:12px;text-shadow:0 0 26px rgba(255,204,0,0.7),0 0 50px rgba(180,74,255,0.5);animation:ef 3s ease-in-out infinite;}
+@keyframes ef{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+.tt{font-family:'Bebas Neue',sans-serif;font-size:38px;letter-spacing:0.02em;line-height:1;background:linear-gradient(135deg,#ffe282 0%,#ffcc00 40%,#b44aff 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;filter:drop-shadow(0 0 18px rgba(255,204,0,0.5));}
+@media(max-width:520px){.tt{font-size:28px;}}
+.tsub{font-size:10px;color:rgba(255,204,0,0.9);font-weight:800;letter-spacing:0.3em;text-transform:uppercase;margin-bottom:14px;}
+.tdesc{font-size:13px;color:rgba(240,240,245,0.85);font-weight:600;line-height:1.6;margin-bottom:20px;font-style:italic;}
+.tdiv{width:60px;height:1px;background:linear-gradient(90deg,transparent,#ffcc00,transparent);margin:0 auto 16px;}
+.tbtns{display:flex;flex-direction:column;gap:6px;}
+.tcta{padding:12px 18px;border-radius:10px;background:linear-gradient(180deg,#ffd633,#d97706);color:#0f0522;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.04em;border:none;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,0.4),inset 0 -3px 0 rgba(0,0,0,0.25),0 3px 0 #7a4408,0 10px 24px -6px rgba(255,204,0,0.7);display:flex;align-items:center;justify-content:center;gap:6px;}
+.tcls{padding:9px 16px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,204,0,0.3);color:rgba(255,204,0,0.9);font-weight:800;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;}
+.ttag{font-size:9px;color:rgba(255,204,0,0.75);font-weight:700;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:4px;}
 </style>
 </head>
 <body>
 
-<header class="glass">
+<header class="surf header">
   <div class="brand">
     <div class="logo"><i class="fa-solid fa-bolt"></i></div>
-    <div>
-      <div class="title">СВОЯК</div>
-      <div class="sub" id="sub">Шоу-викторина</div>
+    <div class="brand-t">
+      <div class="title">СВОЯК 3D</div>
+      <div class="sub">Шоу-викторина</div>
     </div>
   </div>
   <div class="hact">
@@ -342,14 +385,14 @@ footer{ flex-shrink:0; padding: 6px 12px; display:flex; align-items:center; just
       <i class="fa-solid fa-clock-rotate-left"></i>
       <span class="bdg2 hd1" id="hbdg">0</span>
     </button>
-    <button class="ibtn" onclick="openRandom()" title="Случайный вопрос"><i class="fa-solid fa-shuffle"></i></button>
+    <button class="ibtn" onclick="openRandom()" title="Рандом"><i class="fa-solid fa-shuffle"></i></button>
     <button class="ibtn" onclick="toggleSound()"><i class="fa-solid fa-volume-high" id="snd"></i></button>
     <button class="ibtn pink" onclick="showWinner()" title="Итоги"><i class="fa-solid fa-trophy"></i></button>
   </div>
 </header>
 
 <section class="players">
-  <div class="player glass" id="pc0">
+  <div class="player surf" id="pc0">
     <div class="av k"><i class="fa-solid fa-user-ninja"></i></div>
     <div class="pinf">
       <div class="pnm" onclick="renameP(0)"><span id="pn0">Кира</span><i class="fa-solid fa-pen ed"></i></div>
@@ -360,7 +403,7 @@ footer{ flex-shrink:0; padding: 6px 12px; display:flex; align-items:center; just
       <div class="psl">очков</div>
     </div>
   </div>
-  <div class="player glass" id="pc1">
+  <div class="player surf" id="pc1">
     <div class="av v"><i class="fa-solid fa-user-astronaut"></i></div>
     <div class="pinf">
       <div class="pnm" onclick="renameP(1)"><span id="pn1">Витя</span><i class="fa-solid fa-pen ed"></i></div>
@@ -373,21 +416,21 @@ footer{ flex-shrink:0; padding: 6px 12px; display:flex; align-items:center; just
   </div>
 </section>
 
-<section class="prog glass">
+<section class="prog surf">
   <div class="pi"><i class="fa-solid fa-chart-line"></i><span id="pl">0 / 70</span></div>
   <div class="pt"><div class="pf" id="pf" style="width:0%"></div></div>
   <div class="pp" id="pp">0%</div>
 </section>
 
 <main>
-  <div class="gridbox glass">
+  <div class="gridbox surf">
     <div id="grid"></div>
   </div>
 </main>
 
-<footer class="glass">
+<footer class="surf">
   <div class="leg">
-    <span class="li"><i class="fa-solid fa-cat" style="color:var(--pink)"></i>Кот в мешке</span>
+    <span class="li"><i class="fa-solid fa-cat" style="color:var(--pink)"></i>Кот</span>
     <span class="li"><i class="fa-solid fa-gavel" style="color:var(--gold)"></i>Аукцион</span>
     <span class="li"><i class="fa-solid fa-stopwatch" style="color:var(--cyan)"></i>Таймер</span>
     <span class="li"><i class="fa-solid fa-mask" style="color:var(--purple)"></i>Блеф</span>
@@ -398,9 +441,10 @@ footer{ flex-shrink:0; padding: 6px 12px; display:flex; align-items:center; just
 
 <div id="toasts"></div>
 
+<!-- QUESTION MODAL -->
 <div id="q-ov" class="ov hd1">
   <div class="sheet">
-    <div class="hd"></div>
+    <div class="hnd"></div>
     <div class="shead">
       <div class="bgs">
         <span class="bdg cat" id="m-cat">Категория</span>
@@ -411,16 +455,26 @@ footer{ flex-shrink:0; padding: 6px 12px; display:flex; align-items:center; just
     </div>
     <div class="sbody">
       <div class="df" id="m-df"><i class="fa-solid fa-seedling"></i> Разминка</div>
-      <p class="qt" id="m-q">Вопрос...</p>
+      <div class="qt-card">
+        <p class="qt" id="m-q">Вопрос...</p>
+      </div>
       <div class="ans hd1" id="m-ans">
-        <div class="alab"><i class="fa-solid fa-circle-check"></i> Правильный ответ</div>
+        <div class="alab"><i class="fa-solid fa-circle-check"></i> Ответ</div>
         <div class="atx" id="m-atx"></div>
       </div>
-      <div class="wrn hd1" id="m-wrn"></div>
+      <div id="m-wrn"></div>
     </div>
-    <div style="padding-top:12px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px;">
+    <div id="auction-info" class="hd1" style="padding:6px 10px;background:linear-gradient(180deg,rgba(255,204,0,0.15),rgba(255,204,0,0.05));border:1px solid rgba(255,204,0,0.4);border-radius:8px;text-align:center;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--gold);">
+      <i class="fa-solid fa-gavel"></i> Ставка: <span id="bet-amount">0</span>
+    </div>
+    <div style="padding-top:8px;border-top:1px solid var(--edge);display:flex;flex-direction:column;gap:6px;">
+      <div id="bluff-wrap" class="hd1">
+        <button onclick="bluffTransfer()" style="width:100%;padding:9px;border-radius:8px;border:1px solid rgba(180,74,255,0.5);background:linear-gradient(180deg,rgba(180,74,255,0.22),rgba(180,74,255,0.06));color:var(--purple);font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.05em;cursor:pointer;">
+          <i class="fa-solid fa-mask"></i> БЛЕФ — ПЕРЕДАТЬ СОПЕРНИКУ
+        </button>
+      </div>
       <div id="rv-wr">
-        <button class="rvl" onclick="revealAns()"><i class="fa-solid fa-eye"></i>Показать ответ</button>
+        <button class="rvl" onclick="revealAns()"><i class="fa-solid fa-eye"></i>ПОКАЗАТЬ ОТВЕТ</button>
       </div>
       <div class="sbls">
         <div class="sbl k" id="sbl0">
@@ -438,46 +492,66 @@ footer{ flex-shrink:0; padding: 6px 12px; display:flex; align-items:center; just
           </div>
         </div>
       </div>
-      <button class="skp" onclick="closeQ()"><i class="fa-solid fa-forward"></i> Пропустить — передать ход</button>
+      <button class="skp" onclick="closeQ()"><i class="fa-solid fa-forward"></i> ПРОПУСТИТЬ</button>
     </div>
   </div>
 </div>
 
-<div id="i-ov" class="cov hd1">
+<!-- BET MODAL -->
+<div id="bet-ov" class="cov hd1">
   <div class="cc">
-    <div class="ci" id="i-i" style="background:linear-gradient(135deg,var(--green),#059669);"><i class="fa-solid fa-dice"></i></div>
-    <h2 class="ct" id="i-t">Бонус!</h2>
-    <p class="cd" id="i-d"></p>
-    <button class="cbtn" onclick="closeInstant()">Продолжить</button>
+    <div class="ci" style="background:linear-gradient(160deg,#ffd633,#d97706);"><i class="fa-solid fa-gavel"></i></div>
+    <h2 class="ct">АУКЦИОН</h2>
+    <p class="cd">Выбери ставку, долбоёб:<br>если ответишь верно — удвоишь, если нет — потеряешь</p>
+    <div class="bet-btns">
+      <button class="bet-btn" onclick="setBet(100)">100</button>
+      <button class="bet-btn" onclick="setBet(200)">200</button>
+      <button class="bet-btn" onclick="setBet(300)">300</button>
+      <button class="bet-btn" onclick="setBet(500)">500</button>
+      <button class="bet-btn gold" style="grid-column:1/-1;" onclick="setBet(1000)">ВА-БАНК 1000</button>
+    </div>
   </div>
 </div>
 
+<!-- INSTANT MODAL -->
+<div id="i-ov" class="cov hd1">
+  <div class="cc">
+    <div class="ci" id="i-i" style="background:linear-gradient(160deg,#22e58a,#059669);"><i class="fa-solid fa-dice"></i></div>
+    <h2 class="ct" id="i-t">Бонус!</h2>
+    <p class="cd" id="i-d"></p>
+    <button class="cbtn" onclick="closeInstant()">ПРОДОЛЖИТЬ</button>
+  </div>
+</div>
+
+<!-- WINNER MODAL -->
 <div id="w-ov" class="cov hd1">
   <div class="cc">
-    <div class="ci" style="background:linear-gradient(135deg,var(--gold),#f59e0b);"><i class="fa-solid fa-trophy"></i></div>
-    <h2 class="ct">Игра завершена!</h2>
-    <p class="cd">Все 70 вопросов сыграны</p>
-    <p class="ct" id="w-n" style="font-size:18px;margin-bottom:10px;"></p>
+    <div class="ci" style="background:linear-gradient(160deg,#ffd633,#d97706);"><i class="fa-solid fa-trophy"></i></div>
+    <h2 class="ct">ИГРА ЗАВЕРШЕНА</h2>
+    <p class="cd">Все 70 вопросов сыграны, долбоёбы</p>
+    <p class="ct" id="w-n" style="font-size:15px;margin-bottom:8px;"></p>
     <div class="fin">
       <div class="fb k"><div class="fbt" id="fw0">Игрок 1</div><div class="fbv" id="w0">0</div></div>
       <div class="fb v"><div class="fbt" id="fw1">Игрок 2</div><div class="fbv" id="w1">0</div></div>
     </div>
-    <button class="cbtn" onclick="resetGame(true);closeModal('w-ov');"><i class="fa-solid fa-rotate-right"></i>Сыграть снова</button>
+    <button class="cbtn" onclick="resetGame(true);closeModal('w-ov');"><i class="fa-solid fa-rotate-right"></i>СЫГРАТЬ СНОВА</button>
   </div>
 </div>
 
+<!-- HISTORY MODAL -->
 <div id="h-ov" class="cov hd1">
-  <div class="cc" style="max-width:420px;">
-    <div class="ci" style="background:linear-gradient(135deg,var(--purple),#7c3aed);font-size:26px;"><i class="fa-solid fa-clock-rotate-left"></i></div>
-    <h2 class="ct" style="font-size:20px;">История ходов</h2>
+  <div class="cc" style="max-width:400px;">
+    <div class="ci" style="background:linear-gradient(160deg,#b44aff,#7c3aed);font-size:24px;"><i class="fa-solid fa-clock-rotate-left"></i></div>
+    <h2 class="ct" style="font-size:18px;">ИСТОРИЯ ХОДОВ</h2>
     <div class="hl" id="hl"></div>
-    <div style="display:flex;gap:8px;margin-top:14px;">
-      <button class="cbtn" onclick="undoLast()" id="undb" style="background:linear-gradient(135deg,var(--gold),#f59e0b);"><i class="fa-solid fa-undo"></i>Отменить</button>
-      <button class="cbtn" onclick="closeModal('h-ov')" style="background:rgba(255,255,255,0.06);box-shadow:none;">Закрыть</button>
+    <div style="display:flex;gap:6px;margin-top:12px;">
+      <button class="cbtn" onclick="undoLast()" id="undb" style="background:linear-gradient(180deg,#ffd633,#d97706);color:#0f0522;"><i class="fa-solid fa-undo"></i>ОТМЕНИТЬ</button>
+      <button class="cbtn" onclick="closeModal('h-ov')" style="background:linear-gradient(180deg,var(--panel-hi),var(--panel));color:var(--text);">ЗАКРЫТЬ</button>
     </div>
   </div>
 </div>
 
+<!-- TAROT -->
 <div id="tarot-ov" class="hd1">
   <div class="tbg-glow"></div>
   <div class="tstars"></div>
@@ -497,35 +571,35 @@ footer{ flex-shrink:0; padding: 6px 12px; display:flex; align-items:center; just
     <p class="tdesc">Открой завесу будущего вместе с Early.<br>Личные расклады Таро, обучение и прогнозы — всё это ждёт тебя.</p>
     <div class="ttag">Реклама · Партнёр проекта</div>
     <div class="tbtns">
-      <button class="tcta" onclick="buySpread()"><i class="fa-solid fa-wand-magic-sparkles"></i> Заказать расклад</button>
-      <button class="tcls" onclick="hideTarot()">Вернуться к игре</button>
+      <button class="tcta" onclick="buySpread()"><i class="fa-solid fa-wand-magic-sparkles"></i> ЗАКАЗАТЬ РАСКЛАД</button>
+      <button class="tcls" onclick="hideTarot()">ВЕРНУТЬСЯ К ИГРЕ</button>
     </div>
   </div>
 </div>
 
 <script>
-let players=[
-  {name:'Кира',score:0,streak:0},
-  {name:'Витя',score:0,streak:0}
-];
+// ========== STATE ==========
+let players=[{name:'Кира',score:0,streak:0},{name:'Витя',score:0,streak:0}];
 let active=0;
 let cur=null,curCell=null,curKey=null;
 let soundOn=true;
 let played=new Set();
 let specials={};
 let history=[];
+let curBet=0;
+let bluffActive=false;
 
-const STORAGE='jeopardy_svoyak_v3';
+const STORAGE='jeopardy_svoyak_v4';
 
-// ========== КАТЕГОРИИ ==========
+// ========== CATEGORIES ==========
 const cats=[
-  {id:'conspiracy',name:'Заговоры',color:'linear-gradient(135deg,#8b5cf6,#6d28d9)',icon:'fa-eye'},
-  {id:'mutants',name:'Бредовые животные',color:'linear-gradient(135deg,#10b981,#047857)',icon:'fa-paw'},
-  {id:'tarot',name:'Таро',color:'linear-gradient(135deg,#b44aff,#7c3aed)',icon:'fa-moon'},
-  {id:'memes',name:'Мемы',color:'linear-gradient(135deg,#ec4899,#be185d)',icon:'fa-face-laugh-squint'},
-  {id:'anagrams',name:'Анаграммы',color:'linear-gradient(135deg,#ef4444,#b91c1c)',icon:'fa-font'},
-  {id:'math',name:'Тупая математика',color:'linear-gradient(135deg,#06b6d4,#0891b2)',icon:'fa-calculator'},
-  {id:'rap',name:'Русский рэп',color:'linear-gradient(135deg,#f97316,#c2410c)',icon:'fa-microphone'}
+  {id:'conspiracy',name:'Заговоры',color:'linear-gradient(160deg,#a78bfa,#7c3aed)',icon:'fa-eye'},
+  {id:'tarot',name:'Таро',color:'linear-gradient(160deg,#c4b5fd,#8b5cf6)',icon:'fa-moon'},
+  {id:'memes',name:'Мемы',color:'linear-gradient(160deg,#f472b6,#db2777)',icon:'fa-face-laugh-squint'},
+  {id:'anagrams',name:'Анаграммы',color:'linear-gradient(160deg,#f87171,#dc2626)',icon:'fa-font'},
+  {id:'math',name:'Тупая математика',color:'linear-gradient(160deg,#22d3ee,#0891b2)',icon:'fa-calculator'},
+  {id:'rap',name:'Русский рэп',color:'linear-gradient(160deg,#fb923c,#ea580c)',icon:'fa-microphone'},
+  {id:'chaos',name:'Угар',color:'linear-gradient(160deg,#facc15,#eab308)',icon:'fa-explosion'}
 ];
 
 const pts=[100,200,300,400,500,600,700,800,900,1000];
@@ -542,11 +616,11 @@ function diffOf(p){
 function genSpecials(){
   const map={};
   const types=[
-    {t:'cat_in_bag',n:4},
+    {t:'cat_in_bag',n:5},
     {t:'auction',n:4},
     {t:'timer',n:4},
     {t:'bluff',n:4},
-    {t:'jackpot',n:3}
+    {t:'jackpot',n:4}
   ];
   const keys=[];
   cats.forEach(c=>pts.forEach(p=>keys.push(`${c.id}-${p}`)));
@@ -557,104 +631,105 @@ function genSpecials(){
 }
 
 function specInfo(t){
-  if(t==='cat_in_bag')return{icon:'fa-cat',label:'КОТ В МЕШКЕ',bg:'linear-gradient(135deg,#ff2d7a,#c026d3)'};
-  if(t==='auction')return{icon:'fa-gavel',label:'АУКЦИОН',bg:'linear-gradient(135deg,#ffcc00,#f59e0b)'};
-  if(t==='timer')return{icon:'fa-stopwatch',label:'ТАЙМЕР 10С',bg:'linear-gradient(135deg,#00d4ff,#0891b2)'};
-  if(t==='bluff')return{icon:'fa-mask',label:'БЛЕФ',bg:'linear-gradient(135deg,#b44aff,#7c3aed)'};
-  if(t==='jackpot')return{icon:'fa-star',label:'ДЖЕКПОТ',bg:'linear-gradient(135deg,#00e676,#059669)'};
+  if(t==='cat_in_bag')return{icon:'fa-cat',label:'КОТ',bg:'linear-gradient(160deg,#ff4d9e,#c026d3)'};
+  if(t==='auction')return{icon:'fa-gavel',label:'АУКЦИОН',bg:'linear-gradient(160deg,#ffd633,#d97706)'};
+  if(t==='timer')return{icon:'fa-stopwatch',label:'ТАЙМЕР',bg:'linear-gradient(160deg,#22d3ee,#0891b2)'};
+  if(t==='bluff')return{icon:'fa-mask',label:'БЛЕФ',bg:'linear-gradient(160deg,#b44aff,#7c3aed)'};
+  if(t==='jackpot')return{icon:'fa-star',label:'ДЖЕКПОТ',bg:'linear-gradient(160deg,#22e58a,#059669)'};
   return null;
 }
 
-// ========== 70 ВОПРОСОВ ==========
+// ========== 70 НОВЫХ ВОПРОСОВ ==========
 const db={
   conspiracy:{
-    100:{q:'Правда ли, что Земля плоская?',a:'Нет, она треугольная (шутка)'},
-    200:{q:'Кто на самом деле построил пирамиды?',a:'Рептилоиды в отпуске'},
-    300:{q:'Что распыляют самолёты по теории химтрейлов?',a:'Спрей от комаров и скуку'},
-    400:{q:'Кто управляет миром по самой популярной теории?',a:'Рептилоиды с Нибиру'},
-    500:{q:'Что на обратной стороне Луны?',a:'База пришельцев и шаурмичная'},
-    600:{q:'Кто «создал» коронавирус?',a:'Билл Гейтс (по версии соседа дяди Вити)'},
-    700:{q:'Кто убил Кеннеди?',a:'Все сразу: ЦРУ, мафия, пришельцы'},
-    800:{q:'Что добавляют в Coca-Cola по теории?',a:'Секретный ингредиент и немного колы'},
-    900:{q:'Какой самый популярный символ заговоров?',a:'Пирамида с глазом (Масоны)'},
-    1000:{q:'Какой год «конца света» был по календарю майя?',a:'2012 (но что-то пошло не так)'}
-  },
-  mutants:{
-    100:{q:'У тебя носорог и бык. Скрещиваем — как назовём?',a:'Нособык'},
-    200:{q:'Гиппопотам встретил жирафа. Кто родился?',a:'Гипожираф'},
-    300:{q:'Панда подружилась с битой. Результат?',a:'Пеньбита (или пандобита)'},
-    400:{q:'Кот + собака = ?',a:'Кошака (или котопёс)'},
-    500:{q:'Слон + муха = ?',a:'Слономух (страшная штука)'},
-    600:{q:'Крокодил + утка = ?',a:'Крокоутка (летающий крокодил)'},
-    700:{q:'Лев + ёж = ?',a:'Левоеж (колючий и опасный)'},
-    800:{q:'Заяц + кит = ?',a:'Зайцекит (живёт в море, ест морковку)'},
-    900:{q:'Медведь + утка = ?',a:'Медвеутка (крякает и пугает)'},
-    1000:{q:'Жираф + пингвин = ?',a:'Жирафвин (высокий, но не летает)'}
+    100:{q:'Правда ли, что Земля плоская?',a:'Нет, долбоёб, она как картошка — то есть шар'},
+    200:{q:'Кто на самом деле построил пирамиды?',a:'Рептилоиды-дальнобойщики, сука'},
+    300:{q:'Что распыляют самолёты по теории химтрейлов?',a:'Спрей от тупости, но тебе не помогает'},
+    400:{q:'Кто управляет миром по популярной теории?',a:'Рептилоиды с Нибиру и масоны-педофилы'},
+    500:{q:'Что на обратной стороне Луны?',a:'База с шаурмой и пришельцами'},
+    600:{q:'Кто убил Кеннеди?',a:'Бабка с рынка (по новой теории, серьёзно)'},
+    700:{q:'Кто «создал» коронавирус?',a:'Билл Гейтс и его чипы в вакцине (шутка, расслабься)'},
+    800:{q:'Что прячет правительство?',a:'НЛО в ангаре, ну и скелеты в шкафу'},
+    900:{q:'Какое самое популярное число заговоров?',a:'666 или 13, ты и так знал'},
+    1000:{q:'Кто придумал теорию заговоров?',a:'Сами рептилоиды, чтобы отвлечь внимание'}
   },
   tarot:{
-    100:{q:'Сколько карт в полной колоде Таро?',a:'78'},
-    200:{q:'Как называется карта с номером 0?',a:'Шут (тот ещё додик)'},
-    300:{q:'Что означает карта «Смерть» на самом деле?',a:'Перемены (а не то, что ты подумал)'},
-    400:{q:'Сколько старших арканов в Таро?',a:'22'},
-    500:{q:'Выпала карта «Башня» — что это значит?',a:'Всё сломалось, расходимся'},
-    600:{q:'Что означает карта «Колесо Фортуны»?',a:'То густо, то пусто'},
-    700:{q:'Какая карта означает любовь?',a:'Влюблённые (или Шут, если это твой краш)'},
-    800:{q:'Сколько мастей в младших арканах?',a:'4 (жезлы, кубки, мечи, пентакли)'},
-    900:{q:'Что делает таролог, когда карта не нравится?',a:'Тянет заново (шутка, но не совсем)'},
-    1000:{q:'Как называется 21-й старший аркан?',a:'Мир'}
+    100:{q:'Сколько карт в колоде Таро?',a:'78, бля, запомни уже'},
+    200:{q:'Что означает карта «Шут»?',a:'Ты долбоёб (или новое начало, как скажешь)'},
+    300:{q:'Что означает «Смерть» на самом деле?',a:'Перемены, а не смерть, успокойся'},
+    400:{q:'Сколько старших арканов в Таро?',a:'22, но ты не считал, признайся'},
+    500:{q:'Что означает карта «Башня»?',a:'Всё сломалось, нахуй'},
+    600:{q:'Как называется 21-й старший аркан?',a:'Мир (и это не метафора)'},
+    700:{q:'Что означает «Колесо Фортуны»?',a:'Тебе повезёт или ты лох, как повезёт'},
+    800:{q:'Что означает «Влюблённые»?',a:'Ты влюбился как дурак (или выбор, кому верить)'},
+    900:{q:'Какая карта самая страшная?',a:'Башня, но Смерть тоже пиздец'},
+    1000:{q:'Кто такой таролог?',a:'Либо шарлатан уебан, либо кира — угадай сам'}
   },
   memes:{
-    100:{q:'Что означает «кринж»?',a:'Чувство неловкости'},
-    200:{q:'Что такое «рофл»?',a:'Шутка, прикол'},
-    300:{q:'Что означает «жиза»?',a:'Жизненно, в точку'},
-    400:{q:'Что такое «вайб»?',a:'Атмосфера, настроение'},
-    500:{q:'Кто такой «краш»?',a:'Тот, кто очень нравится'},
-    600:{q:'Что означает «кек»?',a:'Смех, лол'},
-    700:{q:'Что такое «хайп»?',a:'Шумиха вокруг чего-то'},
-    800:{q:'Что значит «имба» в играх?',a:'Несправедливо сильное'},
-    900:{q:'Что такое «тильт»?',a:'Состояние злости и фрустрации'},
-    1000:{q:'Что означает «агриться»?',a:'Злиться, раздражаться'}
+    100:{q:'Что значит «кринж»?',a:'Испанский стыд, пиздец как неловко'},
+    200:{q:'Что такое «рофл»?',a:'Шутка, прикол, лол, кек'},
+    300:{q:'Кто такой «сигма»?',a:'Мужчина, который срёт стоя (шутка, независимый)'},
+    400:{q:'Что такое «вайб»?',a:'Атмосфера, настроение, пон'},
+    500:{q:'Кто такой «краш»?',a:'Тот, на кого дрочишь втихую (влюблённость)'},
+    600:{q:'Что означает «жиза»?',a:'Жизненно, пиздец как в точку'},
+    700:{q:'Что такое «имба»?',a:'Настолько сильное, что аж бесит'},
+    800:{q:'Что такое «тильт»?',a:'Состояние «всё бесит, хочу ударить кого-то»'},
+    900:{q:'Что значит «агриться»?',a:'Беситься, злиться, как бабка на рынке'},
+    1000:{q:'Что такое «хайп»?',a:'Шумиха вокруг какой-то херни'}
   },
   anagrams:{
-    100:{q:'Собери слово: ОКШКА',a:'КОШКА'},
-    200:{q:'Собери слово: САБАКО',a:'СОБАКА'},
-    300:{q:'Собери слово: ОМОЛОК',a:'МОЛОКО'},
-    400:{q:'Собери слово: ОВИП',a:'ПИВО'},
-    500:{q:'Собери слово: ЫБАР',a:'РЫБА'},
-    600:{q:'Собери слово: ТОК',a:'КОТ'},
-    700:{q:'Собери слово: МОД',a:'ДОМ'},
-    800:{q:'Собери слово: АНУЛ',a:'ЛУНА'},
-    900:{q:'Собери слово: ЗДЕВЗА',a:'ЗВЕЗДА'},
-    1000:{q:'Собери слово: ТАНЕЛПА',a:'ПЛАНЕТА'}
+    100:{q:'Собери: ХУЙ',a:'ХУЙ (да, это то слово)'},
+    200:{q:'Собери: ЛОХ',a:'ЛОХ (без комментариев)'},
+    300:{q:'Собери: ГОВНО',a:'ГОВНО (по буквам, долбоёб)'},
+    400:{q:'Собери: БЛЯ',a:'БЛЯ (или ЛЯБ, но ты понял)'},
+    500:{q:'Собери: ЕБЛАН',a:'ЕБЛАН (это про тебя, шутка)'},
+    600:{q:'Собери: ПИЗДЕЦ',a:'ПИЗДЕЦ (и это тоже)'},
+    700:{q:'Собери: КИРАЛОХ',a:'КИРА ЛОХ (сорян, Кира)'},
+    800:{q:'Собери: ВИТЯЛОХ',a:'ВИТЯ ЛОХ (сорян, Витя)'},
+    900:{q:'Собери: МУДАК',a:'МУДАК (ну ты понял)'},
+    1000:{q:'Собери: ДОЛБОЕБ',a:'ДОЛБОЕБ (это ты, читающий)'}
   },
   math:{
-    100:{q:'Сколько будет 2+2×2?',a:'6 (а не 8, додик)'},
-    200:{q:'Сколько будет 10% от 100?',a:'10, это изи'},
-    300:{q:'Сколько будет 5! (факториал)?',a:'120 (5×4×3×2×1)'},
-    400:{q:'Сколько будет 2 в 10-й степени?',a:'1024 (как мегабайт)'},
-    500:{q:'Сколько будет 7×8?',a:'56 (ты в уме считал, да?)'},
-    600:{q:'Сколько будет 100/0?',a:'На ноль делить нельзя, додик'},
-    700:{q:'Сколько будет 3+3×3?',a:'12 (а не 18, думай)'},
-    800:{q:'Сколько будет 9+9/9?',a:'10'},
-    900:{q:'Сколько будет 2+2/2?',a:'3'},
-    1000:{q:'Сколько будет 1+1×0?',a:'1'}
+    100:{q:'Сколько будет 2+2?',a:'4, если ты не имбецил'},
+    200:{q:'Что тяжелее: 1 кг ваты или 1 кг железа?',a:'Одинаково, ты чё тупой'},
+    300:{q:'6/2(1+2) = ?',a:'9 (или 1, но правильно 9, еблан)'},
+    400:{q:'2+2×2 = ?',a:'6, а не 8, дебил'},
+    500:{q:'Сколько будет 100/0?',a:'На ноль делить нельзя, долбоёб'},
+    600:{q:'Сколько будет 10% от 100?',a:'10, ну ты чё, это изи'},
+    700:{q:'5! (пять факториал) = ?',a:'120, а не 5, дебил'},
+    800:{q:'Сколько сторон у круга?',a:'Одна (или бесконечность, зависит от того, насколько ты долбоёб)'},
+    900:{q:'1+1×0 = ?',a:'1, а не 0, еблан'},
+    1000:{q:'Сколько яблок на дереве с 10 яблоками, если тряхнуть?',a:'Все 10, нехуй думать'}
   },
   rap:{
-    100:{q:'Кто поёт «Я — Баста, я — Баста...»?',a:'Баста (ну кто ещё)'},
-    200:{q:'Кто поёт «Сансара»?',a:'Баста'},
-    300:{q:'Сколько раз Тимати говорит «Тимати» в своих песнях?',a:'Бесконечно'},
-    400:{q:'Кто поёт «Где ты, где я»?',a:'Тимати и Джиган'},
-    500:{q:'Кто исполнил «Бедный пацан»?',a:'Птаха'},
-    600:{q:'Кто поёт «Моя игра»?',a:'Баста'},
-    700:{q:'Кто исполнил «Всё будет хорошо»?',a:'Мот'},
-    800:{q:'Кто поёт «Капкан»?',a:'Мот'},
-    900:{q:'Кто исполнил «Абсолютно всё»?',a:'Баста'},
-    1000:{q:'Кто поёт «Выпускной»?',a:'Баста'}
+    100:{q:'Кто поёт «Сансара»?',a:'Баста, кто же ещё'},
+    200:{q:'Кто исполнил «Розовое вино»?',a:'Элджей и Feduk'},
+    300:{q:'Кто поёт «Плачу на техно»?',a:'Cream Soda (земля пухом)'},
+    400:{q:'Кто исполнил «Патимейкер»?',a:'Face (он же Иван Дрёмин)'},
+    500:{q:'Кто такой Скриптонит?',a:'Адиль Жалелов, рэпер из Казахстана'},
+    600:{q:'Кто поёт «Лодка»?',a:'Гуф'},
+    700:{q:'Кто исполнил «Город под подошвой»?',a:'Oxxxymiron'},
+    800:{q:'Кто поёт «Капкан»?',a:'Мот, ну ты чё'},
+    900:{q:'Что такое Black Star?',a:'Лейбл Тимати (а не группа, дебил)'},
+    1000:{q:'Кто исполнил «Моя игра»?',a:'Баста, опять он'}
+  },
+  chaos:{
+    100:{q:'Ты кто по жизни?',a:'Долбоёб, а ты?'},
+    200:{q:'Что ты сегодня принимал?',a:'Мефедрон (шутка, чай с печеньками)'},
+    300:{q:'Что курит сосед?',a:'Гашиш (шутка, шучу... или нет)'},
+    400:{q:'Кто из вас лох?',a:'Оба (шутка, никто, вы красавчики)'},
+    500:{q:'За сколько продашь мамку?',a:'Она бесценна, еблан'},
+    600:{q:'Что лучше: мефедрон или гашиш?',a:'Ни то, ни другое, дурак — наркота зло'},
+    700:{q:'Что за животное «нособык»?',a:'Помесь носорога и быка (бред, не существует)'},
+    800:{q:'Что за животное «гиппожираф»?',a:'Помесь гиппопотама и жирафа'},
+    900:{q:'Что за животное «пеньбита»?',a:'Помесь панды и биты (это вообще кто)'},
+    1000:{q:'Что значит «Кира + Витя»?',a:'Два долбоёба (шутка, вы лучшие)'}
   }
 };
 
+// ========== AUDIO ==========
 let actx=null;
-function ac(){ if(!actx)actx=new (window.AudioContext||window.webkitAudioContext)(); if(actx.state==='suspended')actx.resume(); return actx; }
+function ac(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume();return actx;}
 function sfx(type){
   if(!soundOn)return;
   try{
@@ -662,18 +737,17 @@ function sfx(type){
     if(type==='click'){
       const o=c.createOscillator(),g=c.createGain();
       o.connect(g);g.connect(c.destination);
-      o.frequency.setValueAtTime(900,n);
-      o.frequency.exponentialRampToValueAtTime(1200,n+0.03);
-      g.gain.setValueAtTime(0.035,n);
+      o.frequency.setValueAtTime(700,n);
+      o.frequency.exponentialRampToValueAtTime(1000,n+0.03);
+      g.gain.setValueAtTime(0.04,n);
       g.gain.linearRampToValueAtTime(0.001,n+0.04);
       o.start(n);o.stop(n+0.04);
     }else if(type==='correct'){
-      [660,880,1175,1568].forEach((f,i)=>{
+      [523,659,784,1047].forEach((f,i)=>{
         const o=c.createOscillator(),g=c.createGain();
         o.connect(g);g.connect(c.destination);
-        o.type='sine';
         o.frequency.setValueAtTime(f,n+i*0.05);
-        g.gain.setValueAtTime(0.055,n+i*0.05);
+        g.gain.setValueAtTime(0.06,n+i*0.05);
         g.gain.linearRampToValueAtTime(0.001,n+i*0.05+0.12);
         o.start(n+i*0.05);o.stop(n+i*0.05+0.12);
       });
@@ -681,11 +755,11 @@ function sfx(type){
       const o=c.createOscillator(),g=c.createGain();
       o.connect(g);g.connect(c.destination);
       o.type='sawtooth';
-      o.frequency.setValueAtTime(280,n);
-      o.frequency.linearRampToValueAtTime(80,n+0.24);
+      o.frequency.setValueAtTime(220,n);
+      o.frequency.linearRampToValueAtTime(70,n+0.22);
       g.gain.setValueAtTime(0.06,n);
-      g.gain.linearRampToValueAtTime(0.001,n+0.24);
-      o.start(n);o.stop(n+0.24);
+      g.gain.linearRampToValueAtTime(0.001,n+0.22);
+      o.start(n);o.stop(n+0.22);
     }else if(type==='win'){
       [523,659,784,1047,1319,1568].forEach((f,i)=>{
         const o=c.createOscillator(),g=c.createGain();
@@ -693,35 +767,34 @@ function sfx(type){
         o.type='triangle';
         o.frequency.setValueAtTime(f,n+i*0.07);
         g.gain.setValueAtTime(0.07,n+i*0.07);
-        g.gain.linearRampToValueAtTime(0.001,n+i*0.07+0.22);
-        o.start(n+i*0.07);o.stop(n+i*0.07+0.22);
+        g.gain.linearRampToValueAtTime(0.001,n+i*0.07+0.2);
+        o.start(n+i*0.07);o.stop(n+i*0.07+0.2);
       });
     }else if(type==='tarot'){
       [261,329,392,523,659].forEach((f,i)=>{
         const o=c.createOscillator(),g=c.createGain();
         o.connect(g);g.connect(c.destination);
-        o.type='sine';
-        o.frequency.setValueAtTime(f,n+i*0.16);
-        g.gain.setValueAtTime(0.05,n+i*0.16);
-        g.gain.linearRampToValueAtTime(0.001,n+i*0.16+0.5);
-        o.start(n+i*0.16);o.stop(n+i*0.16+0.5);
+        o.frequency.setValueAtTime(f,n+i*0.15);
+        g.gain.setValueAtTime(0.04,n+i*0.15);
+        g.gain.linearRampToValueAtTime(0.001,n+i*0.15+0.45);
+        o.start(n+i*0.15);o.stop(n+i*0.15+0.45);
       });
     }else if(type==='open'){
       const o=c.createOscillator(),g=c.createGain();
       o.connect(g);g.connect(c.destination);
-      o.frequency.setValueAtTime(400,n);
-      o.frequency.exponentialRampToValueAtTime(800,n+0.1);
+      o.frequency.setValueAtTime(380,n);
+      o.frequency.exponentialRampToValueAtTime(750,n+0.09);
       g.gain.setValueAtTime(0.04,n);
-      g.gain.linearRampToValueAtTime(0.001,n+0.12);
-      o.start(n);o.stop(n+0.12);
+      g.gain.linearRampToValueAtTime(0.001,n+0.11);
+      o.start(n);o.stop(n+0.11);
     }else if(type==='close'){
       const o=c.createOscillator(),g=c.createGain();
       o.connect(g);g.connect(c.destination);
-      o.frequency.setValueAtTime(800,n);
-      o.frequency.exponentialRampToValueAtTime(300,n+0.1);
+      o.frequency.setValueAtTime(750,n);
+      o.frequency.exponentialRampToValueAtTime(280,n+0.09);
       g.gain.setValueAtTime(0.04,n);
-      g.gain.linearRampToValueAtTime(0.001,n+0.12);
-      o.start(n);o.stop(n+0.12);
+      g.gain.linearRampToValueAtTime(0.001,n+0.11);
+      o.start(n);o.stop(n+0.11);
     }else if(type==='mod'){
       [880,1108,1318].forEach((f,i)=>{
         const o=c.createOscillator(),g=c.createGain();
@@ -741,6 +814,7 @@ function toggleSound(){
   sfx('click');
 }
 
+// ========== TOASTS ==========
 function toast(text,icon,color){
   const box=document.getElementById('toasts');
   const el=document.createElement('div');
@@ -753,28 +827,27 @@ function toast(text,icon,color){
   },2800);
 }
 
-function showTarot(){ sfx('tarot'); document.getElementById('tarot-ov').classList.remove('hd1'); }
-function hideTarot(){ sfx('close'); document.getElementById('tarot-ov').classList.add('hd1'); }
-function buySpread(){
-  sfx('click');
-  toast('Early ждёт тебя в личке!','fa-wand-sparkles','gold');
-  setTimeout(()=>hideTarot(),700);
-}
+// ========== TAROT ==========
+function showTarot(){sfx('tarot');document.getElementById('tarot-ov').classList.remove('hd1');}
+function hideTarot(){sfx('close');document.getElementById('tarot-ov').classList.add('hd1');}
+function buySpread(){sfx('click');toast('Early ждёт тебя в личке!','fa-wand-sparkles','gold');setTimeout(()=>hideTarot(),700);}
 
-function save(){ try{ localStorage.setItem(STORAGE,JSON.stringify({players,active,played:[...played],specials,history})); }catch(e){} }
+// ========== PERSISTENCE ==========
+function save(){try{localStorage.setItem(STORAGE,JSON.stringify({players,active,played:[...played],specials,history}));}catch(e){}}
 function load(){
   try{
     const raw=localStorage.getItem(STORAGE);
-    if(!raw){ specials=genSpecials(); return; }
+    if(!raw){specials=genSpecials();return;}
     const d=JSON.parse(raw);
     if(d.players)players=d.players;
     if(typeof d.active==='number')active=d.active;
     if(d.played)played=new Set(d.played);
-    if(d.specials&&Object.keys(d.specials).length)specials=d.specials; else specials=genSpecials();
+    if(d.specials&&Object.keys(d.specials).length)specials=d.specials;else specials=genSpecials();
     if(d.history)history=d.history;
-  }catch(e){ specials=genSpecials(); }
+  }catch(e){specials=genSpecials();}
 }
 
+// ========== RENDER ==========
 function render(){
   const grid=document.getElementById('grid');
   grid.innerHTML='';
@@ -784,21 +857,25 @@ function render(){
     const doneCount=pts.filter(p=>played.has(`${cat.id}-${p}`)).length;
     const isDone=doneCount===pts.length;
     const h=document.createElement('div');
-    h.className='cath'+(isDone?' dn':'');
+    h.className='cath';
     h.style.background=cat.color;
+    if(isDone)h.style.filter='grayscale(0.5)';
     h.textContent=cat.name;
     row.appendChild(h);
+    const cells=document.createElement('div');
+    cells.className='cells';
     pts.forEach(p=>{
       const key=`${cat.id}-${p}`;
       const isPlayed=played.has(key);
       const cell=document.createElement('button');
       cell.className='cell'+(isPlayed?' dn':'');
       cell.dataset.key=key;
-      if(isPlayed){ cell.innerHTML='<i class="fa-solid fa-check"></i>'; }
-      else{ cell.textContent=p; }
+      if(isPlayed){cell.innerHTML='<i class="fa-solid fa-check"></i>';}
+      else{cell.textContent=p;}
       cell.onclick=()=>openQ(cell,key,cat,p);
-      row.appendChild(cell);
+      cells.appendChild(cell);
     });
+    row.appendChild(cells);
     grid.appendChild(row);
   });
   updateHUD();
@@ -813,15 +890,15 @@ function updateHUD(){
   const pc0=document.getElementById('pc0'),pc1=document.getElementById('pc1');
   const pm0=document.getElementById('pm0'),pm1=document.getElementById('pm1');
   if(active===0){
-    pc0.className='player glass active-kira';
-    pc1.className='player glass dim';
-    pm0.className='pm kact'; pm0.innerHTML='<span class="dot"></span><span>ходит</span>';
-    pm1.className='pm'; pm1.innerHTML='<span>ждёт</span>';
+    pc0.className='player surf on k';
+    pc1.className='player surf off';
+    pm0.className='pm on k';pm0.innerHTML='<span class="dot"></span><span>ходит</span>';
+    pm1.className='pm';pm1.innerHTML='<span>ждёт</span>';
   }else{
-    pc0.className='player glass dim';
-    pc1.className='player glass active-vitya';
-    pm0.className='pm'; pm0.innerHTML='<span>ждёт</span>';
-    pm1.className='pm vact'; pm1.innerHTML='<span class="dot"></span><span>ходит</span>';
+    pc0.className='player surf off';
+    pc1.className='player surf on v';
+    pm0.className='pm';pm0.innerHTML='<span>ждёт</span>';
+    pm1.className='pm on v';pm1.innerHTML='<span class="dot"></span><span>ходит</span>';
   }
   const total=cats.length*pts.length;
   const done=played.size;
@@ -833,162 +910,151 @@ function updateHUD(){
 
 function pulseSc(i){
   const el=document.getElementById(`sc${i}`);
-  el.classList.remove('pp');
+  el.classList.remove('pop');
   void el.offsetWidth;
-  el.classList.add('pp');
+  el.classList.add('pop');
 }
 
 function updateHBdg(){
   const b=document.getElementById('hbdg');
-  if(history.length>0){ b.textContent=history.length; b.classList.remove('hd1'); }
+  if(history.length>0){b.textContent=history.length;b.classList.remove('hd1');}
   else b.classList.add('hd1');
 }
 
+// ========== OPEN QUESTION ==========
 function openQ(cell,key,cat,points){
   if(played.has(key))return;
   sfx('click');
-  curCell=cell; curKey=key;
+  curCell=cell;curKey=key;
   const sp=specials[key];
-  const info=sp?specInfo(sp):null;
-
-  if(sp==='auction'||sp==='timer'||sp==='bluff'||sp==='jackpot'){
-    handleModifier(sp,cat,points,cell,key);
+  bluffActive=false;
+  
+  if(sp==='auction'){
+    cur={key,cat,points,special:'auction',cell};
+    document.getElementById('bet-ov').classList.remove('hd1');
     return;
   }
-
-  let questionData=db[cat.id][points];
-  let displayCat=cat;
+  
   if(sp==='cat_in_bag'){
     const otherCats=cats.filter(c=>c.id!==cat.id);
     const randomCat=otherCats[Math.floor(Math.random()*otherCats.length)];
-    questionData=db[randomCat.id][points];
-    displayCat=randomCat;
     sfx('mod');
     toast('КОТ В МЕШКЕ! Вопрос из другой темы','fa-cat','pink');
+    showQuestion(randomCat,points,key,cell,'cat_in_bag');
+    return;
   }
+  
+  if(sp==='jackpot'){
+    applyJackpot(cat,points,cell,key);
+    return;
+  }
+  
+  showQuestion(cat,points,key,cell,sp);
+}
 
-  cur={key,cat:displayCat,points,data:questionData,special:sp};
+function showQuestion(cat,points,key,cell,sp){
+  cur={key,cat,points,special:sp,cell};
   sfx('open');
-
-  document.getElementById('m-cat').textContent=displayCat.name;
-  document.getElementById('m-cat').style.background=displayCat.color;
+  const info=sp?specInfo(sp):null;
+  document.getElementById('m-cat').textContent=cat.name;
+  document.getElementById('m-cat').style.background=cat.color;
   document.getElementById('m-pts').textContent=points+' pts';
   const d=diffOf(points);
   document.getElementById('m-df').innerHTML=`<i class="fa-solid ${d.i}"></i> ${d.l}`;
   document.getElementById('m-turn').textContent=players[active].name;
-  document.getElementById('m-q').textContent=cur.data.q;
-  document.getElementById('m-atx').textContent=cur.data.a;
-
+  document.getElementById('m-q').textContent=db[cat.id][points].q;
+  document.getElementById('m-atx').textContent=db[cat.id][points].a;
+  
   const sb=document.getElementById('m-sp');
-  if(info && sp!=='cat_in_bag'){
+  if(info){
     sb.classList.remove('hd1');
     sb.style.background=info.bg;
     sb.innerHTML=`<i class="fa-solid ${info.icon}"></i> ${info.label}`;
-  }else if(sp==='cat_in_bag'){
-    sb.classList.remove('hd1');
-    sb.style.background='linear-gradient(135deg,#ff2d7a,#c026d3)';
-    sb.innerHTML='<i class="fa-solid fa-cat"></i> КОТ В МЕШКЕ';
   }else sb.classList.add('hd1');
-
-  document.getElementById('m-wrn').classList.add('hd1');
-
-  updateScoreLabels();
+  
   document.getElementById('m-ans').classList.add('hd1');
   document.getElementById('rv-wr').classList.remove('hd1');
+  
+  const bluffWrap=document.getElementById('bluff-wrap');
+  if(sp==='bluff'){
+    bluffWrap.classList.remove('hd1');
+    document.getElementById('m-wrn').innerHTML='<div style="padding:8px;background:rgba(180,74,255,0.12);border:1px solid rgba(180,74,255,0.4);border-radius:8px;text-align:center;margin-top:8px;"><div style="font-size:9px;font-weight:900;letter-spacing:0.1em;text-transform:uppercase;color:var(--purple);margin-bottom:4px;"><i class="fa-solid fa-mask"></i> БЛЕФ</div><div style="font-size:11px;font-weight:700;color:var(--text);">Можешь передать вопрос сопернику — он будет отвечать и получать/терять очки</div></div>';
+  }else{
+    bluffWrap.classList.add('hd1');
+    document.getElementById('m-wrn').innerHTML='';
+  }
+  
+  if(sp==='timer'){
+    startTimer();
+  }
+  
+  document.getElementById('auction-info').classList.add('hd1');
+  updateScoreLabels();
   document.getElementById('q-ov').classList.remove('hd1');
   updateSBlocks();
 }
 
-function handleModifier(sp,cat,points,cell,key){
-  if(sp==='auction'){
-    const bet=prompt('АУКЦИОН! Сколько очков ставишь? (0-500)','100');
-    const betNum=Math.max(0,Math.min(500,parseInt(bet)||0));
-    if(betNum>0){
-      const win=confirm('Ставка '+betNum+'. Ответишь верно? (ОК — да, Отмена — нет)');
-      const delta=win?betNum*2:-betNum;
-      players[active].score+=delta;
+let timerId=null;
+function startTimer(){
+  clearInterval(timerId);
+  let t=10;
+  document.getElementById('m-wrn').innerHTML=`<div style="padding:8px;background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.4);border-radius:8px;text-align:center;margin-top:8px;font-family:'Bebas Neue';font-size:20px;color:var(--cyan);"><i class="fa-solid fa-stopwatch"></i> <span id="timer-num">10</span> СЕК</div>`;
+  timerId=setInterval(()=>{
+    t--;
+    const el=document.getElementById('timer-num');
+    if(el)el.textContent=t;
+    if(t<=0){
+      clearInterval(timerId);
+      players[active].score-=cur.points;
       pulseSc(active);
-      if(win)sfx('correct'); else sfx('wrong');
-      addHistory(active,cat,points,delta,'auction');
-      showInstant(delta>0,delta,'auction');
-    }else{
-      toast('Ставка отменена','fa-gavel','gold');
-    }
-    played.add(key); cell.classList.add('dn'); cell.innerHTML='<i class="fa-solid fa-check"></i>';
-    save(); render(); return;
-  }
-
-  if(sp==='timer'){
-    toast('ТАЙМЕР 10 СЕКУНД! Отвечай быстро!','fa-stopwatch','blu');
-    let timeLeft=10;
-    const timerInterval=setInterval(()=>{
-      timeLeft--;
-      if(timeLeft<=0){
-        clearInterval(timerInterval);
-        players[active].score-=points;
-        pulseSc(active);
-        sfx('wrong');
-        toast('Время вышло! Штраф -'+points,'fa-stopwatch','pink');
-        addHistory(active,cat,points,-points,'timer');
-        played.add(key); cell.classList.add('dn'); cell.innerHTML='<i class="fa-solid fa-check"></i>';
-        save(); render();
-      }
-    },1000);
-    cur={key,cat,points,data:db[cat.id][points],special:sp,timerInterval};
-    sfx('open');
-    document.getElementById('m-cat').textContent=cat.name;
-    document.getElementById('m-cat').style.background=cat.color;
-    document.getElementById('m-pts').textContent=points+' pts';
-    const d=diffOf(points);
-    document.getElementById('m-df').innerHTML=`<i class="fa-solid ${d.i}"></i> ${d.l}`;
-    document.getElementById('m-turn').textContent=players[active].name;
-    document.getElementById('m-q').textContent=cur.data.q;
-    document.getElementById('m-atx').textContent=cur.data.a;
-    const sb=document.getElementById('m-sp');
-    sb.classList.remove('hd1');
-    sb.style.background='linear-gradient(135deg,#00d4ff,#0891b2)';
-    sb.innerHTML='<i class="fa-solid fa-stopwatch"></i> 10 СЕК';
-    document.getElementById('m-wrn').classList.add('hd1');
-    updateScoreLabels();
-    document.getElementById('m-ans').classList.add('hd1');
-    document.getElementById('rv-wr').classList.remove('hd1');
-    document.getElementById('q-ov').classList.remove('hd1');
-    updateSBlocks();
-    return;
-  }
-
-  if(sp==='bluff'){
-    const target=active===0?1:0;
-    const choice=confirm('БЛЕФ! Заставить '+players[target].name+' ответить? (ОК — да, Отмена — нет)');
-    if(choice){
-      players[target].score-=points;
-      pulseSc(target);
       sfx('wrong');
-      toast(players[target].name+' теряет '+points+'!','fa-mask','purple');
-      addHistory(target,cat,points,-points,'bluff');
-    }else{
-      toast('Блеф не удался','fa-mask','purple');
+      toast('Время вышло! -'+cur.points,'fa-stopwatch','pink');
+      addHistory(active,cur.cat,cur.points,-cur.points,'timer');
+      played.add(curKey);
+      if(curCell){curCell.classList.add('dn');curCell.innerHTML='<i class="fa-solid fa-check"></i>';}
+      save();render();closeQ(true);
     }
-    played.add(key); cell.classList.add('dn'); cell.innerHTML='<i class="fa-solid fa-check"></i>';
-    save(); render(); return;
-  }
+  },1000);
+}
 
-  if(sp==='jackpot'){
-    const mult=[2,3,0.5][Math.floor(Math.random()*3)];
-    const delta=Math.round(points*mult);
-    players[active].score+=delta;
-    pulseSc(active);
-    if(delta>0)sfx('correct'); else sfx('wrong');
-    toast('ДЖЕКПОТ ×'+mult+'! '+ (delta>0?'+':'')+delta,'fa-star','gold');
-    addHistory(active,cat,points,delta,'jackpot');
-    showInstant(delta>0,delta,'jackpot');
-    played.add(key); cell.classList.add('dn'); cell.innerHTML='<i class="fa-solid fa-check"></i>';
-    save(); render(); return;
-  }
+function setBet(amount){
+  sfx('click');
+  curBet=amount;
+  document.getElementById('bet-ov').classList.add('hd1');
+  const cat=cur.cat,points=cur.points,key=cur.key,cell=cur.cell;
+  showQuestion(cat,points,key,cell,'auction');
+  document.getElementById('auction-info').classList.remove('hd1');
+  document.getElementById('bet-amount').textContent=amount;
+  document.getElementById('bluff-wrap').classList.add('hd1');
+  updateScoreLabels();
+}
+
+function bluffTransfer(){
+  sfx('mod');
+  const target=active===0?1:0;
+  active=target;
+  bluffActive=true;
+  toast('Блеф! Вопрос передан '+players[target].name,'fa-mask','purple');
+  document.getElementById('m-turn').textContent=players[active].name;
+  document.getElementById('bluff-wrap').classList.add('hd1');
+  updateSBlocks();
+}
+
+function applyJackpot(cat,points,cell,key){
+  const mult=[2,3,0.5][Math.floor(Math.random()*3)];
+  const delta=Math.round(points*mult);
+  players[active].score+=delta;
+  pulseSc(active);
+  if(delta>0)sfx('correct');else sfx('wrong');
+  toast('ДЖЕКПОТ ×'+mult+'! '+(delta>0?'+':'')+delta,'fa-star','gold');
+  addHistory(active,cat,points,delta,'jackpot');
+  showInstant(delta>0,delta,'jackpot');
+  played.add(key);cell.classList.add('dn');cell.innerHTML='<i class="fa-solid fa-check"></i>';
+  save();render();
 }
 
 function updateScoreLabels(){
-  const p=cur.points;
+  const p=cur.special==='auction'?curBet:cur.points;
   document.getElementById('kp').textContent='+'+p;
   document.getElementById('km').textContent='-'+p;
   document.getElementById('vp').textContent='+'+p;
@@ -1000,8 +1066,8 @@ function updateScoreLabels(){
 function updateSBlocks(){
   for(let i=0;i<2;i++){
     const b=document.getElementById('sbl'+i),t=document.getElementById('tg'+i);
-    if(i===active){ b.classList.remove('lk'); b.classList.add('act'); t.classList.remove('hd1'); }
-    else{ b.classList.add('lk'); b.classList.remove('act'); t.classList.add('hd1'); }
+    if(i===active){b.classList.remove('lk');b.classList.add('act');t.classList.remove('hd1');}
+    else{b.classList.add('lk');b.classList.remove('act');t.classList.add('hd1');}
   }
 }
 
@@ -1011,17 +1077,14 @@ function revealAns(){
   document.getElementById('rv-wr').classList.add('hd1');
 }
 
+// ========== SCORING ==========
 function score(idx,correct){
   if(!cur)return;
-  if(idx!==active){ sfx('wrong'); return; }
-  const p=cur.points;
-
-  if(cur.special==='timer' && cur.timerInterval){
-    clearInterval(cur.timerInterval);
-  }
-
+  if(idx!==active){sfx('wrong');return;}
+  clearInterval(timerId);
+  const p=cur.special==='auction'?curBet:cur.points;
   let delta=correct?p:-p;
-
+  
   if(correct){
     players[idx].streak=(players[idx].streak||0)+1;
     if(players[idx].streak>=3){
@@ -1033,12 +1096,8 @@ function score(idx,correct){
     document.body.classList.add('shk');
     setTimeout(()=>document.body.classList.remove('shk'),500);
   }
-
-  if(!correct && Math.abs(delta)>=400){
-    if(!confirm(`Списать ${Math.abs(delta)} очков у ${players[idx].name}?`))return;
-  }
-
-  if(correct)sfx('correct'); else sfx('wrong');
+  
+  if(correct)sfx('correct');else sfx('wrong');
   players[idx].score+=delta;
   pulseSc(idx);
   addHistory(idx,cur.cat,p,delta,cur.special);
@@ -1048,77 +1107,76 @@ function score(idx,correct){
 function addHistory(idx,cat,points,delta,spec){
   history.push({idx,cat:cat.name,points,delta,spec,time:Date.now()});
   if(history.length>30)history.shift();
-  save(); updateHBdg();
+  save();updateHBdg();
 }
 
 function finishTurn(switchTurn){
   if(curKey)played.add(curKey);
-  if(curCell){ curCell.classList.add('dn'); curCell.innerHTML='<i class="fa-solid fa-check"></i>'; }
-  if(switchTurn){ active=active===0?1:0; }
-  save(); render(); closeQ(true);
+  if(curCell){curCell.classList.add('dn');curCell.innerHTML='<i class="fa-solid fa-check"></i>';}
+  if(switchTurn)active=active===0?1:0;
+  save();render();closeQ(true);
 }
 
 function closeQ(skip){
-  if(curKey && !skip){
+  clearInterval(timerId);
+  if(curKey&&!skip){
     played.add(curKey);
-    if(curCell){ curCell.classList.add('dn'); curCell.innerHTML='<i class="fa-solid fa-check"></i>'; }
+    if(curCell){curCell.classList.add('dn');curCell.innerHTML='<i class="fa-solid fa-check"></i>';}
     active=active===0?1:0;
-    save(); render();
+    save();render();
   }
   sfx('close');
   document.getElementById('q-ov').classList.add('hd1');
-  cur=null; curCell=null; curKey=null;
+  cur=null;curCell=null;curKey=null;
   checkDone();
 }
 
+// ========== INSTANT ==========
 function showInstant(isWin,delta,kind){
   const ic=document.getElementById('i-i');
   const t=document.getElementById('i-t');
   const d=document.getElementById('i-d');
-  if(kind==='auction'){
-    ic.style.background='linear-gradient(135deg,#ffcc00,#f59e0b)';
-    ic.innerHTML='<i class="fa-solid fa-gavel"></i>';
-    t.textContent='Аукцион!';
-    d.textContent=isWin?`+${delta} очков!`:`-${Math.abs(delta)} очков!`;
-  }else if(kind==='jackpot'){
-    ic.style.background='linear-gradient(135deg,#00e676,#059669)';
+  if(kind==='jackpot'){
+    ic.style.background='linear-gradient(160deg,#22e58a,#059669)';
     ic.innerHTML='<i class="fa-solid fa-star"></i>';
-    t.textContent='Джекпот!';
-    d.textContent=isWin?`+${delta} очков!`:`-${Math.abs(delta)} очков!`;
+    t.textContent='ДЖЕКПОТ';
+    d.textContent=isWin?`+${delta} очков для ${players[active].name}!`:`-${Math.abs(delta)} очков для ${players[active].name}!`;
   }else if(isWin){
-    ic.style.background='linear-gradient(135deg,var(--green),#059669)';
+    ic.style.background='linear-gradient(160deg,#22e58a,#059669)';
     ic.innerHTML='<i class="fa-solid fa-dice"></i>';
-    t.textContent='Бонус!';
+    t.textContent='БОНУС';
     d.textContent=`${players[active].name} получает +${delta}!`;
   }else{
-    ic.style.background='linear-gradient(135deg,var(--red),#dc2626)';
+    ic.style.background='linear-gradient(160deg,#ff5566,#dc2626)';
     ic.innerHTML='<i class="fa-solid fa-burst"></i>';
-    t.textContent='Штраф!';
+    t.textContent='ШТРАФ';
     d.textContent=`${players[active].name} теряет ${Math.abs(delta)}!`;
   }
   sfx('open');
   document.getElementById('i-ov').classList.remove('hd1');
-  if(delta>0)confetti({particleCount:36,spread:70,origin:{y:0.6},colors:['#ffcc00','#00e676','#00d4ff']});
+  if(delta>0)confetti({particleCount:30,spread:70,origin:{y:0.6},colors:['#ffcc00','#00e676','#00d4ff']});
 }
 
 function closeInstant(){
   sfx('close');
   document.getElementById('i-ov').classList.add('hd1');
   active=active===0?1:0;
-  save(); render(); checkDone();
+  save();render();checkDone();
 }
 
+// ========== RANDOM ==========
 function openRandom(){
   sfx('click');
   const rem=[];
-  cats.forEach(c=>pts.forEach(p=>{ const k=`${c.id}-${p}`; if(!played.has(k))rem.push({c,p,k}); }));
+  cats.forEach(c=>pts.forEach(p=>{const k=`${c.id}-${p}`;if(!played.has(k))rem.push({c,p,k});}));
   if(!rem.length)return;
   const pick=rem[Math.floor(Math.random()*rem.length)];
   document.querySelectorAll('.cell').forEach(cell=>{
-    if(cell.dataset.key===pick.k && !cell.classList.contains('dn'))cell.click();
+    if(cell.dataset.key===pick.k&&!cell.classList.contains('dn'))cell.click();
   });
 }
 
+// ========== HISTORY ==========
 function openHistory(){
   sfx('open');
   const list=document.getElementById('hl');
@@ -1128,13 +1186,9 @@ function openHistory(){
     list.innerHTML=history.slice().reverse().map(h=>{
       const sign=h.delta>0?'+':(h.delta<0?'':'');
       const cls=h.delta>0?'pos':(h.delta<0?'neg':'');
-      const ic=h.idx===0?'linear-gradient(135deg,#ff2d7a,#c026d3)':'linear-gradient(135deg,#00d4ff,#0891b2)';
+      const ic=h.idx===0?'linear-gradient(160deg,#ff2d7a,#c026d3)':'linear-gradient(160deg,#00d4ff,#0891b2)';
       const v=h.delta!==0?`${sign}${h.delta}`:'—';
-      return `<div class="hi">
-        <div class="ic2" style="background:${ic}">${h.idx===0?'К':'В'}</div>
-        <div class="inf2"><div class="nm2">${h.cat} · ${h.points}pts</div><div class="dt2">${new Date(h.time).toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})}</div></div>
-        <div class="vl2 ${cls}">${v}</div>
-      </div>`;
+      return `<div class="hi"><div class="ic2" style="background:${ic}">${h.idx===0?'К':'В'}</div><div class="inf2"><div class="nm2">${h.cat} · ${h.points}</div><div class="dt2">${new Date(h.time).toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})}</div></div><div class="vl2 ${cls}">${v}</div></div>`;
     }).join('');
   }
   document.getElementById('undb').style.display=history.length>0?'flex':'none';
@@ -1150,26 +1204,27 @@ function undoLast(){
     const key=`${cat.id}-${last.points}`;
     played.delete(key);
     document.querySelectorAll('.cell').forEach(c=>{
-      if(c.dataset.key===key){ c.classList.remove('dn'); c.textContent=last.points; }
+      if(c.dataset.key===key){c.classList.remove('dn');c.textContent=last.points;}
     });
   }
-  history.pop();
-  active=last.idx;
-  save(); render(); openHistory();
+  history.pop();active=last.idx;
+  save();render();openHistory();
   toast('Ход отменён','fa-undo','blu');
   sfx('click');
 }
 
+// ========== RENAME ==========
 function renameP(idx){
   sfx('click');
   const name=prompt('Новое имя:',players[idx].name);
   if(name&&name.trim()){
     players[idx].name=name.trim().slice(0,20);
-    save(); render();
+    save();render();
     toast(`${players[idx].name} в игре!`,'fa-pen','blu');
   }
 }
 
+// ========== WIN ==========
 function checkDone(){
   const total=cats.length*pts.length;
   if(played.size>=total)setTimeout(()=>showWinner(),500);
@@ -1184,7 +1239,7 @@ function showWinner(){
   let name='';
   if(players[0].score>players[1].score)name=`${players[0].name} побеждает!`;
   else if(players[1].score>players[0].score)name=`${players[1].name} побеждает!`;
-  else name='Ничья!';
+  else name='Ничья, долбоёбы!';
   document.getElementById('w-n').textContent=name;
   document.getElementById('w-ov').classList.remove('hd1');
   if(window.confetti){
@@ -1197,18 +1252,21 @@ function showWinner(){
   }
 }
 
-function closeModal(id){ sfx('close'); document.getElementById(id).classList.add('hd1'); }
+function closeModal(id){sfx('close');document.getElementById(id).classList.add('hd1');}
 
+// ========== RESET ==========
 function resetGame(force){
   if(!force&&played.size>0&&!confirm('Сбросить игру?'))return;
   sfx('click');
   players=[{name:players[0].name,score:0,streak:0},{name:players[1].name,score:0,streak:0}];
-  active=0; played.clear(); specials=genSpecials(); history=[];
+  active=0;played.clear();specials=genSpecials();history=[];
+  curBet=0;bluffActive=false;
   localStorage.removeItem(STORAGE);
-  save(); render();
+  save();render();
 }
 
-window.addEventListener('DOMContentLoaded',()=>{ load(); render(); });
+// ========== INIT ==========
+window.addEventListener('DOMContentLoaded',()=>{load();render();});
 </script>
 </body>
 </html>
