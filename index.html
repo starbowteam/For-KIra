@@ -1,1011 +1,599 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Кирусе от Вити 💙</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050912">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Кира — сладких снов</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  :root{
+    --night:#050912;
+    --ink:#eaf4ff;
+    --ice:#8fd4ff;
+    --rose:#ff8fae;
+    --serif:"Iowan Old Style","Palatino Linotype","Book Antiqua",Palatino,Georgia,"Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    margin:0;
+    min-height:100svh;
+    background:#050912;
+    color:var(--ink);
+    font-family:var(--sans);
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+    position:relative;
+  }
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:radial-gradient(120% 85% at 50% -15%, #17305a 0%, #0a1730 38%, #050912 74%);
+    z-index:0;
+    pointer-events:none;
+  }
+  #bg{
+    position:fixed; inset:0; width:100%; height:100%; z-index:1; pointer-events:none;
+  }
+  .nebula{
+    position:fixed; border-radius:50%; filter:blur(90px); pointer-events:none; z-index:1;
+  }
+  .n1{ width:72vmax;height:72vmax; left:-30vmax;top:-26vmax; background:radial-gradient(circle,#1d4278 0%,transparent 62%); opacity:.55; }
+  .n2{ width:64vmax;height:64vmax; right:-26vmax;bottom:-22vmax; background:radial-gradient(circle,#3d1c56 0%,transparent 62%); opacity:.4; }
 
-  body {
-    min-height: 100vh;
-    font-family: 'Segoe UI', 'Comic Sans MS', sans-serif;
-    background: linear-gradient(160deg, #d6ecff 0%, #a8d4ff 45%, #7cb8f5 100%);
-    padding: 16px;
-    color: #1e5c99;
-    overflow-x: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .sound-btn{
+    position:fixed; top:calc(12px + env(safe-area-inset-top)); right:calc(12px + env(safe-area-inset-right));
+    z-index:30; width:44px;height:44px; border-radius:50%;
+    border:1px solid rgba(150,215,255,.35); background:rgba(10,22,42,.55);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    color:#cfeaff; font-size:17px; line-height:1; cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:transform .25s ease, background .25s ease, opacity .25s ease;
+    font-family:var(--sans);
   }
+  .sound-btn:hover{background:rgba(30,60,105,.7);transform:scale(1.06)}
+  .sound-btn:active{transform:scale(.94)}
+  .sound-btn.muted{opacity:.45}
 
-  .bubble {
-    position: fixed;
-    border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.75), rgba(255,255,255,0.05));
-    animation: float 14s infinite ease-in-out;
-    pointer-events: none;
-    z-index: 0;
+  main{
+    position:relative; z-index:2; width:100%; max-width:780px; margin:0 auto;
+    min-height:100svh; padding:calc(30px + env(safe-area-inset-top)) 18px calc(24px + env(safe-area-inset-bottom));
+    display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
   }
-  @keyframes float {
-    0%,100% { transform: translateY(0) translateX(0); opacity: .5;}
-    50% { transform: translateY(-55px) translateX(35px); opacity: 1;}
-  }
+  .screen{ width:100%; display:none; flex-direction:column; align-items:center; }
+  .screen.active{ display:flex; animation:fadeUp .7s cubic-bezier(.2,.8,.3,1) both; }
+  .screen.fading{ animation:fadeOut .5s ease forwards; }
+  @keyframes fadeUp{ from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:none} }
+  @keyframes fadeOut{ to{opacity:0;transform:scale(1.06);filter:blur(7px)} }
 
-  .screen {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    max-width: 520px;
-    display: none;
-    animation: slideUp .5s cubic-bezier(.2,1.2,.5,1);
+  .kicker{ font-size:10px; letter-spacing:.38em; text-transform:uppercase; color:#7d97bb; margin:0 0 14px; padding-left:.38em; }
+  h1{
+    font-family:var(--serif); font-weight:400; font-size:clamp(38px,10vw,66px);
+    line-height:1.02; margin:0 0 14px; color:#f0f8ff; letter-spacing:.01em;
+    text-shadow:0 0 40px rgba(130,207,255,.35),0 0 90px rgba(90,160,255,.18);
   }
-  .screen.active { display: block; }
+  h1 em{ font-style:italic; color:#cfe9ff; }
+  .lead{ margin:0 0 26px; font-size:14.5px; color:#a8bed6; letter-spacing:.02em; }
+  .question{
+    font-family:var(--serif); font-style:italic; font-size:clamp(20px,5.2vw,28px);
+    line-height:1.25; margin:0 0 6px; color:#e8f4ff; text-shadow:0 0 26px rgba(130,207,255,.25);
+  }
+  .hint{ margin:4px 0 0; font-size:10px; letter-spacing:.26em; text-transform:uppercase; color:#6d87a8; opacity:.9; }
 
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(30px) scale(.96); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-  }
+  .stage{ width:100%; max-width:720px; margin:0 auto; position:relative; }
+  .stage svg{ display:block; width:100%; height:auto; overflow:visible; }
+  .hand{ filter:drop-shadow(0 22px 28px rgba(0,0,0,.62)); }
+  .pill{ cursor:pointer; outline:none; }
+  .pill-body{ transform-box:fill-box; transform-origin:center; transition:transform .45s cubic-bezier(.2,.9,.3,1.5); }
+  .pill .glow{ opacity:.7; transform-box:fill-box; transform-origin:center; transition:opacity .4s ease, transform .45s cubic-bezier(.2,.9,.3,1.4); pointer-events:none; }
+  .pill:hover .pill-body, .pill:focus-visible .pill-body{transform:scale(1.07)}
+  .pill:hover .glow, .pill:focus-visible .glow{opacity:1;transform:scale(1.08)}
+  .pill:active .pill-body{transform:scale(.94)}
+  .pill.chosen .pill-body{transform:scale(1.2)}
+  .pill.chosen .glow{opacity:1;transform:scale(1.35)}
+  .pill.chosen .pill-body{ filter:brightness(1.25); }
 
-  .card {
-    background: rgba(255,255,255,0.92);
-    backdrop-filter: blur(14px);
-    border-radius: 30px;
-    padding: 28px 22px;
-    box-shadow: 0 24px 60px rgba(30,92,153,0.3), inset 0 0 0 2px rgba(255,255,255,0.9);
+  .art-wrap{
+    width:100%; max-width:560px; margin:0 auto 22px; border-radius:22px; overflow:hidden;
+    position:relative; border:1px solid rgba(150,215,255,.22);
+    box-shadow:0 30px 90px rgba(0,0,0,.75), 0 0 70px rgba(70,150,255,.13), inset 0 1px 0 rgba(255,255,255,.07);
+    background:#070d1a;
   }
+  #art{ display:block; width:100%; height:auto; aspect-ratio: 1 / 1; }
+  
+  #resultTitle{
+    font-family:var(--serif); font-weight:400; font-style:italic; font-size:clamp(26px,7vw,40px);
+    margin:0 0 12px; color:#f2f9ff; text-shadow:0 0 34px rgba(130,207,255,.4);
+  }
+  #resultCopy{ max-width:520px; margin:0 auto 26px; font-size:15px; line-height:1.65; color:#b7c9de; }
+  #backBtn{
+    font-family:var(--sans); font-size:14px; letter-spacing:.04em; color:#e8f6ff;
+    background:rgba(140,215,255,.08); border:1px solid rgba(150,215,255,.42);
+    border-radius:999px; padding:13px 26px; cursor:pointer;
+    transition:background .25s ease, transform .2s ease, box-shadow .25s ease;
+  }
+  #backBtn:hover{ background:rgba(140,215,255,.18); box-shadow:0 0 34px rgba(120,200,255,.28); }
+  #backBtn:active{transform:scale(.96)}
 
-  h1 {
-    font-size: clamp(24px, 6vw, 32px);
-    text-align: center;
-    margin-bottom: 8px;
-    text-shadow: 1px 1px 0 #fff;
-  }
-  .sub {
-    text-align: center;
-    font-size: clamp(14px, 3.6vw, 16px);
-    color: #4a92d6;
-    margin-bottom: 18px;
-    line-height: 1.5;
-  }
+  .note{ margin:34px 0 0; font-size:10.5px; letter-spacing:.22em; text-transform:uppercase; color:#5f7899; }
 
-  .box {
-    border-radius: 20px;
-    padding: 16px 18px;
-    margin-bottom: 14px;
-    font-size: clamp(14px, 3.8vw, 16px);
-    line-height: 1.6;
-  }
-  .box.blue { background: #eaf6ff; border-left: 6px solid #4a92d6; }
-  .box.yellow { background: #fff7b0; border-left: 6px solid #ffd93b; }
-  .box.pink { background: #ffe8f0; border-left: 6px solid #ff9ec4; }
-
-  .btn {
-    display: block;
-    width: 100%;
-    padding: 15px;
-    margin-top: 16px;
-    border: none;
-    border-radius: 50px;
-    background: linear-gradient(135deg, #7cb8f5, #2f6fb0);
-    color: #fff;
-    font-size: clamp(15px, 4vw, 17px);
-    font-weight: 700;
-    font-family: inherit;
-    cursor: pointer;
-    transition: all .25s;
-    box-shadow: 0 8px 22px rgba(47,111,176,0.4);
-    letter-spacing: .5px;
-  }
-  .btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(47,111,176,0.55); filter: brightness(1.08); }
-  .btn:active { transform: translateY(0); }
-  .btn.secondary {
-    background: linear-gradient(135deg, #a8d4ff, #6aa9dd);
-    box-shadow: 0 8px 22px rgba(106,169,221,0.4);
-  }
-  .btn.small { padding: 11px 18px; font-size: 14px; width: auto; display: inline-block; margin: 6px 4px 0; }
-
-  .skip-link {
-    display: block;
-    text-align: center;
-    margin-top: 14px;
-    font-size: 13px;
-    color: #8fb9dd;
-    text-decoration: none;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-    transition: color .2s;
-    width: 100%;
-    padding: 6px;
-  }
-  .skip-link:hover { color: #4a92d6; }
-
-  .meow26 {
-    text-align: center;
-    background: linear-gradient(135deg, #fff7b0, #ffe27a);
-    color: #7a5c00;
-    padding: 10px 14px;
-    border-radius: 14px;
-    font-weight: 700;
-    font-size: clamp(13px, 3.4vw, 14px);
-    margin-top: 16px;
-    box-shadow: 0 6px 18px rgba(255,215,60,0.35);
-    animation: pulseNote 1.8s ease-in-out infinite;
-  }
-  @keyframes pulseNote { 0%,100% { transform: scale(1); } 50% { transform: scale(1.04); } }
-
-  /* --- РИТМ-ИГРА --- */
-  .rhythm-stage {
-    position: relative;
-    height: 320px;
-    background: linear-gradient(180deg, #c3e1ff 0%, #eaf6ff 70%, #fff 100%);
-    border-radius: 22px;
-    overflow: hidden;
-    margin-bottom: 10px;
-    border: 3px solid #a8d4ff;
-    box-shadow: inset 0 -10px 30px rgba(47,111,176,0.15);
-  }
-  .lane {
-    position: absolute;
-    top: 0; bottom: 0;
-    width: 25%;
-    border-right: 1px solid rgba(124,184,245,0.35);
-  }
-  .lane:last-child { border-right: none; }
-  .judge-line {
-    position: absolute;
-    bottom: 28px;
-    left: 0; right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, transparent, #4a92d6, transparent);
-    box-shadow: 0 0 14px #4a92d6;
-    z-index: 5;
-    pointer-events: none;
-  }
-  .note {
-    position: absolute;
-    top: -60px;
-    width: calc(25% - 10px);
-    height: 46px;
-    border-radius: 12px;
-    background: linear-gradient(135deg, #7cb8f5, #2f6fb0);
-    box-shadow: 0 0 18px rgba(47,111,176,0.6);
-    z-index: 4;
-    pointer-events: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    color: #fff;
-  }
-  .note.hit { animation: noteHit .3s forwards; }
-  @keyframes noteHit { to { transform: scale(1.6); opacity: 0; filter: blur(4px); } }
-  .touch-zone {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 70px;
-    display: flex;
-    z-index: 6;
-  }
-  .touch-btn {
-    flex: 1;
-    border-right: 1px solid rgba(124,184,245,0.25);
-    cursor: pointer;
-    transition: background .1s;
-  }
-  .touch-btn:last-child { border-right: none; }
-  .touch-btn:active, .touch-btn.active { background: rgba(124,184,245,0.25); }
-
-  .judge-text {
-    position: absolute;
-    top: 40%; left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 30px;
-    font-weight: 800;
-    z-index: 10;
-    pointer-events: none;
-    opacity: 0;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  }
-  .judge-text.show { animation: judgePop .5s forwards; }
-  @keyframes judgePop {
-    0% { opacity: 1; transform: translate(-50%, -50%) scale(1.4); }
-    100% { opacity: 0; transform: translate(-50%, -80%) scale(.9); }
+  /* Оверлей для случая, если картинки не загрузились */
+  .error-msg {
+    position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
+    background: rgba(10, 20, 40, 0.9); color: #fff; font-size: 14px; text-align: center;
+    padding: 20px; line-height: 1.5; z-index: 10; border-radius: 22px;
   }
 
-  .rhythm-hud {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 6px;
-    margin-bottom: 6px;
-    font-weight: 700;
-    font-size: 15px;
+  @media (max-width:560px){
+    main{padding-left:14px;padding-right:14px}
+    .lead{margin-bottom:20px} .question{font-size:20px}
+    .art-wrap{border-radius:18px} #resultCopy{font-size:14px}
   }
-  .combo-big { font-size: 22px; color: #2f6fb0; }
-
-  /* --- КРЕСТИКИ-НОЛИКИ --- */
-  .ttt-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    max-width: 270px;
-    margin: 16px auto;
-  }
-  .ttt-cell {
-    aspect-ratio: 1;
-    background: #eaf6ff;
-    border: 3px solid #a8d4ff;
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: clamp(30px, 8vw, 44px);
-    cursor: pointer;
-    transition: all .25s;
-    user-select: none;
-    box-shadow: 0 4px 10px rgba(47,111,176,0.15);
-  }
-  .ttt-cell:hover:not(.taken) { background: #d6ecff; transform: scale(1.04); }
-  .ttt-cell.taken { cursor: default; }
-  .ttt-cell.win { background: #fff7b0; border-color: #ffd93b; animation: winPulse .6s ease infinite alternate; }
-  @keyframes winPulse { from { transform: scale(1); } to { transform: scale(1.06); } }
-  .ttt-status {
-    text-align: center;
-    font-weight: 700;
-    font-size: 16px;
-    min-height: 26px;
-    color: #2f6fb0;
-    margin: 8px 0;
-  }
-  .pony-vs {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #eaf6ff;
-    border-radius: 16px;
-    padding: 10px 16px;
-    margin-bottom: 12px;
-    font-size: 14px;
-    font-weight: 700;
-  }
-  .pony-vs span { display: flex; align-items: center; gap: 6px; }
-  .pony-vs .big { font-size: 24px; }
-
-  /* --- МЯУДОКУ --- */
-  .sudoku-grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 3px;
-    max-width: 290px;
-    margin: 14px auto;
-    background: #b0d4f0;
-    padding: 4px;
-    border-radius: 14px;
-  }
-  .sudoku-cell {
-    aspect-ratio: 1;
-    background: #fff;
-    border-radius: 9px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: clamp(20px, 5vw, 26px);
-    cursor: pointer;
-    transition: all .2s;
-    user-select: none;
-  }
-  .sudoku-cell:hover { background: #eaf6ff; }
-  .sudoku-cell.fixed { background: #d6ecff; cursor: default; }
-  .sudoku-cell.fixed:hover { background: #d6ecff; }
-  .sudoku-cell.error { background: #ffd6e0; animation: shake .3s; }
-  .sudoku-cell.cat { background: #fff7b0; }
-  @keyframes shake {
-    0%,100% { transform: translateX(0); }
-    25% { transform: translateX(-4px); }
-    75% { transform: translateX(4px); }
-  }
-  .sudoku-msg {
-    text-align: center;
-    font-weight: 700;
-    min-height: 22px;
-    font-size: 14px;
-    color: #2f9150;
-  }
-
-  /* --- MEMORY --- */
-  .memory-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    max-width: 300px;
-    margin: 14px auto;
-  }
-  .memory-card {
-    aspect-ratio: 1;
-    background: linear-gradient(135deg, #7cb8f5, #4a92d6);
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: clamp(22px, 5.5vw, 30px);
-    cursor: pointer;
-    transition: all .35s;
-    user-select: none;
-    color: transparent;
-    box-shadow: 0 4px 10px rgba(47,111,176,0.3);
-  }
-  .memory-card.flipped { background: #fff; color: inherit; transform: rotateY(0); }
-  .memory-card.matched { background: #d6ecff; cursor: default; opacity: .75; }
-  .memory-card:active:not(.flipped):not(.matched) { transform: scale(.95); }
-
-  /* --- КОНФЕТТИ --- */
-  .confetti {
-    position: fixed;
-    width: 10px; height: 10px;
-    z-index: 100;
-    pointer-events: none;
-    animation: confettiFall 2.5s linear forwards;
-  }
-  @keyframes confettiFall {
-    to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
   }
 </style>
 </head>
 <body>
 
-<!-- ЭКРАН 1: ИЗВИНЕНИЯ -->
-<div class="screen active" id="scr-1">
-  <div class="card">
-    <h1>Кирусе 💙</h1>
-    <p class="sub">от Вити, который очень сожалеет...</p>
-    <div class="box blue">
-      <strong>Кируся, прости меня, пожалуйста.</strong> 💔<br>
-      Я знаю, что сильно тебя бесил и накосячил. Я не хотел. Ты для меня очень важна, и мне правда стыдно. Я всё понял и хочу всё исправить.
+<canvas id="bg"></canvas>
+<div class="nebula n1"></div>
+<div class="nebula n2"></div>
+
+<button id="soundBtn" class="sound-btn" aria-label="Звук" title="Звук"><span id="soundIcon">♪</span></button>
+
+<main>
+  <!-- ЭКРАН ВЫБОРА -->
+  <section id="intro" class="screen active">
+    <p class="kicker">маленькое ночное приключение</p>
+    <h1>Кира,<br><em>сладких снов</em></h1>
+    <p class="lead">Перед сном остался один маленький выбор…</p>
+    <p class="question">Какую таблетку<br>ты выбираешь на ночь?</p>
+
+    <div class="stage">
+      <svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" role="group">
+        <defs>
+          <linearGradient id="fingerGrad" x1="0.25" y1="0" x2="0.75" y2="1">
+            <stop offset="0" stop-color="#ffe9dd"/><stop offset="0.26" stop-color="#e6d5d7"/>
+            <stop offset="0.58" stop-color="#aec2d9"/><stop offset="0.84" stop-color="#7288ab"/>
+            <stop offset="1" stop-color="#4d5f80"/>
+          </linearGradient>
+          <linearGradient id="palmGrad" x1="0.12" y1="0" x2="0.88" y2="1">
+            <stop offset="0" stop-color="#f7e0da"/><stop offset="0.28" stop-color="#d6d9e3"/>
+            <stop offset="0.62" stop-color="#98aec9"/><stop offset="1" stop-color="#56698e"/>
+          </linearGradient>
+          <radialGradient id="palmLight" cx="0.42" cy="0.36" r="0.72">
+            <stop offset="0" stop-color="#ffffff" stop-opacity="0.5"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="glowBlue">
+            <stop offset="0" stop-color="#63ccff" stop-opacity="0.6"/><stop offset="0.42" stop-color="#2f8fe0" stop-opacity="0.24"/><stop offset="1" stop-color="#2f8fe0" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="glowRed">
+            <stop offset="0" stop-color="#ff85ac" stop-opacity="0.6"/><stop offset="0.42" stop-color="#e63f6d" stop-opacity="0.24"/><stop offset="1" stop-color="#e63f6d" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="blueCap" x1="0.18" y1="0" x2="0.82" y2="1">
+            <stop offset="0" stop-color="#ffffff"/><stop offset="0.16" stop-color="#cdf2ff"/><stop offset="0.44" stop-color="#63c6ff"/><stop offset="0.72" stop-color="#1f7fd0"/><stop offset="1" stop-color="#0b3a72"/>
+          </linearGradient>
+          <linearGradient id="redCap" x1="0.18" y1="0" x2="0.82" y2="1">
+            <stop offset="0" stop-color="#fff7f9"/><stop offset="0.16" stop-color="#ffcdd9"/><stop offset="0.44" stop-color="#ff7599"/><stop offset="0.72" stop-color="#d62c5b"/><stop offset="1" stop-color="#751131"/>
+          </linearGradient>
+          <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffffff" stop-opacity="0.5"/><stop offset="0.32" stop-color="#ffffff" stop-opacity="0.05"/><stop offset="0.72" stop-color="#001028" stop-opacity="0.1"/><stop offset="1" stop-color="#001028" stop-opacity="0.34"/>
+          </linearGradient>
+          <g id="handShape">
+            <g fill="none" stroke-linecap="round" stroke="url(#fingerGrad)">
+              <path d="M302 362 C310 320 314 278 315 244" stroke-width="26"/>
+              <path d="M276 362 C280 306 281 254 283 214" stroke-width="29"/>
+              <path d="M246 362 C242 298 242 240 246 198" stroke-width="32"/>
+              <path d="M216 362 C205 306 199 254 204 216" stroke-width="29"/>
+            </g>
+            <path d="M186 420 C178 384 178 340 190 300 C202 260 228 244 254 246 C280 248 304 268 311 304 C318 340 314 386 304 420 Z" fill="url(#palmGrad)"/>
+            <ellipse cx="246" cy="332" rx="58" ry="66" fill="url(#palmLight)"/>
+            <path d="M198 368 C170 360 149 340 141 314" fill="none" stroke="url(#fingerGrad)" stroke-width="34" stroke-linecap="round"/>
+            <g fill="none" stroke="#7c93b3" stroke-linecap="round" opacity="0.32">
+              <path d="M208 338 C228 354 245 372 253 398" stroke-width="2"/><path d="M216 316 C224 332 226 346 224 358" stroke-width="1.6"/><path d="M230 300 C242 306 254 313 262 323" stroke-width="1.6"/><path d="M268 300 C282 307 293 317 299 332" stroke-width="1.6"/>
+            </g>
+            <g fill="#f4faff" stroke="#a7bddb" stroke-width="1" opacity="0.95">
+              <ellipse cx="204" cy="204" rx="8" ry="10" transform="rotate(-10 204 204)"/><ellipse cx="246" cy="186" rx="9" ry="11"/><ellipse cx="283" cy="204" rx="8" ry="10" transform="rotate(8 283 204)"/><ellipse cx="315" cy="234" rx="7" ry="9" transform="rotate(14 315 234)"/><ellipse cx="143" cy="304" rx="10" ry="13" transform="rotate(-38 143 304)"/>
+            </g>
+          </g>
+        </defs>
+        <g class="hand"><use href="#handShape"/></g>
+        <g class="hand" transform="translate(700,0) scale(-1,1)"><use href="#handShape"/></g>
+
+        <g class="pill" data-color="blue" role="button" tabindex="0" transform="translate(250,108)">
+          <circle class="hit" r="80" fill="transparent"/>
+          <circle class="glow" r="94" fill="url(#glowBlue)"/>
+          <g class="pill-body"><g transform="rotate(-18)">
+            <rect x="-29" y="-65" width="58" height="130" rx="29" fill="url(#blueCap)" stroke="rgba(222,246,255,.9)" stroke-width="1.6"/>
+            <path d="M-29 0 H29" stroke="rgba(232,249,255,.85)" stroke-width="1.6"/>
+            <rect x="-29" y="-65" width="58" height="130" rx="29" fill="url(#glass)"/>
+            <ellipse cx="-11" cy="-36" rx="7" ry="18" fill="#ffffff" opacity="0.45" transform="rotate(-6 -11 -36)"/>
+            <ellipse cx="11" cy="34" rx="5" ry="12" fill="#ffffff" opacity="0.16"/>
+          </g></g>
+        </g>
+
+        <g class="pill" data-color="red" role="button" tabindex="0" transform="translate(450,108)">
+          <circle class="hit" r="80" fill="transparent"/>
+          <circle class="glow" r="94" fill="url(#glowRed)"/>
+          <g class="pill-body"><g transform="rotate(18)">
+            <rect x="-29" y="-65" width="58" height="130" rx="29" fill="url(#redCap)" stroke="rgba(255,228,236,.9)" stroke-width="1.6"/>
+            <path d="M-29 0 H29" stroke="rgba(255,232,239,.85)" stroke-width="1.6"/>
+            <rect x="-29" y="-65" width="58" height="130" rx="29" fill="url(#glass)"/>
+            <ellipse cx="-11" cy="-36" rx="7" ry="18" fill="#ffffff" opacity="0.45" transform="rotate(-6 -11 -36)"/>
+            <ellipse cx="11" cy="34" rx="5" ry="12" fill="#ffffff" opacity="0.16"/>
+          </g></g>
+        </g>
+      </svg>
     </div>
-    <div class="box pink">
-      Пожалуйста, не злись на меня слишком долго. Я приготовил для тебя кое-что милое 🥺
-    </div>
-    <button class="btn" onclick="goTo(2)">Продолжить →</button>
-    <button class="skip-link" onclick="goTo(3)">если не хочешь — можешь пропустить</button>
-    <div class="meow26">Не забудь сказать Вите «мяу26» 💙</div>
-  </div>
-</div>
+    <p class="hint">нажми прямо на таблетку</p>
+  </section>
 
-<!-- ЭКРАН 2: ДОДСТЕР -->
-<div class="screen" id="scr-2">
-  <div class="card">
-    <h1>🍗 Кирусь, покушай!</h1>
-    <p class="sub">Это очень важно</p>
-    <div class="box yellow">
-      Съешь, пожалуйста, <strong>додстер</strong> (тот самый, реальный 🥺). Не голодай, ладно? Ты должна кушать хорошо, чтобы быть здоровой и счастливой.
-    </div>
-    <button class="btn" onclick="goTo(3)">Продолжить →</button>
-    <button class="skip-link" onclick="goTo(3)">если хочешь — пропусти</button>
-    <div class="meow26">Не забудь сказать Вите «мяу26» 💙</div>
-  </div>
-</div>
-
-<!-- ЭКРАН 3: КРЕСТИКИ С ПОНИ -->
-<div class="screen" id="scr-3">
-  <div class="card">
-    <h1>🐴 Пони-крестики</h1>
-    <p class="sub">Ты играешь за Сумеречную Искорку ✨<br>Витя-Робот играет за Эпплджек 🍎</p>
-
-    <div class="pony-vs">
-      <span><span class="big">🦄</span> Ты (Искорка)</span>
-      <span>vs</span>
-      <span><span class="big">🐴</span> Робот (Эпплджек)</span>
-    </div>
-
-    <div class="ttt-status" id="ttt-status">Твой ход! ✨</div>
-    <div class="ttt-grid" id="ttt-grid"></div>
-
-    <div style="text-align:center;">
-      <button class="btn secondary small" onclick="resetTTT()">🔄 Заново</button>
-    </div>
-
-    <button class="btn" onclick="goTo(4)">Дальше →</button>
-    <button class="skip-link" onclick="goTo(4)">пропустить</button>
-    <div class="meow26">Не забудь сказать Вите «мяу26» 💙</div>
-  </div>
-</div>
-
-<!-- ЭКРАН 4: РИТМ-ИГРА -->
-<div class="screen" id="scr-4">
-  <div class="card">
-    <h1>🎹 Sekai Rhythm</h1>
-    <p class="sub">Нажимай на дорожки, когда ноты на линии 💙</p>
-
-    <div class="rhythm-hud">
-      <span>Счёт: <span id="score">0</span></span>
-      <span class="combo-big" id="combo">0 combo</span>
-    </div>
-
-    <div class="rhythm-stage" id="stage">
-      <div class="lane" style="left:0%"></div>
-      <div class="lane" style="left:25%"></div>
-      <div class="lane" style="left:50%"></div>
-      <div class="lane" style="left:75%"></div>
-      <div class="judge-line"></div>
-      <div class="judge-text" id="judgeText"></div>
-      <div class="touch-zone" id="touchZone">
-        <div class="touch-btn" data-lane="0"></div>
-        <div class="touch-btn" data-lane="1"></div>
-        <div class="touch-btn" data-lane="2"></div>
-        <div class="touch-btn" data-lane="3"></div>
+  <!-- ЭКРАН РЕЗУЛЬТАТА -->
+  <section id="result" class="screen" aria-live="polite">
+    <div class="art-wrap">
+      <canvas id="art" width="800" height="800"></canvas>
+      <div id="errorOverlay" class="error-msg">
+        Ой! Браузер заблокировал доступ к картинке.<br><br>
+        Пожалуйста, запустите файл через локальный сервер (например, Live Server), чтобы увидеть магию частиц.
       </div>
     </div>
+    <h2 id="resultTitle"></h2>
+    <p id="resultCopy"></p>
+    <button id="backBtn" type="button">↶ Вернуться к выбору</button>
+  </section>
 
-    <button class="btn" onclick="goTo(5)">Дальше →</button>
-    <button class="skip-link" onclick="goTo(5)">пропустить игру</button>
-    <div class="meow26">Не забудь сказать Вите «мяу26» 💙</div>
-  </div>
-</div>
-
-<!-- ЭКРАН 5: МЯУДОКУ -->
-<div class="screen" id="scr-5">
-  <div class="card">
-    <h1>🐱 Мяудоку</h1>
-    <p class="sub">
-      Поставь котиков так, чтобы в каждой строке, столбце и блоке 2×3 был <strong>один</strong> котик.<br>
-      Котики <strong>не могут касаться</strong> друг друга даже углами!
-    </p>
-
-    <div class="sudoku-grid" id="sudoku-grid"></div>
-    <div class="sudoku-msg" id="sudoku-msg"></div>
-
-    <div style="text-align:center;">
-      <button class="btn secondary small" onclick="resetSudoku()">🔄 Заново</button>
-    </div>
-
-    <button class="btn" onclick="goTo(6)">Дальше →</button>
-    <button class="skip-link" onclick="goTo(6)">пропустить игру</button>
-    <div class="meow26">Не забудь сказать Вите «мяу26» 💙</div>
-  </div>
-</div>
-
-<!-- ЭКРАН 6: MEMORY -->
-<div class="screen" id="scr-6">
-  <div class="card">
-    <h1>🃏 Мяу-пары</h1>
-    <p class="sub">Найди все пары котиков 💙</p>
-
-    <div class="memory-grid" id="memory-grid"></div>
-    <div class="sudoku-msg" id="memory-msg"></div>
-
-    <div style="text-align:center;">
-      <button class="btn secondary small" onclick="resetMemory()">🔄 Заново</button>
-    </div>
-
-    <button class="btn" onclick="goTo(7)">Финал →</button>
-    <button class="skip-link" onclick="goTo(7)">пропустить игру</button>
-    <div class="meow26">Не забудь сказать Вите «мяу26» 💙</div>
-  </div>
-</div>
-
-<!-- ЭКРАН 7: ФИНАЛ -->
-<div class="screen" id="scr-7">
-  <div class="card">
-    <h1>💙 Спасибо, Кируся</h1>
-    <p class="sub">Ты лучшая</p>
-    <div class="box blue">
-      Спасибо, что заглянула. Даже если что-то пропустила — сам факт того, что ты здесь, для меня уже много значит.
-    </div>
-    <div class="box pink">
-      Я очень надеюсь, что ты больше не злишься. Ты для меня очень важна, правда.
-    </div>
-    <div class="box yellow">
-      <strong>И самое главное: напиши Вите «мяу26» 💙</strong><br>
-      Он очень ждёт.
-    </div>
-    <button class="btn" onclick="finishAll()">🎮 Окончить</button>
-    <div class="meow26">Не забудь сказать Вите «мяу26» 💙</div>
-  </div>
-</div>
+  <p class="note">✦ тихой ночи, уютных снов и самого доброго утра ✦</p>
+</main>
 
 <script>
-  /* ---------- НАВИГАЦИЯ ---------- */
-  function goTo(n) {
-    // Останавливаем ритм, если уходим не на 4-й экран
-    if (n !== 4) stopRhythmSilently();
+(function () {
+  'use strict';
 
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById('scr-' + n).classList.add('active');
-    window.scrollTo(0, 0);
+  // Подключаем локальные файлы из корня проекта
+  const PHOTOS = {
+    blue: "blue.png",
+    red:  "red.png"
+  };
 
-    if (n === 3) initTTT();
-    if (n === 4) startRhythmGame();
-    if (n === 5) initSudoku();
-    if (n === 6) initMemory();
+  /* =========================================================
+     1. ФОНОВОЕ ЗВЁЗДНОЕ НЕБО
+     ========================================================= */
+  const bgCanvas = document.getElementById('bg');
+  const bgCtx = bgCanvas.getContext('2d');
+  let bgStars = [], bgW = 0, bgH = 0, bgTime = 0;
 
-    spawnConfetti();
-  }
-
-  function spawnConfetti() {
-    const colors = ['#7cb8f5','#a8d4ff','#fff7b0','#ff9ec4','#4a92d6'];
-    for (let i = 0; i < 22; i++) {
-      const c = document.createElement('div');
-      c.className = 'confetti';
-      c.style.left = Math.random() * 100 + 'vw';
-      c.style.top = '-20px';
-      c.style.background = colors[Math.floor(Math.random() * colors.length)];
-      c.style.borderRadius = Math.random() > .5 ? '50%' : '2px';
-      c.style.animationDelay = Math.random() * 0.8 + 's';
-      c.style.animationDuration = (1.8 + Math.random() * 1.5) + 's';
-      document.body.appendChild(c);
-      setTimeout(() => c.remove(), 4000);
+  function resizeBg() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    bgW = bgCanvas.clientWidth || window.innerWidth;
+    bgH = bgCanvas.clientHeight || window.innerHeight;
+    bgCanvas.width = Math.floor(bgW * dpr);
+    bgCanvas.height = Math.floor(bgH * dpr);
+    bgCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    bgStars = [];
+    const count = Math.min(260, Math.round((bgW * bgH) / 7200));
+    for (let i = 0; i < count; i++) {
+      bgStars.push({ x: Math.random() * bgW, y: Math.random() * bgH, r: Math.random() * 1.5 + 0.35, a: Math.random() * 0.55 + 0.2, sp: Math.random() * 0.9 + 0.25, ph: Math.random() * Math.PI * 2 });
     }
   }
 
-  function finishAll() {
-    window.location.href = 'https://link.brawlstars.com/invite/gameroom/ru?tag=XCBS8BMP';
-  }
-
-  /* ---------- ПУЗЫРЬКИ ---------- */
-  for (let i = 0; i < 10; i++) {
-    const b = document.createElement('div');
-    b.className = 'bubble';
-    const s = 12 + Math.random() * 40;
-    b.style.width = s + 'px'; b.style.height = s + 'px';
-    b.style.left = Math.random() * 100 + '%';
-    b.style.top = Math.random() * 100 + '%';
-    b.style.animationDuration = (10 + Math.random() * 8) + 's';
-    b.style.animationDelay = (-Math.random() * 10) + 's';
-    document.body.appendChild(b);
-  }
-
-  /* ---------- КРЕСТИКИ-НОЛИКИ С ПОНИ (ИГРОК ВСЕГДА ВЫИГРЫВАЕТ) ---------- */
-  let tttBoard = [];
-  let tttActive = true;
-  const tttPlayer = '🦄';
-  const tttRobot = '🍎';
-  const TTT_WINS = [
-    [0,1,2],[3,4,5],[6,7,8],
-    [0,3,6],[1,4,7],[2,5,8],
-    [0,4,8],[2,4,6]
-  ];
-
-  function initTTT() {
-    resetTTT();
-  }
-
-  function resetTTT() {
-    tttBoard = Array(9).fill('');
-    tttActive = true;
-    document.getElementById('ttt-status').textContent = 'Твой ход! ✨';
-    const grid = document.getElementById('ttt-grid');
-    grid.innerHTML = '';
-    for (let i = 0; i < 9; i++) {
-      const cell = document.createElement('div');
-      cell.className = 'ttt-cell';
-      cell.dataset.idx = i;
-      cell.addEventListener('click', () => onTTTClick(i, cell));
-      grid.appendChild(cell);
+  function bgLoop() {
+    bgTime += 0.016;
+    bgCtx.clearRect(0, 0, bgW, bgH);
+    for (let i = 0; i < bgStars.length; i++) {
+      const s = bgStars[i];
+      bgCtx.globalAlpha = s.a * (0.55 + 0.45 * Math.sin(bgTime * s.sp + s.ph));
+      bgCtx.fillStyle = '#dff0ff';
+      bgCtx.beginPath(); bgCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2); bgCtx.fill();
     }
+    bgCtx.globalAlpha = 1;
+    requestAnimationFrame(bgLoop);
+  }
+  resizeBg();
+  window.addEventListener('resize', resizeBg);
+  window.addEventListener('orientationchange', () => setTimeout(resizeBg, 250));
+  requestAnimationFrame(bgLoop);
+
+  /* =========================================================
+     2. АУДИО (Колыбельная, часы)
+     ========================================================= */
+  let audioCtx = null, masterGain = null, soundOn = true, audioStarted = false;
+  let melodyIndex = 0, musicTimer = null, tickTimer = null;
+  const MELODY = [440, 523.25, 659.25, 587.33, 523.25, 440, 392, 440, 523.25, 659.25, 783.99, 659.25, 587.33, 523.25, 440, 392, 349.23, 440, 523.25, 587.33, 523.25, 440, 392, 349.23, 392, 523.25, 659.25, 523.25, 440, 392, 349.23, 329.63];
+
+  function initAudio() {
+    if (audioCtx) { if (audioCtx.state === 'suspended') audioCtx.resume(); return; }
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    try { audioCtx = new AC(); } catch (e) { return; }
+    masterGain = audioCtx.createGain();
+    const t = audioCtx.currentTime;
+    masterGain.gain.setValueAtTime(0.0001, t);
+    masterGain.gain.exponentialRampToValueAtTime(soundOn ? 0.16 : 0.0001, t + 2.2);
+    masterGain.connect(audioCtx.destination);
+    startMusic(); startTicking();
   }
 
-  function onTTTClick(idx, cell) {
-    if (!tttActive || tttBoard[idx]) return;
+  function playNote(freq, time, dur, vol) {
+    if (!audioCtx) return;
+    const osc = audioCtx.createOscillator(), gain = audioCtx.createGain(), filter = audioCtx.createBiquadFilter();
+    osc.type = 'sine'; osc.frequency.setValueAtTime(freq, time);
+    filter.type = 'lowpass'; filter.frequency.setValueAtTime(1400, time);
+    gain.gain.setValueAtTime(0.0001, time); gain.gain.exponentialRampToValueAtTime(vol, time + 0.09); gain.gain.exponentialRampToValueAtTime(0.0001, time + dur);
+    osc.connect(filter); filter.connect(gain); gain.connect(masterGain);
+    osc.start(time); osc.stop(time + dur + 0.1);
 
-    tttBoard[idx] = tttPlayer;
-    cell.textContent = tttPlayer;
-    cell.classList.add('taken');
+    const bell = audioCtx.createOscillator(), bellGain = audioCtx.createGain();
+    bell.type = 'sine'; bell.frequency.setValueAtTime(freq * 2, time);
+    bellGain.gain.setValueAtTime(0.0001, time); bellGain.gain.exponentialRampToValueAtTime(vol * 0.22, time + 0.02); bellGain.gain.exponentialRampToValueAtTime(0.0001, time + dur * 0.55);
+    bell.connect(bellGain); bellGain.connect(masterGain);
+    bell.start(time); bell.stop(time + dur * 0.6 + 0.1);
+  }
 
-    if (checkTTTWin(tttPlayer)) {
-      // Подсветить выигрыш
-      TTT_WINS.forEach(line => {
-        if (line.every(i => tttBoard[i] === tttPlayer)) {
-          line.forEach(i => document.querySelector(`.ttt-cell[data-idx="${i}"]`).classList.add('win'));
-        }
+  function startMusic() {
+    if (!audioCtx) return;
+    let next = audioCtx.currentTime + 0.35, step = 0.92;
+    function schedule() {
+      if (!audioCtx) return;
+      while (next < audioCtx.currentTime + 1.4) {
+        const f = MELODY[melodyIndex % MELODY.length];
+        playNote(f, next, 2.4, 0.2);
+        if (melodyIndex % 4 === 0) playNote(f / 2, next, 3.2, 0.085);
+        melodyIndex++; next += step;
+      }
+    }
+    schedule(); musicTimer = setInterval(schedule, 400);
+  }
+
+  function startTicking() {
+    if (!audioCtx) return;
+    tickTimer = setInterval(function () {
+      if (!audioCtx || !soundOn) return;
+      const t = audioCtx.currentTime;
+      [0, 0.13].forEach(offset => {
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        o.type = 'sine'; o.frequency.setValueAtTime(1180, t + offset);
+        g.gain.setValueAtTime(0.0001, t + offset); g.gain.exponentialRampToValueAtTime(0.022, t + offset + 0.006); g.gain.exponentialRampToValueAtTime(0.0001, t + offset + 0.06);
+        o.connect(g); g.connect(masterGain); o.start(t + offset); o.stop(t + offset + 0.08);
       });
-      endTTT('Ты победила! 🎉✨');
-      return;
+    }, 2100);
+  }
+
+  const soundBtn = document.getElementById('soundBtn'), soundIcon = document.getElementById('soundIcon');
+  soundBtn.addEventListener('click', e => {
+    e.stopPropagation(); soundOn = !soundOn;
+    if (!audioStarted) initAudio();
+    if (masterGain && audioCtx) {
+      const now = audioCtx.currentTime; masterGain.gain.cancelScheduledValues(now);
+      masterGain.gain.setTargetAtTime(soundOn ? 0.16 : 0.0001, now, 0.12);
     }
-    if (tttBoard.every(c => c)) {
-      endTTT('Ничья! 🤝');
-      return;
-    }
-
-    tttActive = false;
-    document.getElementById('ttt-status').textContent = 'Робот думает... 🤖';
-    setTimeout(robotTTTMove, 700);
-  }
-
-  function robotTTTMove() {
-    if (!tttActive && tttBoard.every(c => c)) return;
-    if (checkTTTWin(tttPlayer) || tttBoard.every(c => c)) return;
-
-    const empty = [];
-    for (let i = 0; i < 9; i++) if (!tttBoard[i]) empty.push(i);
-    if (empty.length === 0) return;
-
-    // 1. Клетки, где игрок может выиграть следующим ходом — робот их ИЗБЕГАЕТ (чтобы дать игроку победить)
-    const playerWinningCells = new Set();
-    TTT_WINS.forEach(line => {
-      const vals = line.map(i => tttBoard[i]);
-      if (vals.filter(v => v === tttPlayer).length === 2 && vals.filter(v => v === '').length === 1) {
-        playerWinningCells.add(line.find(i => tttBoard[i] === ''));
-      }
-    });
-
-    // 2. Клетки, где робот сам может выиграть — тоже ИЗБЕГАЕТ
-    const robotWinningCells = new Set();
-    TTT_WINS.forEach(line => {
-      const vals = line.map(i => tttBoard[i]);
-      if (vals.filter(v => v === tttRobot).length === 2 && vals.filter(v => v === '').length === 1) {
-        robotWinningCells.add(line.find(i => tttBoard[i] === ''));
-      }
-    });
-
-    // Идеальный пул: не блокирует игрока и не выигрывает сам
-    let pool = empty.filter(i => !playerWinningCells.has(i) && !robotWinningCells.has(i));
-    // Запасной: не выигрывает сам, но может блокировать (если уж выбора нет)
-    if (pool.length === 0) pool = empty.filter(i => !robotWinningCells.has(i));
-    // Крайний случай: любые свободные (но тогда может выиграть — стараемся не допускать)
-    if (pool.length === 0) pool = empty;
-
-    const move = pool[Math.floor(Math.random() * pool.length)];
-
-    tttBoard[move] = tttRobot;
-    const cell = document.querySelector(`.ttt-cell[data-idx="${move}"]`);
-    if (cell) {
-      cell.textContent = tttRobot;
-      cell.classList.add('taken');
-    }
-
-    // Сверху ещё раз проверяем, что робот не выиграл (гарантия)
-    if (checkTTTWin(tttRobot)) {
-      // Откат — такого быть не должно, но подстрахуемся
-      tttBoard[move] = '';
-      const alt = empty.filter(i => i !== move);
-      if (alt.length > 0) {
-        const m2 = alt[Math.floor(Math.random() * alt.length)];
-        tttBoard[m2] = tttRobot;
-        if (cell) { cell.textContent = ''; cell.classList.remove('taken'); }
-        const c2 = document.querySelector(`.ttt-cell[data-idx="${m2}"]`);
-        if (c2) { c2.textContent = tttRobot; c2.classList.add('taken'); }
-      }
-    }
-
-    if (tttBoard.every(c => c)) {
-      endTTT('Ничья! 🤝');
-      return;
-    }
-
-    tttActive = true;
-    document.getElementById('ttt-status').textContent = 'Твой ход! ✨';
-  }
-
-  function checkTTTWin(player) {
-    return TTT_WINS.some(line => line.every(i => tttBoard[i] === player));
-  }
-
-  function endTTT(msg) {
-    tttActive = false;
-    document.getElementById('ttt-status').textContent = msg;
-    spawnConfetti();
-  }
-
-  /* ---------- РИТМ-ИГРА ---------- */
-  let rhythmActive = false;
-  let rhythmRAF = null;
-  let notes = [];
-  let score = 0;
-  let combo = 0;
-  let lastSpawn = 0;
-  let spawnInterval = 1400;
-  let startTime = 0;
-  let lastFrame = 0;
-  let audioCtx = null;
-
-  const stage = document.getElementById('stage');
-  const judgeText = document.getElementById('judgeText');
-  const scoreEl = document.getElementById('score');
-  const comboEl = document.getElementById('combo');
-  const touchBtns = document.querySelectorAll('.touch-btn');
-
-  function startRhythmGame() {
-    stopRhythmSilently();
-    rhythmActive = true;
-    score = 0;
-    combo = 0;
-    scoreEl.textContent = '0';
-    comboEl.textContent = '0 combo';
-    spawnInterval = 1400;
-    startTime = performance.now();
-    lastSpawn = performance.now();
-    lastFrame = 0;
-    rhythmLoop();
-  }
-
-  function stopRhythmSilently() {
-    rhythmActive = false;
-    if (rhythmRAF) { cancelAnimationFrame(rhythmRAF); rhythmRAF = null; }
-    notes.forEach(n => n.el && n.el.parentNode && n.el.remove());
-    notes = [];
-  }
-
-  function spawnNote() {
-    const lane = Math.floor(Math.random() * 4);
-    const el = document.createElement('div');
-    el.className = 'note';
-    el.style.left = (lane * 25 + 5) + '%';
-    el.style.top = '-60px';
-    el.textContent = ['💙','🤍','💐','🐱'][Math.floor(Math.random()*4)];
-    stage.appendChild(el);
-    notes.push({ lane, el, y: -60, speed: 0.13 + Math.random() * 0.05, hit: false });
-  }
-
-  function rhythmLoop(now) {
-    if (!rhythmActive) return;
-    now = now || performance.now();
-
-    const dt = lastFrame ? Math.min(now - lastFrame, 50) : 16;
-    lastFrame = now;
-
-    const rect = stage.getBoundingClientRect();
-    if (rect.height === 0) {
-      rhythmRAF = requestAnimationFrame(rhythmLoop);
-      return;
-    }
-
-    if (now - lastSpawn > spawnInterval) {
-      spawnNote();
-      lastSpawn = now;
-      spawnInterval = Math.max(900, 1400 - Math.floor((now - startTime) / 15000) * 100);
-    }
-
-    for (let i = notes.length - 1; i >= 0; i--) {
-      const n = notes[i];
-      if (n.hit) { n.el.remove(); notes.splice(i, 1); continue; }
-      n.y += n.speed * dt;
-      n.el.style.top = n.y + 'px';
-
-      if (n.y > rect.height + 20) {
-        n.el.remove();
-        notes.splice(i, 1);
-        combo = 0;
-        comboEl.textContent = '0 combo';
-        showJudge('MISS', '#e0567e');
-      }
-    }
-
-    rhythmRAF = requestAnimationFrame(rhythmLoop);
-  }
-
-  function pressLane(lane) {
-    if (!rhythmActive) return;
-    const btn = touchBtns[lane];
-    btn.classList.add('active');
-    setTimeout(() => btn.classList.remove('active'), 120);
-
-    const rect = stage.getBoundingClientRect();
-    if (rect.height === 0) return;
-    const judgeY = rect.height - 40;
-
-    let bestIdx = -1;
-    let bestDist = 999;
-    for (let i = 0; i < notes.length; i++) {
-      const n = notes[i];
-      if (n.lane !== lane || n.hit) continue;
-      const dist = Math.abs(n.y - judgeY);
-      if (dist < bestDist) { bestDist = dist; bestIdx = i; }
-    }
-
-    if (bestIdx === -1) {
-      combo = 0;
-      comboEl.textContent = '0 combo';
-      return;
-    }
-
-    const n = notes[bestIdx];
-    let judge, color, points;
-    if (bestDist <= 30) { judge = 'PERFECT'; color = '#ffd93b'; points = 300; combo++; }
-    else if (bestDist <= 60) { judge = 'GREAT'; color = '#7cb8f5'; points = 200; combo++; }
-    else if (bestDist <= 90) { judge = 'GOOD'; color = '#6aa9dd'; points = 100; combo++; }
-    else { judge = 'BAD'; color = '#e0567e'; points = 0; combo = 0; }
-
-    n.hit = true;
-    n.el.classList.add('hit');
-    score += points;
-    scoreEl.textContent = score;
-    comboEl.textContent = combo + ' combo';
-    showJudge(judge, color);
-    playTone(lane);
-
-    setTimeout(() => { if (n.el.parentNode) n.el.remove(); }, 300);
-  }
-
-  function showJudge(text, color) {
-    judgeText.textContent = text;
-    judgeText.style.color = color;
-    judgeText.classList.remove('show');
-    void judgeText.offsetWidth;
-    judgeText.classList.add('show');
-  }
-
-  function playTone(lane) {
-    try {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      const freqs = [261.63, 329.63, 392.00, 523.25];
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.value = freqs[lane];
-      gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
-      osc.connect(gain); gain.connect(audioCtx.destination);
-      osc.start(); osc.stop(audioCtx.currentTime + 0.3);
-    } catch (e) {}
-  }
-
-  touchBtns.forEach(btn => {
-    btn.addEventListener('mousedown', () => pressLane(+btn.dataset.lane));
-    btn.addEventListener('touchstart', (e) => { e.preventDefault(); pressLane(+btn.dataset.lane); });
+    soundIcon.textContent = soundOn ? '♪' : '✕';
+    soundBtn.classList.toggle('muted', !soundOn);
   });
 
-  document.addEventListener('keydown', (e) => {
-    if (!rhythmActive) return;
-    const map = { 'd': 0, 'f': 1, 'j': 2, 'k': 3 };
-    if (map[e.key.toLowerCase()] !== undefined) pressLane(map[e.key.toLowerCase()]);
+  /* =========================================================
+     3. УПРАВЛЕНИЕ ЭКРАНАМИ
+     ========================================================= */
+  const intro = document.getElementById('intro'), result = document.getElementById('result');
+  const resultTitle = document.getElementById('resultTitle'), resultCopy = document.getElementById('resultCopy');
+  const backBtn = document.getElementById('backBtn');
+  const errorOverlay = document.getElementById('errorOverlay');
+
+  const COPY = {
+    blue: 'Пора баиньки, Кира. Гаси ебало и ложись спать! Сладких снов ✦',
+    red: 'Доброй ночки и сочной дрочки, Кира! Пусть приснится что-то очень приятное ✦'
+  };
+  const TITLES = { blue: 'Пора баиньки ✦', red: 'Доброй ночки ✦' };
+
+  let busy = false, rafId = 0;
+
+  function choose(color) {
+    if (busy) return;
+
+    if (!audioStarted) { initAudio(); audioStarted = true; }
+    else if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+
+    if (audioCtx && soundOn) {
+      const t = audioCtx.currentTime;
+      [880, 1318.5, 1760].forEach((f, i) => {
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        o.type = 'sine'; o.frequency.setValueAtTime(f, t + i * 0.07);
+        g.gain.setValueAtTime(0.0001, t + i * 0.07); g.gain.exponentialRampToValueAtTime(0.05, t + i * 0.07 + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.07 + 0.9);
+        o.connect(g); g.connect(masterGain); o.start(t + i * 0.07); o.stop(t + i * 0.07 + 1);
+      });
+    }
+
+    busy = true;
+    errorOverlay.style.display = 'none';
+
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('chosen'));
+    const chosen = document.querySelector(`.pill[data-color="${color}"]`);
+    if (chosen) chosen.classList.add('chosen');
+
+    intro.classList.add('fading');
+    setTimeout(() => {
+      intro.classList.remove('active', 'fading');
+      result.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'auto' });
+      resultTitle.textContent = TITLES[color];
+      resultCopy.textContent = COPY[color];
+      setTimeout(() => buildArtwork(color), 90);
+    }, 520);
+  }
+
+  function goBack() {
+    if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
+    busy = false;
+    result.classList.remove('active');
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('chosen'));
+    intro.classList.add('active');
+    intro.classList.remove('fading');
+    const c = document.getElementById('art'), cx = c.getContext('2d');
+    cx.clearRect(0, 0, c.width, c.height); cx.fillStyle = '#070d1a'; cx.fillRect(0, 0, c.width, c.height);
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  backBtn.addEventListener('click', goBack);
+  document.querySelectorAll('.pill').forEach(pill => {
+    pill.addEventListener('click', e => { e.preventDefault(); choose(pill.getAttribute('data-color')); });
+    pill.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose(pill.getAttribute('data-color')); }
+    });
   });
 
-  /* ---------- МЯУДОКУ ---------- */
-  const FIXED_CELLS = [[0,0], [5,5]];
-  let sudokuGrid = [];
-
-  function initSudoku() {
-    resetSudoku();
+  /* =========================================================
+     4. ОТРИСОВКА ИЗОБРАЖЕНИЯ (БЕЗ ОБРЕЗКИ ТЕКСТА)
+     ========================================================= */
+  function drawContain(g, img, W, H) {
+    const ir = img.width / img.height, cr = W / H;
+    let dw, dh, dx, dy;
+    if (ir > cr) { dw = W; dh = W / ir; dx = 0; dy = (H - dh) / 2; }
+    else { dh = H; dw = H * ir; dx = (W - dw) / 2; dy = 0; }
+    g.fillStyle = '#070d1a'; g.fillRect(0, 0, W, H);
+    g.drawImage(img, dx, dy, dw, dh);
   }
 
-  function resetSudoku() {
-    const grid = document.getElementById('sudoku-grid');
-    grid.innerHTML = '';
-    sudokuGrid = Array.from({ length: 6 }, () => Array(6).fill(null));
-    document.getElementById('sudoku-msg').textContent = '';
+  function getSourceCanvas(variant, callback) {
+    const W = 800, H = 800, c = document.createElement('canvas');
+    c.width = W; c.height = H;
+    const g = c.getContext('2d');
+    const src = PHOTOS[variant];
 
-    FIXED_CELLS.forEach(([r,c]) => { sudokuGrid[r][c] = 'cat'; });
+    const im = new Image();
+    // Важно для локальных файлов
+    im.crossOrigin = "anonymous"; 
+    im.onload = () => { 
+      drawContain(g, im, W, H); 
+      callback(c); 
+    };
+    im.onerror = () => {
+      errorOverlay.style.display = 'flex';
+    };
+    im.src = src;
+  }
 
-    for (let r = 0; r < 6; r++) {
-      for (let c = 0; c < 6; c++) {
-        const cell = document.createElement('div');
-        cell.className = 'sudoku-cell';
-        cell.dataset.row = r; cell.dataset.col = c;
-        if (FIXED_CELLS.some(([fr,fc]) => fr === r && fc === c)) {
-          cell.classList.add('fixed', 'cat');
-          cell.textContent = '🐱';
+  /* =========================================================
+     5. СБОРКА ИЗ ЧАСТИЦ
+     ========================================================= */
+  const artCanvas = document.getElementById('art'), artCtx = artCanvas.getContext('2d');
+  const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+
+  function drawShapeAt(ctx, shape, x, y, s) {
+    switch (shape) {
+      case 0: ctx.fillRect(x - s/2, y - s/2, s, s); break;
+      case 1: ctx.beginPath(); ctx.arc(x, y, s/2, 0, Math.PI*2); ctx.fill(); break;
+      case 2: ctx.beginPath(); ctx.moveTo(x, y-s*.62); ctx.lineTo(x+s*.56, y+s*.44); ctx.lineTo(x-s*.56, y+s*.44); ctx.closePath(); ctx.fill(); break;
+      case 3: ctx.beginPath(); ctx.moveTo(x, y-s*.62); ctx.lineTo(x+s*.6, y); ctx.lineTo(x, y+s*.62); ctx.lineTo(x-s*.6, y); ctx.closePath(); ctx.fill(); break;
+      case 4: 
+        ctx.save(); ctx.translate(x, y); ctx.beginPath();
+        for (let i=0; i<5; i++) {
+          let r = s*.62, ang = (i*72-90)*Math.PI/180; ctx.lineTo(Math.cos(ang)*r, Math.sin(ang)*r);
+          ang = (i*72-54)*Math.PI/180; r = s*.24; ctx.lineTo(Math.cos(ang)*r, Math.sin(ang)*r);
         }
-        cell.addEventListener('click', () => onSudokuClick(r, c, cell));
-        grid.appendChild(cell);
+        ctx.closePath(); ctx.fill(); ctx.restore(); break;
+      default: ctx.beginPath(); ctx.arc(x, y, s/2, 0, Math.PI*2); ctx.fill();
+    }
+  }
+
+  function buildArtwork(variant) {
+    if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
+    const W = artCanvas.width, H = artCanvas.height;
+    artCtx.fillStyle = '#070d1a'; artCtx.fillRect(0, 0, W, H);
+
+    getSourceCanvas(variant, sourceCanvas => {
+      const COLS = 60, ROWS = 60;
+      const small = document.createElement('canvas'); small.width = COLS; small.height = ROWS;
+      const sg = small.getContext('2d', { willReadFrequently: true });
+      sg.drawImage(sourceCanvas, 0, 0, COLS, ROWS);
+
+      let data;
+      try { 
+        // Если браузер заблокирует чтение, мы поймаем ошибку здесь
+        data = sg.getImageData(0, 0, COLS, ROWS).data; 
+      } catch(e) { 
+        errorOverlay.style.display = 'flex'; 
+        return; 
       }
-    }
-  }
 
-  function onSudokuClick(r, c, cell) {
-    if (FIXED_CELLS.some(([fr,fc]) => fr === r && fc === c)) return;
+      const cellW = W / COLS, cellH = H / ROWS, baseSize = Math.max(cellW, cellH) * 1.3;
+      const cx = W / 2, cy = H / 2, pieces = [];
 
-    if (sudokuGrid[r][c] === 'cat') {
-      sudokuGrid[r][c] = null;
-      cell.textContent = '';
-      cell.classList.remove('cat');
-      document.getElementById('sudoku-msg').textContent = '';
-      return;
-    }
+      for (let y = 0; y < ROWS; y++) {
+        for (let x = 0; x < COLS; x++) {
+          const k = (y * COLS + x) * 4, a = data[k + 3] / 255;
+          if (a < 0.08) continue;
 
-    if (!canPlaceCat(sudokuGrid, r, c)) {
-      cell.classList.add('error');
-      setTimeout(() => cell.classList.remove('error'), 400);
-      document.getElementById('sudoku-msg').textContent = 'Мяу! Сюда нельзя 🐾';
-      return;
-    }
+          const r = data[k], g = data[k + 1], b = data[k + 2];
+          const tx = (x + 0.5) * cellW, ty = (y + 0.5) * cellH;
+          const ang = Math.random() * Math.PI * 2, rad = W * 0.6 + Math.random() * W * 0.8;
+          const sx = cx + Math.cos(ang) * rad, sy = cy + Math.sin(ang) * rad * 0.85;
+          const shapePool = [0, 1, 2, 3, 4, 1, 0, 4];
+          
+          pieces.push({
+            tx, ty, sx, sy, color: `rgb(${r},${g},${b})`,
+            shape: shapePool[(x * 7 + y * 13 + ((x * y) % 5)) % shapePool.length],
+            size: baseSize * (0.85 + Math.random() * 0.3),
+            delay: Math.random() * 600, dur: 1600 + Math.random() * 900,
+            rot: (Math.random() - 0.5) * (Math.random() < 0.4 ? 6 : 0),
+            wobble: Math.random() * Math.PI * 2, alpha: a
+          });
+        }
+      }
 
-    sudokuGrid[r][c] = 'cat';
-    cell.textContent = '🐱';
-    cell.classList.add('cat');
-    document.getElementById('sudoku-msg').textContent = '';
+      const t0 = performance.now(), TOTAL = 2800;
+      function frame(now) {
+        const elapsed = now - t0;
+        artCtx.fillStyle = '#070d1a'; artCtx.fillRect(0, 0, W, H);
+        
+        const bgGrad = artCtx.createRadialGradient(cx, cy, 40, cx, cy, W * 0.7);
+        bgGrad.addColorStop(0, 'rgba(30,80,140,0.16)'); bgGrad.addColorStop(1, 'rgba(0,0,0,0)');
+        artCtx.fillStyle = bgGrad; artCtx.fillRect(0, 0, W, H);
 
-    let count = 0;
-    for (let i = 0; i < 6; i++) for (let j = 0; j < 6; j++) if (sudokuGrid[i][j] === 'cat') count++;
-    if (count === 6 && isSolved(sudokuGrid)) {
-      document.getElementById('sudoku-msg').textContent = '🎉 Мяу! Ты решила мяудоку! 💙';
-      spawnConfetti();
-    }
-  }
+        let allDone = true;
+        for (let i = 0; i < pieces.length; i++) {
+          const p = pieces[i], local = (elapsed - p.delay) / p.dur;
+          if (local <= 0) { allDone = false; continue; }
+          if (local < 1) allDone = false;
 
-  function canPlaceCat(grid, r, c) {
-    for (let i = 0; i < 6; i++) {
-      if (grid[r][i] === 'cat' || grid[i][c] === 'cat') return false;
-    }
-    const br = Math.floor(r / 2) * 2;
-    const bc = Math.floor(c / 3) * 3;
-    for (let i = br; i < br + 2; i++) for (let j = bc; j < bc + 3; j++) {
-      if (grid[i][j] === 'cat') return false;
-    }
-    for (let dr = -1; dr <= 1; dr++) for (let dc = -1; dc <= 1; dc++) {
-      if (dr === 0 && dc === 0) continue;
-      const nr = r + dr, nc = c + dc;
-      if (nr >= 0 && nr < 6 && nc >= 0 && nc < 6 && grid[nr][nc] === 'cat') return false;
-    }
-    return true;
-  }
+          const e = local >= 1 ? 1 : easeOutCubic(local);
+          let x = p.sx + (p.tx - p.sx) * e, y = p.sy + (p.ty - p.sy) * e;
 
-  function isSolved(grid) {
-    for (let r = 0; r < 6; r++) { let cnt = 0; for (let c = 0; c < 6; c++) if (grid[r][c] === 'cat') cnt++; if (cnt !== 1) return false; }
-    for (let c = 0; c < 6; c++) { let cnt = 0; for (let r = 0; r < 6; r++) if (grid[r][c] === 'cat') cnt++; if (cnt !== 1) return false; }
-    for (let br = 0; br < 6; br += 2) for (let bc = 0; bc < 6; bc += 3) {
-      let cnt = 0;
-      for (let i = br; i < br + 2; i++) for (let j = bc; j < bc + 3; j++) if (grid[i][j] === 'cat') cnt++;
-      if (cnt !== 1) return false;
-    }
-    return true;
-  }
+          if (local < 1) {
+            const w = (1 - e) * 16;
+            x += Math.sin(now * 0.002 + p.wobble) * w;
+            y += Math.cos(now * 0.0017 + p.wobble) * w;
+          }
 
-  /* ---------- MEMORY ---------- */
-  let memoryCards = [];
-  let memoryFlipped = [];
-  let memoryMatched = [];
-  let memoryLocked = false;
-  const CAT_EMOJIS = ['😺','😸','😹','😻','😼','😽','🙀','😿'];
+          artCtx.globalAlpha = Math.min(1, local * 2.6) * p.alpha;
+          artCtx.fillStyle = p.color;
 
-  function initMemory() {
-    resetMemory();
-  }
+          const rot = p.rot * (1 - e), scale = 0.35 + 0.65 * e, s = p.size * scale;
 
-  function resetMemory() {
-    const grid = document.getElementById('memory-grid');
-    grid.innerHTML = '';
-    document.getElementById('memory-msg').textContent = '';
-    memoryFlipped = []; memoryMatched = []; memoryLocked = false;
+          if (rot !== 0) {
+            artCtx.save(); artCtx.translate(x, y); artCtx.rotate(rot);
+            drawShapeAt(artCtx, p.shape, 0, 0, s); artCtx.restore();
+          } else {
+            drawShapeAt(artCtx, p.shape, x, y, s);
+          }
+        }
+        artCtx.globalAlpha = 1;
 
-    const deck = [...CAT_EMOJIS, ...CAT_EMOJIS];
-    for (let i = deck.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [deck[i], deck[j]] = [deck[j], deck[i]];
-    }
-    memoryCards = deck;
-
-    deck.forEach((emoji, idx) => {
-      const card = document.createElement('div');
-      card.className = 'memory-card';
-      card.dataset.idx = idx;
-      card.textContent = emoji;
-      card.addEventListener('click', () => flipCard(idx, card));
-      grid.appendChild(card);
+        if (allDone && elapsed > TOTAL) {
+          artCtx.save(); artCtx.globalAlpha = 0.14; artCtx.strokeStyle = '#d9f2ff'; artCtx.lineWidth = 2;
+          artCtx.strokeRect(10, 10, W - 20, H - 20); artCtx.restore();
+          rafId = 0; return;
+        }
+        rafId = requestAnimationFrame(frame);
+      }
+      rafId = requestAnimationFrame(frame);
     });
   }
 
-  function flipCard(idx, card) {
-    if (memoryLocked || memoryFlipped.includes(idx) || memoryMatched.includes(idx)) return;
-
-    card.classList.add('flipped');
-    memoryFlipped.push(idx);
-
-    if (memoryFlipped.length === 2) {
-      const [i1, i2] = memoryFlipped;
-      if (memoryCards[i1] === memoryCards[i2]) {
-        memoryMatched.push(i1, i2);
-        document.querySelectorAll(`.memory-card[data-idx="${i1}"], .memory-card[data-idx="${i2}"]`)
-          .forEach(el => el.classList.add('matched'));
-        memoryFlipped = [];
-        if (memoryMatched.length === 16) {
-          document.getElementById('memory-msg').textContent = '🎉 Мяу! Все пары найдены! 💙';
-          spawnConfetti();
-        }
-      } else {
-        memoryLocked = true;
-        setTimeout(() => {
-          document.querySelectorAll(`.memory-card[data-idx="${i1}"], .memory-card[data-idx="${i2}"]`)
-            .forEach(el => el.classList.remove('flipped'));
-          memoryFlipped = []; memoryLocked = false;
-        }, 700);
-      }
-    }
-  }
+  artCtx.fillStyle = '#070d1a'; artCtx.fillRect(0, 0, artCanvas.width, artCanvas.height);
+})();
 </script>
-
 </body>
 </html>
